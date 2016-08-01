@@ -1,11 +1,17 @@
 var express = require('express');
+var passport = require('passport');
+var util = require('util');
+
+
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-
 var MongoStore = require('connect-mongo')(session);
+
+var routes = require('./routes/index');
+
 
 var app = express();
 
@@ -14,10 +20,11 @@ var passport = require('passport'); //not installed
 var LocalStrategy = require('passport-local').Strategy;//not installed
 var FacebookStrategy = require('passport-facebook'); //not installed
 var YoutubeStrategy = require('passport-youtube');
+var InstagramStrategy = require('passport-instagram').Strategy;
 //** end passport auth **
 
 //Checks if all the process.env tokensar e there
-var REQUIRED_ENV = "MONGODB_URI SECRET FB_CLIENT_ID FB_CLIENT_SECRET".split(" ");
+var REQUIRED_ENV = "MONGODB_URI SECRET FB_CLIENT_ID FB_CLIENT_SECRET INSTAGRAM_CLIENT_ID INSTAGRAM_CLIENT_SECRET".split(" ");
 REQUIRED_ENV.forEach(function(el) {
   if (!process.env[el])
     throw new Error("Missing required env var " + el);
@@ -104,6 +111,21 @@ passport.use(new FacebookStrategy({
 //   }
 // ));
 
+
+
+passport.use(new InstagramStrategy({
+    clientID: process.env.INSTAGRAM_CLIENT_ID,
+    clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/instagram/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    process.nextTick(function () {
+      return done(null, profile);
+    });
+  }
+));
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -113,7 +135,6 @@ var routes = require('./routes/index');
 app.use('/', auth(passport));
 app.use('/', routes);
 
-// error handlers
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

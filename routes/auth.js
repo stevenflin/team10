@@ -43,6 +43,17 @@ module.exports = function(passport) {
   //     res.redirect('/');
   //   });
 
+//INSTAGRAM 
+  router.get('/auth/instagram',
+  passport.authenticate('instagram'));
+
+  router.get('/auth/instagram/callback', 
+    passport.authenticate('instagram', { failureRedirect: '/login' }),
+    function(req, res) {
+      // Successful authentication, redirect home.
+      res.redirect('/');
+  });
+
   router.use(function(req, res, next) {
    if (!req.user) {
      res.redirect('/login');
@@ -50,6 +61,11 @@ module.exports = function(passport) {
       next()
    }
   })
+
+  router.get('/logout', function(req, res, next){
+    req.logout();
+    res.redirect('/login');
+  }); 
 
   return router;
 }
