@@ -53,6 +53,10 @@ app.use(session({
 var models = require('./models/models');
 var User = models.User;
 
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // YOUR CODE HERE
 passport.serializeUser(function(user, done) {
   done(null, user._id);
@@ -60,6 +64,7 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
   User.findById(id, function(err, user) {
+    console.log("deserializeUser error", err);
     done(err, user);
   });
 });
@@ -116,18 +121,22 @@ passport.use(new FacebookStrategy({
 passport.use(new InstagramStrategy({
     clientID: process.env.INSTAGRAM_CLIENT_ID,
     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
-    callbackURL: process.env.INSTAGRAM_CALLBACK_URL
+    callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
+    passReqToCallback: true
   },
-  function(accessToken, refreshToken, profile, done) {
-    process.nextTick(function () {
-      return done(null, profile);
+  function(req, accessToken, refreshToken, profile, done) {
+    if(!req.user){
+      throw new Error ("Error please login")
+    } else{
+      req.user.instagramAccessToken = accessToken;
+      req.user.instagramRefreshToken = refreshToken;
+    }
+    req.user.save(function () {
+      return done(null, req.user);
     });
   }
 ));
 
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 var auth = require('./routes/auth');
 var routes = require('./routes/index');
