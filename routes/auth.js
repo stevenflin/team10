@@ -1,5 +1,4 @@
-var express = require('express');
-var router = express.Router();
+var router = require('express').Router();
 var models = require('../models/models');
 var User = models.User;
 
@@ -32,12 +31,6 @@ module.exports = function(passport) {
     res.redirect('/');
   });
 
-  router.use(function(req, res, next) {
-  	if (!req.user) {
-  	  res.redirect('/login');
-  	}
-  })
-
     // FACEBOOK
 
   // router.get('/auth/facebook',
@@ -49,6 +42,14 @@ module.exports = function(passport) {
   //     // Successful authentication, redirect home.
   //     res.redirect('/');
   //   });
+
+  router.use(function(req, res, next) {
+   if (!req.user) {
+     res.redirect('/login');
+   } else {
+      next()
+   }
+  })
 
   return router;
 }

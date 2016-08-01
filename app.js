@@ -5,19 +5,15 @@ var logger = require('morgan');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var YoutubeStrategy = require('passport-youtube');
-
 var MongoStore = require('connect-mongo')(session);
 
 var app = express();
 
 //** for passport auth **
 var passport = require('passport'); //not installed
-var LocalStrategy = require('passport-local');//not installed
+var LocalStrategy = require('passport-local').Strategy;//not installed
 var FacebookStrategy = require('passport-facebook'); //not installed
-var mongoose = require('mongoose'); //not installed
+var YoutubeStrategy = require('passport-youtube');
 //** end passport auth **
 
 //Checks if all the process.env tokensar e there
@@ -27,6 +23,7 @@ REQUIRED_ENV.forEach(function(el) {
     throw new Error("Missing required env var " + el);
 });
 
+var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI);
 var mongoStore = new MongoStore({mongooseConnection: mongoose.connection});
 
@@ -46,7 +43,9 @@ app.use(session({
 }));
 
 
-// Passport stuff here
+var models = require('./models/models');
+var User = models.User;
+
 // YOUR CODE HERE
 passport.serializeUser(function(user, done) {
   done(null, user._id);
@@ -63,13 +62,11 @@ passport.use(new LocalStrategy(function(username, password, done) {
   // Find the user with the given username
     User.findOne({ username: username }, function (err, user) {
       // if there's an error, finish trying to authenticate (auth failed)
-      if (err) { 
-        console.log(err);
+      if (err) {
         return done(err);
       }
       // if no user present, auth failed
       if (!user) {
-        console.log(user);
         return done(null, false);
       }
       // if passwords do not match, auth failed
@@ -77,7 +74,20 @@ passport.use(new LocalStrategy(function(username, password, done) {
         return done(null, false);
       }
       // auth has has succeeded
+      console.log('LOGGED IN');
       return done(null, user);
+    });
+  }
+));
+
+passport.use(new FacebookStrategy({
+    clientID: process.env.FB_CLIENT_ID,
+    clientSecret: process.env.FB_CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL //fix when callback URL is updated
+  },
+  function(accessToken, refreshToken, profile, callback) {
+    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+      return callback(err, user);
     });
   }
 ));
@@ -97,44 +107,19 @@ passport.use(new LocalStrategy(function(username, password, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 var auth = require('./routes/auth');
 var routes = require('./routes/index');
-var models = require('./models/models');
-var User = models.User;
 
 app.use('/', auth(passport));
 app.use('/', routes);
 
-passport.serializeUser(function(user, done){
-  done(null, user._id)
-})
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
-
+// error handlers
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
-
-passport.use(new FacebookStrategy({
-    clientID: process.env.FB_CLIENT_ID,
-    clientSecret: process.env.FB_CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL //fix when callback URL is updated
-  },
-  function(accessToken, refreshToken, profile, callback) {
-    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-      return callback(err, user);
-    });
-  }
-));
-
-// error handlers
 
 // development error handler
 // will print stacktrace
