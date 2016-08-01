@@ -2,20 +2,33 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var YoutubeStrategy = require('passport-youtube');
-var routes = require('./routes/index');
-var auth = require('./routes/auth');
-var session = require('express-session');
+
+var MongoStore = require('connect-mongo')(session);
 
 var app = express();
 
-var models = require('./models/models');
-var User = models.User;
+//** for passport auth **
+var passport = require('passport'); //not installed
+var LocalStrategy = require('passport-local');//not installed
+var FacebookStrategy = require('passport-facebook'); //not installed
+var mongoose = require('mongoose'); //not installed
+//** end passport auth **
+
+//Checks if all the process.env tokensar e there
+var REQUIRED_ENV = "MONGODB_URI SECRET FB_CLIENT_ID FB_CLIENT_SECRET".split(" ");
+REQUIRED_ENV.forEach(function(el) {
+  if (!process.env[el])
+    throw new Error("Missing required env var " + el);
+});
+
+mongoose.connect(process.env.MONGODB_URI);
+var mongoStore = new MongoStore({mongooseConnection: mongoose.connection});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,9 +39,12 @@ app.set('view engine', 'hbs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'keyboard cat' }));
+app.use(session({
+  secret: process.env.SECRET,
+  store: mongoStore
+}));
+
 
 // Passport stuff here
 // YOUR CODE HERE
@@ -81,8 +97,23 @@ passport.use(new LocalStrategy(function(username, password, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+var auth = require('./routes/auth');
+var routes = require('./routes/index');
+var models = require('./models/models');
+var User = models.User;
+
 app.use('/', auth(passport));
 app.use('/', routes);
+
+passport.serializeUser(function(user, done){
+  done(null, user._id)
+})
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -90,6 +121,18 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
+passport.use(new FacebookStrategy({
+    clientID: process.env.FB_CLIENT_ID,
+    clientSecret: process.env.FB_CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL //fix when callback URL is updated
+  },
+  function(accessToken, refreshToken, profile, callback) {
+    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+      return callback(err, user);
+    });
+  }
+));
 
 // error handlers
 
