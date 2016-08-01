@@ -116,7 +116,7 @@ passport.use(new FacebookStrategy({
 passport.use(new InstagramStrategy({
     clientID: process.env.INSTAGRAM_CLIENT_ID,
     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/instagram/callback"
+    callbackURL: process.env.INSTAGRAM_CALLBACK_URL
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
