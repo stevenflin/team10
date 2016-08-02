@@ -33,27 +33,27 @@ module.exports = function(passport) {
 
   // FACEBOOK
 
-  // router.get('/auth/facebook',
-  //   passport.authenticate('facebook'));
+  router.get('/auth/facebook',
+    passport.authenticate('facebook'));
 
-  // router.get('/auth/facebook/callback',
-  //   passport.authenticate('facebook', { failureRedirect: '/login' }),
-  //   function(req, res) {
-  //     // Successful authentication, redirect home.
-  //     res.redirect('/');
-  //   });
+  router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    function(req, res) {
+      // Successful authentication, redirect home.
+      res.redirect('/');
+    });
 
 
 //INSTAGRAM 
-  // router.get('/auth/instagram',
-  // passport.authenticate('instagram'));
+  router.get('/auth/instagram',
+  passport.authenticate('instagram'));
 
-  // router.get('/auth/instagram/callback', 
-  //   passport.authenticate('instagram', { failureRedirect: '/login' }),
-  //   function(req, res) {
-  //     // Successful authentication, redirect home.
-  //     res.redirect('/');
-  // });
+  router.get('/auth/instagram/callback', 
+    passport.authenticate('instagram', { failureRedirect: '/login' }),
+    function(req, res) {
+      // Successful authentication, redirect home.
+      res.redirect('/');
+  });
 
   // YOUTUBE
   router.get('/auth/youtube', 

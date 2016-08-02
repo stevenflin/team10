@@ -10,9 +10,6 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var MongoStore = require('connect-mongo')(session);
 
-var routes = require('./routes/index');
-
-
 var app = express();
 
 //** for passport auth **
@@ -128,26 +125,24 @@ passport.use(new YoutubeStrategy({
   }
 ));
 
-
-
-// passport.use(new InstagramStrategy({
-//     clientID: process.env.INSTAGRAM_CLIENT_ID,
-//     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
-//     callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
-//     passReqToCallback: true
-//   },
-//   function(req, accessToken, refreshToken, profile, done) {
-//     if(!req.user){
-//       throw new Error ("Error please login")
-//     } else{
-//       req.user.instagramAccessToken = accessToken;
-//       req.user.instagramRefreshToken = refreshToken;
-//     }
-//     req.user.save(function () {
-//       return done(null, req.user);
-//     });
-//   }
-// ));
+passport.use(new InstagramStrategy({
+    clientID: process.env.INSTAGRAM_CLIENT_ID,
+    clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
+    callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
+    passReqToCallback: true
+  },
+  function(req, accessToken, refreshToken, profile, done) {
+    if(!req.user){
+      throw new Error ("Error please login")
+    } else{
+      req.user.instagramAccessToken = accessToken;
+      req.user.instagramRefreshToken = refreshToken;
+    }
+    req.user.save(function () {
+      return done(null, req.user);
+    });
+  }
+));
 
 
 var auth = require('./routes/auth');
@@ -155,6 +150,7 @@ var routes = require('./routes/index');
 
 app.use('/', auth(passport));
 app.use('/', routes);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
