@@ -22,6 +22,7 @@ var LocalStrategy = require('passport-local').Strategy;//not installed
 var FacebookStrategy = require('passport-facebook'); //not installed
 var YoutubeStrategy = require('passport-youtube-v3').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 //** end passport auth **
 
@@ -106,48 +107,67 @@ passport.use(new FacebookStrategy({
   }
 ));
 
-passport.use(new YoutubeStrategy({
-    clientID: process.env.YOUTUBE_CLIENT_ID,
-    clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/youtube/callback",
-    scope: 'https://www.googleapis.com/auth/youtube.readonly',
-    passReqToCallback: true
-  },
-  function(req, accessToken, refreshToken, profile, done) {
-    if (!req.user) {
-      throw new Error("lmao gotta log in bro")
-    }
-    console.log("[YT profile]", profile)
-
-    var user = req.user;
-    user.youtube = profile;
-
-    user.save(function(err, user) {
-      return done(null, req.user)
-    })
-  }
-));
-
-
-
-// passport.use(new InstagramStrategy({
-//     clientID: process.env.INSTAGRAM_CLIENT_ID,
-//     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
-//     callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
+// passport.use(new YoutubeStrategy({
+//     clientID: process.env.YOUTUBE_CLIENT_ID,
+//     clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
+//     callbackURL: "http://localhost:3000/auth/youtube/callback",
+//     scope: 'https://www.googleapis.com/auth/youtube.readonly',
 //     passReqToCallback: true
 //   },
 //   function(req, accessToken, refreshToken, profile, done) {
-//     if(!req.user){
-//       throw new Error ("Error please login")
-//     } else{
-//       req.user.instagramAccessToken = accessToken;
-//       req.user.instagramRefreshToken = refreshToken;
+//     if (!req.user) {
+//       throw new Error("lmao gotta log in bro")
 //     }
-//     req.user.save(function () {
-//       return done(null, req.user);
-//     });
+//     console.log("[YT profile]", profile)
+
+//     var user = req.user;
+//     user.youtube = profile;
+
+//     user.save(function(err, user) {
+//       return done(null, req.user)
+//     })
 //   }
 // ));
+
+
+
+passport.use(new InstagramStrategy({
+    clientID: process.env.INSTAGRAM_CLIENT_ID,
+    clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
+    callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
+    passReqToCallback: true
+  },
+  function(req, accessToken, refreshToken, profile, done) {
+    if(!req.user){
+      throw new Error ("Error please login")
+    } else{
+      req.user.instagramAccessToken = accessToken;
+      req.user.instagramRefreshToken = refreshToken;
+    }
+    req.user.save(function () {
+      return done(null, req.user);
+    });
+  }
+));
+
+passport.use(new TwitterStrategy({
+    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    callbackURL: "http://127.0.0.1:3000/auth/twitter/callback", 
+     passReqToCallback: true
+  },
+  function(req, token, tokenSecret, profile, cb) {
+    if(!req.user){
+      throw new Error("twitter failed to login")
+    } else {
+      req.user.twitterToken = token;
+      req.user.twitterTokenSecret = tokenSecret;
+    }
+    req.user.save(function (err, user) {
+      return cb(err, req.user);
+    });
+  }
+));
 
 
 var auth = require('./routes/auth');

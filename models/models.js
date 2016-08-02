@@ -21,6 +21,12 @@ var user = new mongoose.Schema({
   }, 
   instagramRefreshToken: {
     type: String
+  }, 
+  twitterToken: {
+    type: String
+  }, 
+  twitterTokenSecret: {
+    type: String
   }
 });
 

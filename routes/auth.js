@@ -32,39 +32,49 @@ module.exports = function(passport) {
   });
 
   // FACEBOOK
+  router.get('/auth/facebook',
+    passport.authenticate('facebook'));
 
-  // router.get('/auth/facebook',
-  //   passport.authenticate('facebook'));
-
-  // router.get('/auth/facebook/callback',
-  //   passport.authenticate('facebook', { failureRedirect: '/login' }),
-  //   function(req, res) {
-  //     // Successful authentication, redirect home.
-  //     res.redirect('/');
-  //   });
+  router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    function(req, res) {
+      // Successful authentication, redirect home.
+      res.redirect('/');
+    });
 
 
 //INSTAGRAM 
-  // router.get('/auth/instagram',
-  // passport.authenticate('instagram'));
+  router.get('/auth/instagram',
+  passport.authenticate('instagram'));
 
-  // router.get('/auth/instagram/callback', 
-  //   passport.authenticate('instagram', { failureRedirect: '/login' }),
-  //   function(req, res) {
-  //     // Successful authentication, redirect home.
-  //     res.redirect('/');
-  // });
-
-  // YOUTUBE
-  router.get('/auth/youtube', 
-    passport.authorize('youtube'));
-
-  router.get('/auth/youtube/callback',
-    passport.authenticate('youtube', {failureRedirect: '/login'}),
+  router.get('/auth/instagram/callback', 
+    passport.authenticate('instagram', { failureRedirect: '/login' }),
     function(req, res) {
+      // Successful authentication, redirect home.
       res.redirect('/');
-    }
-  );
+  });
+
+  // // YOUTUBE
+  // router.get('/auth/youtube', 
+  //   passport.authorize('youtube'));
+
+  // router.get('/auth/youtube/callback',
+  //   passport.authenticate('youtube', {failureRedirect: '/login'}),
+  //   function(req, res) {
+  //     res.redirect('/');
+  //   }
+  // );
+
+  //TWITTER
+  router.get('/auth/twitter',
+  passport.authorize('twitter'));
+
+  router.get('/auth/twitter/callback', 
+  passport.authenticate('twitter', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 
   router.use(function(req, res, next) {
     if (!req.user) {
