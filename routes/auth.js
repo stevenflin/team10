@@ -1,3 +1,4 @@
+
 var router = require('express').Router();
 var models = require('../models/models');
 var User = models.User;
@@ -26,23 +27,12 @@ module.exports = function(passport) {
   });
 
   router.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
+    passport.authenticate('local', { failureRedirect: '/login' }),
+    function(req, res) {
+      res.redirect('/');
   });
 
-    // FACEBOOK
-
-  // router.get('/auth/facebook',
-  //   passport.authenticate('facebook'));
-
-  // router.get('/auth/facebook/callback',
-  //   passport.authenticate('facebook', { failureRedirect: '/login' }),
-  //   function(req, res) {
-  //     // Successful authentication, redirect home.
-  //     res.redirect('/');
-  //   });
-
+  //ROUTER WALL
   router.use(function(req, res, next) {
    if (!req.user) {
      res.redirect('/login');
@@ -50,6 +40,16 @@ module.exports = function(passport) {
       next()
    }
   })
+
+  // FACEBOOK
+  router.get('/auth/facebook', passport.authorize('facebook'));
+
+  router.get('/auth/facebook/cb',
+    passport.authenticate('facebook', {
+      successRedirect: '/integrate', 
+      failureRedirect: '/' 
+    })
+  );
 
   return router;
 }
