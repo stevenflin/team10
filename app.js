@@ -10,8 +10,6 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var MongoStore = require('connect-mongo')(session);
 
-var routes = require('./routes/index');
-
 
 var app = express();
 
@@ -22,6 +20,7 @@ var LocalStrategy = require('passport-local').Strategy;//not installed
 var FacebookStrategy = require('passport-facebook'); //not installed
 var YoutubeStrategy = require('passport-youtube-v3').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 //** end passport auth **
 
@@ -173,11 +172,39 @@ passport.use(new InstagramStrategy({
 ));
 
 
+passport.use(new TwitterStrategy({
+    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    callbackURL: "http://127.0.0.1:3000/auth/twitter/callback", 
+     passReqToCallback: true
+  },
+  function(req, token, tokenSecret, profile, cb) {
+    if(!req.user){
+      throw new Error("twitter failed to login")
+    } else {
+      req.user.twitterToken = token;
+      req.user.twitterTokenSecret = tokenSecret;
+    }
+    req.user.save(function (err, user) {
+      return cb(err, req.user);
+    });
+  }
+));
+
+
 var auth = require('./routes/auth');
 var routes = require('./routes/index');
 
 app.use('/', auth(passport));
 app.use('/', routes);
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
