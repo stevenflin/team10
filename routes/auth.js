@@ -1,3 +1,4 @@
+
 var router = require('express').Router();
 var models = require('../models/models');
 var User = models.User;
@@ -26,11 +27,14 @@ module.exports = function(passport) {
   });
 
   router.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
+    passport.authenticate('local', { failureRedirect: '/login' }),
+    function(req, res) {
+      res.redirect('/');
   });
 
+<<<<<<< HEAD
+  //ROUTER WALL
+=======
   // FACEBOOK
   router.get('/auth/facebook',
     passport.authenticate('facebook'));
@@ -65,9 +69,12 @@ module.exports = function(passport) {
     }
   );
 
+<<<<<<< HEAD
+>>>>>>> 4adca418076d47bb77a42cb56966a8b3c66ea8e2
+=======
   //TWITTER
   router.get('/auth/twitter',
-  passport.authorize('twitter'));
+    passport.authorize('twitter'));
 
   router.get('/auth/twitter/callback', 
   passport.authenticate('twitter', { failureRedirect: '/login' }),
@@ -76,6 +83,7 @@ module.exports = function(passport) {
     res.redirect('/');
   });
 
+>>>>>>> 9351f3cad570ef90011b764790615f17261fc97f
   router.use(function(req, res, next) {
     if (!req.user) {
       res.redirect('/login');
@@ -88,6 +96,16 @@ module.exports = function(passport) {
     req.logout();
     res.redirect('/login');
   }); 
+
+  // FACEBOOK
+  router.get('/auth/facebook', passport.authorize('facebook'));
+
+  router.get('/auth/facebook/cb',
+    passport.authenticate('facebook', {
+      successRedirect: '/integrate', 
+      failureRedirect: '/' 
+    })
+  );
 
   return router;
 }

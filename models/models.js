@@ -8,22 +8,23 @@ var user = new mongoose.Schema({
     unique: true
   },
   password: {
-    type: String
-  }, 
+    type: String,
+    required: true
+  },
   facebook: {
-    id: String, 
-    token: String, 
-    name: String
-  }, 
-  instagram: {
-    id: String, 
-    AccessToken: String, 
-    RefreshToken: String, 
+    id: String,
+    token: String,
     name: String
   },
-  twitter: {
-    twitterToken: String, 
-  twitterTokenSecret: String
+  instagram: {
+    id: String,
+    AccessToken: String,
+    RefreshToken: String,
+    name: String
+  },
+  twitterToken: {
+    twitterToken: String,    
+    twitterTokenSecret: String
   }
 });
 
