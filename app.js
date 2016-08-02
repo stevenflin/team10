@@ -10,8 +10,6 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var MongoStore = require('connect-mongo')(session);
 
-var routes = require('./routes/index');
-
 
 var app = express();
 
@@ -107,27 +105,27 @@ passport.use(new FacebookStrategy({
   }
 ));
 
-// passport.use(new YoutubeStrategy({
-//     clientID: process.env.YOUTUBE_CLIENT_ID,
-//     clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
-//     callbackURL: "http://localhost:3000/auth/youtube/callback",
-//     scope: 'https://www.googleapis.com/auth/youtube.readonly',
-//     passReqToCallback: true
-//   },
-//   function(req, accessToken, refreshToken, profile, done) {
-//     if (!req.user) {
-//       throw new Error("lmao gotta log in bro")
-//     }
-//     console.log("[YT profile]", profile)
+passport.use(new YoutubeStrategy({
+    clientID: process.env.YOUTUBE_CLIENT_ID,
+    clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/youtube/callback",
+    scope: 'https://www.googleapis.com/auth/youtube.readonly',
+    passReqToCallback: true
+  },
+  function(req, accessToken, refreshToken, profile, done) {
+    if (!req.user) {
+      throw new Error("lmao gotta log in bro")
+    }
+    console.log("[YT profile]", profile)
 
-//     var user = req.user;
-//     user.youtube = profile;
+    var user = req.user;
+    user.youtube = profile;
 
-//     user.save(function(err, user) {
-//       return done(null, req.user)
-//     })
-//   }
-// ));
+    user.save(function(err, user) {
+      return done(null, req.user)
+    })
+  }
+));
 
 
 
@@ -175,6 +173,14 @@ var routes = require('./routes/index');
 
 app.use('/', auth(passport));
 app.use('/', routes);
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

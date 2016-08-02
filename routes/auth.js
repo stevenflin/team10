@@ -54,16 +54,16 @@ module.exports = function(passport) {
       res.redirect('/');
   });
 
-  // // YOUTUBE
-  // router.get('/auth/youtube', 
-  //   passport.authorize('youtube'));
+  // YOUTUBE
+  router.get('/auth/youtube', 
+    passport.authorize('youtube'));
 
-  // router.get('/auth/youtube/callback',
-  //   passport.authenticate('youtube', {failureRedirect: '/login'}),
-  //   function(req, res) {
-  //     res.redirect('/');
-  //   }
-  // );
+  router.get('/auth/youtube/callback',
+    passport.authenticate('youtube', {failureRedirect: '/login'}),
+    function(req, res) {
+      res.redirect('/');
+    }
+  );
 
   //TWITTER
   router.get('/auth/twitter',
