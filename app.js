@@ -10,6 +10,7 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var MongoStore = require('connect-mongo')(session);
 
+
 var app = express();
 
 //** for passport auth **
@@ -19,6 +20,7 @@ var LocalStrategy = require('passport-local').Strategy;//not installed
 var FacebookStrategy = require('passport-facebook'); //not installed
 var YoutubeStrategy = require('passport-youtube-v3').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 //** end passport auth **
 
@@ -63,7 +65,6 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
   User.findById(id, function(err, user) {
-    console.log("deserializeUser error", err);
     done(err, user);
   });
 });
@@ -94,11 +95,34 @@ passport.use(new LocalStrategy(function(username, password, done) {
 passport.use(new FacebookStrategy({
     clientID: process.env.FB_CLIENT_ID,
     clientSecret: process.env.FB_CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL //fix when callback URL is updated
+    callbackURL: "http://localhost:3000/auth/facebook/cb", //fix when callback URL is updated
+    passReqToCallback: true
   },
-  function(accessToken, refreshToken, profile, callback) {
-    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-      return callback(err, user);
+  // facebook will send back the token and profile
+  function(req, token, refreshToken, profile, done) {
+    // check if the user is already logged in
+
+    // asynchronous
+    process.nextTick(function() {
+
+      if (!req.user) {
+        throw new Error("Gotta be logged in maaaaaaan");
+      } else {
+        console.log("Updating user with facebook creds: ")
+        // user already exists and is logged in, we have to link accounts
+        var user = req.user; // pull the user out of the session
+        // update the current users facebook credentials
+        user.facebook.id = profile.id;
+        user.facebook.token = token;
+        user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
+        // user.facebook.email = profile.emails[0].value;
+        // save the user
+        user.save(function(err) {
+          if (err)
+            throw err;
+          return done(null, user);
+        });
+      }
     });
   }
 ));
@@ -117,13 +141,18 @@ passport.use(new YoutubeStrategy({
     console.log("[YT profile]", profile)
 
     var user = req.user;
-    user.youtube = profile;
+    user.youtube = {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      profile: profile
+    }
 
     user.save(function(err, user) {
       return done(null, req.user)
     })
   }
 ));
+
 
 passport.use(new InstagramStrategy({
     clientID: process.env.INSTAGRAM_CLIENT_ID,
@@ -135,12 +164,35 @@ passport.use(new InstagramStrategy({
     if(!req.user){
       throw new Error ("Error please login")
     } else{
-      req.user.instagramAccessToken = accessToken;
-      req.user.instagramRefreshToken = refreshToken;
+      req.user.instagram.AccessToken = accessToken;
+      req.user.instagram.RefreshToken = refreshToken;
     }
     req.user.save(function () {
       return done(null, req.user);
     });
+  }
+));
+
+passport.use(new TwitterStrategy({
+    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    callbackURL: "http://localhost:3000/auth/twitter/callback", 
+     passReqToCallback: true
+  },
+  function(req, token, tokenSecret, profile, cb) {
+    console.log("token", token);
+    console.log("tokenSecret", tokenSecret);
+    console.log("profile", profile);
+    if(!req.user){
+      throw new Error("twitter failed to login")
+    } else {
+      req.user.twitter.twitterToken = token;
+      req.user.twitter.twitterTokenSecret = tokenSecret;
+
+      req.user.save(function (err, user) {
+        return cb(err, req.user);
+      });
+    }
   }
 ));
 
