@@ -23,6 +23,7 @@
     "passport-instagram": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-youtube": "0.0.6",
+    "passport-youtube-v3": "^2.0.0",
     "serve-favicon": "~2.3.0"
   }
 }

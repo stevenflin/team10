@@ -45,33 +45,34 @@ module.exports = function(passport) {
 
 
 //INSTAGRAM 
-  router.get('/auth/instagram',
-  passport.authenticate('instagram'));
+  // router.get('/auth/instagram',
+  // passport.authenticate('instagram'));
 
-  router.get('/auth/instagram/callback', 
-    passport.authenticate('instagram', { failureRedirect: '/login' }),
-    function(req, res) {
-      // Successful authentication, redirect home.
-      res.redirect('/');
-  });
+  // router.get('/auth/instagram/callback', 
+  //   passport.authenticate('instagram', { failureRedirect: '/login' }),
+  //   function(req, res) {
+  //     // Successful authentication, redirect home.
+  //     res.redirect('/');
+  // });
 
+  // YOUTUBE
   router.get('/auth/youtube', 
-    passport.authenticate('youtube'));
+    passport.authorize('youtube'));
 
   router.get('/auth/youtube/callback',
-    passport.autheticate('youtube', {failureRedirect: '/login'}),
+    passport.authenticate('youtube', {failureRedirect: '/login'}),
     function(req, res) {
       res.redirect('/');
     }
   );
 
   router.use(function(req, res, next) {
-   if (!req.user) {
-     res.redirect('/login');
-   } else {
-      next()
-   }
-  })
+    if (!req.user) {
+      res.redirect('/login');
+    } else {
+      next();
+    }
+  });
 
   router.get('/logout', function(req, res, next){
     req.logout();

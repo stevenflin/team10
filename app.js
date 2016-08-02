@@ -20,13 +20,13 @@ var passport = require('passport'); //not installed
 var LocalStrategy = require('passport-local').Strategy;//not installed
 
 var FacebookStrategy = require('passport-facebook'); //not installed
-var YoutubeStrategy = require('passport-youtube').Strategy;
+var YoutubeStrategy = require('passport-youtube-v3').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
 
 //** end passport auth **
 
 //Checks if all the process.env tokensar e there
-var REQUIRED_ENV = "MONGODB_URI SECRET FB_CLIENT_ID FB_CLIENT_SECRET INSTAGRAM_CLIENT_ID INSTAGRAM_CLIENT_SECRET".split(" ");
+var REQUIRED_ENV = "MONGODB_URI SECRET FB_CLIENT_ID FB_CLIENT_SECRET".split(" ");
 REQUIRED_ENV.forEach(function(el) {
   if (!process.env[el])
     throw new Error("Missing required env var " + el);
@@ -109,35 +109,45 @@ passport.use(new FacebookStrategy({
 passport.use(new YoutubeStrategy({
     clientID: process.env.YOUTUBE_CLIENT_ID,
     clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/youtube/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate({ userId: profile.id }, function (err, user) {
-      return done(err, user);
-    });
-  }
-));
-
-
-
-passport.use(new InstagramStrategy({
-    clientID: process.env.INSTAGRAM_CLIENT_ID,
-    clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
-    callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
+    callbackURL: "http://localhost:3000/auth/youtube/callback",
+    scope: 'https://www.googleapis.com/auth/youtube.readonly',
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {
-    if(!req.user){
-      throw new Error ("Error please login")
-    } else{
-      req.user.instagramAccessToken = accessToken;
-      req.user.instagramRefreshToken = refreshToken;
+    if (!req.user) {
+      throw new Error("lmao gotta log in bro")
     }
-    req.user.save(function () {
-      return done(null, req.user);
-    });
+    console.log("[YT profile]", profile)
+
+    var user = req.user;
+    user.youtube = profile;
+
+    user.save(function(err, user) {
+      return done(null, req.user)
+    })
   }
 ));
+
+
+
+// passport.use(new InstagramStrategy({
+//     clientID: process.env.INSTAGRAM_CLIENT_ID,
+//     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
+//     callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
+//     passReqToCallback: true
+//   },
+//   function(req, accessToken, refreshToken, profile, done) {
+//     if(!req.user){
+//       throw new Error ("Error please login")
+//     } else{
+//       req.user.instagramAccessToken = accessToken;
+//       req.user.instagramRefreshToken = refreshToken;
+//     }
+//     req.user.save(function () {
+//       return done(null, req.user);
+//     });
+//   }
+// ));
 
 
 var auth = require('./routes/auth');
