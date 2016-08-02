@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-// var findOrCreate = require('mongoose-findorcreate');
+var findOrCreate = require('mongoose-findorcreate');
 
 var user = new mongoose.Schema({
   username: {
@@ -10,8 +10,17 @@ var user = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  facebook: {
+    id: String,
+    token: String,
+    email: String,
+    name: String
   }
 });
+
+user.plugin(findOrCreate);
+
 
 module.exports = {
   User: mongoose.model('User', user)
