@@ -44,7 +44,7 @@ module.exports = function(passport) {
 
 //INSTAGRAM 
   router.get('/auth/instagram',
-  passport.authenticate('instagram'));
+  passport.authorize('instagram', { scope: 'public_content follower_list basic'}));
 
   router.get('/auth/instagram/callback', 
     passport.authenticate('instagram', { failureRedirect: '/login' }),
