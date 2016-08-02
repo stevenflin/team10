@@ -67,7 +67,7 @@ module.exports = function(passport) {
 
   //TWITTER
   router.get('/auth/twitter',
-  passport.authorize('twitter'));
+    passport.authorize('twitter'));
 
   router.get('/auth/twitter/callback', 
   passport.authenticate('twitter', { failureRedirect: '/login' }),
