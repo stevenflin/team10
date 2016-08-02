@@ -8,7 +8,6 @@ var user = new mongoose.Schema({
     unique: true
   },
   password: {
-
     type: String,
     required: true
   },
@@ -26,6 +25,11 @@ var user = new mongoose.Schema({
   twitterToken: {
     twitterToken: String,    
     twitterTokenSecret: String
+  },
+  youtube: {
+    accessToken: String,
+    refreshToken: String,
+    profile: String
   }
 });
 

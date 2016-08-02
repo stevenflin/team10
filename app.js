@@ -142,7 +142,11 @@ passport.use(new YoutubeStrategy({
     console.log("[YT profile]", profile)
 
     var user = req.user;
-    user.youtube = profile;
+    user.youtube = {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      profile: profile
+    }
 
     user.save(function(err, user) {
       return done(null, req.user)
