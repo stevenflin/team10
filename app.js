@@ -139,8 +139,8 @@ passport.use(new InstagramStrategy({
     if(!req.user){
       throw new Error ("Error please login")
     } else{
-      req.user.instagramAccessToken = accessToken;
-      req.user.instagramRefreshToken = refreshToken;
+      req.user.instagram.instagramAccessToken = accessToken;
+      req.user.instagram.instagramRefreshToken = refreshToken;
     }
     req.user.save(function () {
       return done(null, req.user);
@@ -158,8 +158,8 @@ passport.use(new TwitterStrategy({
     if(!req.user){
       throw new Error("twitter failed to login")
     } else {
-      req.user.twitterToken = token;
-      req.user.twitterTokenSecret = tokenSecret;
+      req.user.twitter.twitterToken = token;
+      req.user.twitter.twitterTokenSecret = tokenSecret;
     }
     req.user.save(function (err, user) {
       return cb(err, req.user);
