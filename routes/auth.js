@@ -31,7 +31,7 @@ module.exports = function(passport) {
     res.redirect('/');
   });
 
-    // FACEBOOK
+  // FACEBOOK
 
   // router.get('/auth/facebook',
   //   passport.authenticate('facebook'));
@@ -43,6 +43,7 @@ module.exports = function(passport) {
   //     res.redirect('/');
   //   });
 
+
 //INSTAGRAM 
   router.get('/auth/instagram',
   passport.authenticate('instagram'));
@@ -53,6 +54,16 @@ module.exports = function(passport) {
       // Successful authentication, redirect home.
       res.redirect('/');
   });
+
+  router.get('/auth/youtube', 
+    passport.authenticate('youtube'));
+
+  router.get('/auth/youtube/callback',
+    passport.autheticate('youtube', {failureRedirect: '/login'}),
+    function(req, res) {
+      res.redirect('/');
+    }
+  );
 
   router.use(function(req, res, next) {
    if (!req.user) {

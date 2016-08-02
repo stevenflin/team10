@@ -18,9 +18,11 @@ var app = express();
 //** for passport auth **
 var passport = require('passport'); //not installed
 var LocalStrategy = require('passport-local').Strategy;//not installed
+
 var FacebookStrategy = require('passport-facebook'); //not installed
-var YoutubeStrategy = require('passport-youtube');
+var YoutubeStrategy = require('passport-youtube').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
+
 //** end passport auth **
 
 //Checks if all the process.env tokensar e there
@@ -104,17 +106,17 @@ passport.use(new FacebookStrategy({
   }
 ));
 
-// passport.use(new YoutubeStrategy({
-//     clientID: YOUTUBE_APP_ID,
-//     clientSecret: YOUTUBE_APP_SECRET,
-//     callbackURL: "http://localhost:3000/auth/youtube/callback"
-//   },
-//   function(accessToken, refreshToken, profile, done) {
-//     User.findOrCreate({ userId: profile.id }, function (err, user) {
-//       return done(err, user);
-//     });
-//   }
-// ));
+passport.use(new YoutubeStrategy({
+    clientID: process.env.YOUTUBE_CLIENT_ID,
+    clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/youtube/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    User.findOrCreate({ userId: profile.id }, function (err, user) {
+      return done(err, user);
+    });
+  }
+));
 
 
 
@@ -149,7 +151,7 @@ app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
-});
+}); 
 
 // development error handler
 // will print stacktrace
