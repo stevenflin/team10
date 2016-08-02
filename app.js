@@ -65,7 +65,6 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
   User.findById(id, function(err, user) {
-    console.log("deserializeUser error", err);
     done(err, user);
   });
 });
@@ -179,7 +178,7 @@ passport.use(new InstagramStrategy({
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "http://127.0.0.1:3000/auth/twitter/callback", 
+    callbackURL: "http://localhost:3000/auth/twitter/callback", 
      passReqToCallback: true
   },
   function(req, token, tokenSecret, profile, cb) {
@@ -188,10 +187,11 @@ passport.use(new TwitterStrategy({
     } else {
       req.user.twitter.twitterToken = token;
       req.user.twitter.twitterTokenSecret = tokenSecret;
+
+      req.user.save(function (err, user) {
+        return cb(err, req.user);
+      });
     }
-    req.user.save(function (err, user) {
-      return cb(err, req.user);
-    });
   }
 ));
 
@@ -201,14 +201,6 @@ var routes = require('./routes/index');
 
 app.use('/', auth(passport));
 app.use('/', routes);
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

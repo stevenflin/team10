@@ -22,7 +22,7 @@ var user = new mongoose.Schema({
     RefreshToken: String,
     name: String
   },
-  twitterToken: {
+  twitter: {
     twitterToken: String,    
     twitterTokenSecret: String
   },
