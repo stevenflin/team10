@@ -9,5 +9,10 @@ router.get('/', function(req, res, next) {
 });
 
 
+router.get('/integrate', function(req, res, next) {
+	res.render('integrate');
+});
+
+
 
 module.exports = router;

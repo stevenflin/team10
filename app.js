@@ -96,11 +96,34 @@ passport.use(new LocalStrategy(function(username, password, done) {
 passport.use(new FacebookStrategy({
     clientID: process.env.FB_CLIENT_ID,
     clientSecret: process.env.FB_CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL //fix when callback URL is updated
+    callbackURL: "http://localhost:3000/auth/facebook/cb", //fix when callback URL is updated
+    passReqToCallback: true
   },
-  function(accessToken, refreshToken, profile, callback) {
-    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-      return callback(err, user);
+  // facebook will send back the token and profile
+  function(req, token, refreshToken, profile, done) {
+    // check if the user is already logged in
+
+    // asynchronous
+    process.nextTick(function() {
+
+      if (!req.user) {
+        throw new Error("Gotta be logged in maaaaaaan");
+      } else {
+        console.log("Updating user with facebook creds: ")
+        // user already exists and is logged in, we have to link accounts
+        var user = req.user; // pull the user out of the session
+        // update the current users facebook credentials
+        user.facebook.id = profile.id;
+        user.facebook.token = token;
+        user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
+        // user.facebook.email = profile.emails[0].value;
+        // save the user
+        user.save(function(err) {
+          if (err)
+            throw err;
+          return done(null, user);
+        });
+      }
     });
   }
 ));
@@ -147,6 +170,7 @@ passport.use(new InstagramStrategy({
     });
   }
 ));
+
 
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
