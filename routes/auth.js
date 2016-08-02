@@ -32,14 +32,57 @@ module.exports = function(passport) {
       res.redirect('/');
   });
 
+<<<<<<< HEAD
   //ROUTER WALL
+=======
+  // FACEBOOK
+
+  // router.get('/auth/facebook',
+  //   passport.authenticate('facebook'));
+
+  // router.get('/auth/facebook/callback',
+  //   passport.authenticate('facebook', { failureRedirect: '/login' }),
+  //   function(req, res) {
+  //     // Successful authentication, redirect home.
+  //     res.redirect('/');
+  //   });
+
+
+//INSTAGRAM 
+  // router.get('/auth/instagram',
+  // passport.authenticate('instagram'));
+
+  // router.get('/auth/instagram/callback', 
+  //   passport.authenticate('instagram', { failureRedirect: '/login' }),
+  //   function(req, res) {
+  //     // Successful authentication, redirect home.
+  //     res.redirect('/');
+  // });
+
+  // YOUTUBE
+  router.get('/auth/youtube', 
+    passport.authorize('youtube'));
+
+  router.get('/auth/youtube/callback',
+    passport.authenticate('youtube', {failureRedirect: '/login'}),
+    function(req, res) {
+      res.redirect('/');
+    }
+  );
+
+>>>>>>> 4adca418076d47bb77a42cb56966a8b3c66ea8e2
   router.use(function(req, res, next) {
-   if (!req.user) {
-     res.redirect('/login');
-   } else {
-      next()
-   }
-  })
+    if (!req.user) {
+      res.redirect('/login');
+    } else {
+      next();
+    }
+  });
+
+  router.get('/logout', function(req, res, next){
+    req.logout();
+    res.redirect('/login');
+  }); 
 
   // FACEBOOK
   router.get('/auth/facebook', passport.authorize('facebook'));

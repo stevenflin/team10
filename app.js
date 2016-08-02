@@ -1,19 +1,28 @@
 var express = require('express');
+var passport = require('passport');
+var util = require('util');
+
+
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-
 var MongoStore = require('connect-mongo')(session);
+
+var routes = require('./routes/index');
+
 
 var app = express();
 
 //** for passport auth **
 var passport = require('passport'); //not installed
 var LocalStrategy = require('passport-local').Strategy;//not installed
+
 var FacebookStrategy = require('passport-facebook'); //not installed
-var YoutubeStrategy = require('passport-youtube');
+var YoutubeStrategy = require('passport-youtube-v3').Strategy;
+var InstagramStrategy = require('passport-instagram').Strategy;
+
 //** end passport auth **
 
 //Checks if all the process.env tokensar e there
@@ -46,6 +55,10 @@ app.use(session({
 var models = require('./models/models');
 var User = models.User;
 
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // YOUR CODE HERE
 passport.serializeUser(function(user, done) {
   done(null, user._id);
@@ -53,6 +66,7 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
   User.findById(id, function(err, user) {
+    console.log("deserializeUser error", err);
     done(err, user);
   });
 });
@@ -115,9 +129,49 @@ passport.use(new FacebookStrategy({
   }
 ));
 
+passport.use(new YoutubeStrategy({
+    clientID: process.env.YOUTUBE_CLIENT_ID,
+    clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/youtube/callback",
+    scope: 'https://www.googleapis.com/auth/youtube.readonly',
+    passReqToCallback: true
+  },
+  function(req, accessToken, refreshToken, profile, done) {
+    if (!req.user) {
+      throw new Error("lmao gotta log in bro")
+    }
+    console.log("[YT profile]", profile)
 
-app.use(passport.initialize());
-app.use(passport.session());
+    var user = req.user;
+    user.youtube = profile;
+
+    user.save(function(err, user) {
+      return done(null, req.user)
+    })
+  }
+));
+
+
+
+passport.use(new InstagramStrategy({
+    clientID: process.env.INSTAGRAM_CLIENT_ID,
+    clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
+    callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
+    passReqToCallback: true
+  },
+  function(req, accessToken, refreshToken, profile, done) {
+    if(!req.user){
+      throw new Error ("Error please login")
+    } else{
+      req.user.instagramAccessToken = accessToken;
+      req.user.instagramRefreshToken = refreshToken;
+    }
+    req.user.save(function () {
+      return done(null, req.user);
+    });
+  }
+));
+
 
 var auth = require('./routes/auth');
 var routes = require('./routes/index');
@@ -125,7 +179,6 @@ var routes = require('./routes/index');
 app.use('/', auth(passport));
 app.use('/', routes);
 
-// error handlers
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
