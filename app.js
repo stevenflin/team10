@@ -165,8 +165,8 @@ passport.use(new InstagramStrategy({
     if(!req.user){
       throw new Error ("Error please login")
     } else{
-      req.user.instagram.instagramAccessToken = accessToken;
-      req.user.instagram.instagramRefreshToken = refreshToken;
+      req.user.instagram.AccessToken = accessToken;
+      req.user.instagram.RefreshToken = refreshToken;
     }
     req.user.save(function () {
       return done(null, req.user);
@@ -182,6 +182,9 @@ passport.use(new TwitterStrategy({
      passReqToCallback: true
   },
   function(req, token, tokenSecret, profile, cb) {
+    console.log("token", token);
+    console.log("tokenSecret", tokenSecret);
+    console.log("profile", profile);
     if(!req.user){
       throw new Error("twitter failed to login")
     } else {
