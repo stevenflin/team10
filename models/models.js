@@ -29,7 +29,7 @@ var user = new mongoose.Schema({
   youtube: {
     accessToken: String,
     refreshToken: String,
-    profile: String
+    profile: Object
   }
 });
 

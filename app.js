@@ -131,7 +131,7 @@ passport.use(new YoutubeStrategy({
     clientID: process.env.YOUTUBE_CLIENT_ID,
     clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
     callbackURL: "http://localhost:3000/auth/youtube/callback",
-    scope: 'https://www.googleapis.com/auth/youtube.readonly',
+    scope: 'https://www.googleapis.com/auth/youtube',
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {
@@ -141,14 +141,20 @@ passport.use(new YoutubeStrategy({
     console.log("[YT profile]", profile)
 
     var user = req.user;
-    user.youtube = {
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-      profile: profile
-    }
+    console.log('[INITIAL USER STATE]', user)
+    user.youtube.accessToken = accessToken;
+    user.youtube.refreshToken = refreshToken;
+    user.youtube.profile = profile;
+
+    console.log('[MEDIUM USER STATE]', user);
 
     user.save(function(err, user) {
-      return done(null, req.user)
+      if (err) {
+        console.log("err", err)
+      }
+      console.log('[REQ.USER STATE]', req.user);
+      console.log('[NEW USER STATE]', user);
+      return done(null, user);
     })
   }
 ));
