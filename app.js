@@ -160,7 +160,6 @@ passport.use(new YoutubeStrategy({
 ));
 
 
-
 passport.use(new InstagramStrategy({
     clientID: process.env.INSTAGRAM_CLIENT_ID,
     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
@@ -168,18 +167,20 @@ passport.use(new InstagramStrategy({
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {
+    console.log("token", accessToken);
+    console.log("refreshToken", refreshToken);
+    console.log("profile", profile);
     if(!req.user){
       throw new Error ("Error please login")
     } else{
-      req.user.instagram.instagramAccessToken = accessToken;
-      req.user.instagram.instagramRefreshToken = refreshToken;
+      req.user.instagram.AccessToken = accessToken;
+      req.user.instagram.RefreshToken = refreshToken;
     }
     req.user.save(function () {
       return done(null, req.user);
     });
   }
 ));
-
 
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
@@ -207,6 +208,7 @@ var routes = require('./routes/index');
 
 app.use('/', auth(passport));
 app.use('/', routes);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

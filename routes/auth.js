@@ -34,7 +34,6 @@ module.exports = function(passport) {
 
   // FACEBOOK
   router.get('/auth/facebook', passport.authorize('facebook'));
-
   router.get('/auth/facebook/cb',
     passport.authenticate('facebook', {
       successRedirect: '/integrate', 
