@@ -170,12 +170,13 @@ passport.use(new InstagramStrategy({
     // console.log("token", accessToken);
     // console.log("refreshToken", refreshToken);
     console.log("profile", profile);
-    console.log("fuck", profile._json.data.counts);
+    // console.log("fuck", profile._json.data.counts);
     if(!req.user){
       throw new Error ("Error please login")
     } else{
       req.user.instagram.AccessToken = accessToken;
       req.user.instagram.RefreshToken = refreshToken;
+      req.user.instagram.instagramProfile = profile;
     }
     req.user.save(function () {
       return done(null, req.user);
@@ -199,6 +200,7 @@ passport.use(new TwitterStrategy({
     } else {
       req.user.twitter.twitterToken = token;
       req.user.twitter.twitterTokenSecret = tokenSecret;
+      req.user.twitter.twitterProfile = profile;
       req.user.save(function (err, user) {
         return cb(err, req.user);
       });
