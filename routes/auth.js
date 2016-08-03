@@ -1,7 +1,10 @@
 
 var router = require('express').Router();
 var models = require('../models/models');
+var Vineapple = require('vineapple');
 var User = models.User;
+var vine = new Vineapple();
+var facebook = require('fb');
 
 /* GET home page. */
 
@@ -33,14 +36,13 @@ module.exports = function(passport) {
   });
 
   // FACEBOOK
-  router.get('/auth/facebook', passport.authorize('facebook'));
+  router.get('/auth/facebook', passport.authenticate('facebook', {scope: 'email manage_pages read_insights', return_scopes: true})); //'manage_pages'
   router.get('/auth/facebook/cb',
     passport.authenticate('facebook', {
       successRedirect: '/integrate', 
       failureRedirect: '/' 
     })
   );
-
 
 //INSTAGRAM 
   router.get('/auth/instagram',
@@ -74,6 +76,7 @@ module.exports = function(passport) {
     // Successful authentication, redirect home.
     res.redirect('/');
   });
+//VINE
 
   router.use(function(req, res, next) {
     if (!req.user) {

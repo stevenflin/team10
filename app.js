@@ -22,6 +22,8 @@ var YoutubeStrategy = require('passport-youtube-v3').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 
+var Facebook = require('fb');
+
 //** end passport auth **
 
 //Checks if all the process.env tokensar e there
@@ -96,10 +98,12 @@ passport.use(new FacebookStrategy({
     clientID: process.env.FB_CLIENT_ID,
     clientSecret: process.env.FB_CLIENT_SECRET,
     callbackURL: "http://localhost:3000/auth/facebook/cb", //fix when callback URL is updated
-    passReqToCallback: true
+    passReqToCallback: true,
+    profileFields: ['email']
   },
   // facebook will send back the token and profile
   function(req, token, refreshToken, profile, done) {
+    console.log("Profile ", profile)
     // check if the user is already logged in
 
     // asynchronous
@@ -108,14 +112,14 @@ passport.use(new FacebookStrategy({
       if (!req.user) {
         throw new Error("Gotta be logged in maaaaaaan");
       } else {
-        console.log("Updating user with facebook creds: ")
+        console.log("Updating user with facebook creds:"+ profile+ " xx~~~~~~xx")
         // user already exists and is logged in, we have to link accounts
         var user = req.user; // pull the user out of the session
         // update the current users facebook credentials
+        console.log("Profile.id", profile.id)
         user.facebook.id = profile.id;
         user.facebook.token = token;
-        user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-        // user.facebook.email = profile.emails[0].value;
+        user.facebook.email = profile.email;
         // save the user
         user.save(function(err) {
           if (err)
