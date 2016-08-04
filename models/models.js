@@ -20,15 +20,22 @@ var user = new mongoose.Schema({
   },
   instagram: {
     AccessToken: String,
-    RefreshToken: String
+    RefreshToken: String, 
+    instagramProfile: Object
   },
   twitter: {
     twitterToken: String,    
-    twitterTokenSecret: String
+    twitterTokenSecret: String, 
+    twitterProfile: Object
   },
   youtube: {
     accessToken: String,
     refreshToken: String,
+    profile: Object
+  },
+  vine: {
+    username: String,
+    password: String, 
     profile: Object
   }
 });

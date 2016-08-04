@@ -171,14 +171,16 @@ passport.use(new InstagramStrategy({
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {
-    console.log("token", accessToken);
-    console.log("refreshToken", refreshToken);
+    // console.log("token", accessToken);
+    // console.log("refreshToken", refreshToken);
     console.log("profile", profile);
+    // console.log("fuck", profile._json.data.counts);
     if(!req.user){
       throw new Error ("Error please login")
     } else{
       req.user.instagram.AccessToken = accessToken;
       req.user.instagram.RefreshToken = refreshToken;
+      req.user.instagram.instagramProfile = profile;
     }
     req.user.save(function () {
       return done(null, req.user);
@@ -193,12 +195,16 @@ passport.use(new TwitterStrategy({
      passReqToCallback: true
   },
   function(req, token, tokenSecret, profile, cb) {
+    // console.log("profile", profile);
+    // console.log("followers", profile._json.followers_count);
+    // console.log("retweet count", profile._json.status.retweet_count);
+    // console.log("retweeted status", profile._json.favourites_count);
     if(!req.user){
       throw new Error("twitter failed to login")
     } else {
       req.user.twitter.twitterToken = token;
       req.user.twitter.twitterTokenSecret = tokenSecret;
-
+      req.user.twitter.twitterProfile = profile;
       req.user.save(function (err, user) {
         return cb(err, req.user);
       });
