@@ -52,7 +52,7 @@ module.exports = function(passport) {
     passport.authenticate('instagram', { failureRedirect: '/login' }),
     function(req, res) {
       // Successful authentication, redirect home.
-      res.redirect('/');
+      res.redirect('/integrate');
   });
 
   // YOUTUBE
@@ -62,7 +62,7 @@ module.exports = function(passport) {
   router.get('/auth/youtube/callback',
     passport.authenticate('youtube', {failureRedirect: '/login'}),
     function(req, res) {
-      res.redirect('/');
+      res.redirect('/integrate');
     }
   );
 
@@ -74,9 +74,26 @@ module.exports = function(passport) {
   passport.authenticate('twitter', { failureRedirect: '/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect('/');
+    res.redirect('/integrate');
   });
 //VINE
+  router.get('/integrate', function(req, res, next){
+    res.render('integrate')
+  });
+
+  router.post('/integrate', function(req, res, next){
+    req.user.vine = {
+      username: req.body.username,
+      password: req.body.password,
+    }
+    req.user.save(function(err, user) {
+      console.log(err);
+      if (err) return next(err);
+      res.redirect('/');
+    });
+});
+
+
 
   router.use(function(req, res, next) {
     if (!req.user) {
