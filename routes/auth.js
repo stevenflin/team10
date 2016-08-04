@@ -38,11 +38,11 @@ module.exports = function(passport) {
   // FACEBOOK
   router.get('/auth/facebook', passport.authenticate('facebook', {scope: 'email manage_pages read_insights', return_scopes: true})); //'manage_pages'
   router.get('/auth/facebook/cb',
-    passport.authenticate('facebook', {
-      successRedirect: '/integrate', 
-      failureRedirect: '/' 
+    passport.authenticate('facebook', {failureRedirect:'/login'}),
+      function(req, res){
+        console.log('Yoyo')
+        res.redirect('/fbPageSelector')
     })
-  );
 
 //INSTAGRAM 
   router.get('/auth/instagram',
