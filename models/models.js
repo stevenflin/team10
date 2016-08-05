@@ -19,12 +19,13 @@ var user = new mongoose.Schema({
     email: String
   },
   instagram: {
-    AccessToken: String,
-    RefreshToken: String
+    AccessToken: String, 
+    instagramProfile: Object
   },
   twitter: {
     twitterToken: String,    
-    twitterTokenSecret: String
+    twitterTokenSecret: String, 
+    twitterProfile: Object
   },
   youtube: {
     // title: String,
@@ -41,6 +42,12 @@ var user = new mongoose.Schema({
     profile: Object,
     accessToken: String,
     refreshToken: String
+  },
+  vine: {
+    username: String,
+    password: String, 
+    profile: Object
+
   }
 });
 

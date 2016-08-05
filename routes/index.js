@@ -1,7 +1,8 @@
 var router = require('express').Router();
 var passport = require('passport');
 var FB = require('fb');
-//FB.setAccessToken('');
+var vine = require('../test/vine.js');
+var instagram = require('../test/ig.js');
 
 
 
@@ -72,23 +73,6 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 	}
 	
 })
-
-
-
-
-// router.get('/auth/vine', vine.login('pleeplace@gmail.com', '0519enter', function (error, client) {
-//     // Make an API request
-//     client.me(function (error, user) {
-//         // Handle failure
-//         if (error) {
-//             throw new Error(error);
-//          }
-//         // Handle success
-//         res.redirect('/');
-//         console.log(user);
-//     })
-//   }
-// ))
 
 router.get('/update', (req, res, next) => {
   var socialPromises = Object.keys(socialFunctions).map((socialFunction) => {
