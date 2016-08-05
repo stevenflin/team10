@@ -25,6 +25,6 @@ function instagramInformation(req){
 }
 instagramInformation();
 
-module.exports{
+module.exports={
 	instagramInformation: instagramInformation
 }

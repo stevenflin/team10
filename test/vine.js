@@ -26,6 +26,6 @@ function vineInformation(req){
 }
 vineInformation();
 
-module.exports{
+module.exports={
 	vineInformation: vineInformation
 }
