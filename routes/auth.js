@@ -1,4 +1,3 @@
-
 var router = require('express').Router();
 var models = require('../models/models');
 var Vineapple = require('vineapple');
