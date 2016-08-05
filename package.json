@@ -28,6 +28,7 @@
     "passport-twitter": "^1.0.4",
     "passport-youtube": "0.0.6",
     "passport-youtube-v3": "^2.0.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "youtube-api": "^2.0.2"
   }
 }

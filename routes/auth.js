@@ -62,10 +62,10 @@ module.exports = function(passport) {
   router.get('/auth/youtube/callback',
     passport.authenticate('youtube', {failureRedirect: '/login'}),
     function(req, res) {
-      res.redirect('/');
+      res.redirect('/youtube');
     }
   );
-
+  
   //TWITTER
   router.get('/auth/twitter',
     passport.authorize('twitter'));
