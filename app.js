@@ -125,8 +125,7 @@ passport.use(new FacebookStrategy({
         });
       }
     });
-  }
-));
+  }));
 
 passport.use(new YoutubeStrategy({
     clientID: process.env.YOUTUBE_CLIENT_ID,
@@ -139,24 +138,18 @@ passport.use(new YoutubeStrategy({
     if (!req.user) {
       throw new Error("lmao gotta log in bro")
     }
-    console.log("[YT profile]", profile)
-
+    
     var user = req.user;
-    console.log('[INITIAL USER STATE]', user)
     user.youtube.accessToken = accessToken;
     user.youtube.refreshToken = refreshToken;
     user.youtube.profile = profile;
-
-    console.log('[MEDIUM USER STATE]', user);
-
     user.save(function(err, user) {
       if (err) {
-        console.log("err", err)
+        return done(null, false, err);
       }
-      console.log('[REQ.USER STATE]', req.user);
-      console.log('[NEW USER STATE]', user);
+      // console.log('[UPDATED USER]', user)
       return done(null, user);
-    })
+    });
   }
 ));
 

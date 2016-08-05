@@ -27,9 +27,20 @@ var user = new mongoose.Schema({
     twitterTokenSecret: String
   },
   youtube: {
+    // title: String,
+    // subscriberCount: String,
+    // videoCount: String,
+    // videos: [{
+    //   title: String,
+    //   desc: String,
+    //   likes: String,
+    //   dislikes: String,
+    //   commentCount: String,
+    //   favoriteCount: String
+    // }]
+    profile: Object,
     accessToken: String,
-    refreshToken: String,
-    profile: Object
+    refreshToken: String
   }
 });
 
