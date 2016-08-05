@@ -1,7 +1,8 @@
 var router = require('express').Router();
 var passport = require('passport');
 var FB = require('fb');
-//FB.setAccessToken('');
+var ig = require('instagram-node').instagram()
+var facebook = require('../facebook-test.js')
 
 
 console.log("Loading index routes");
@@ -46,43 +47,48 @@ router.get('/fbPageSelector', function(req, res, next) {
 router.get('/fbPageConfirmation/', function(req, res, next) {
 	if (req.query.pageId) {
 		FB.setAccessToken(req.user.facebook.token);
-
-		new Promise(function(resolve, reject){
-
-			FB.api(`/${req.query.pageId}/insights/page_views_total`, function (res) {
-			  if(!res || res.error) {
-			   console.log(!res ? 'error occurred' : res.error);
-			   reject(res.error);
-			  }
-			  
-			  console.log("RESPONSE   ", res.data[2].values); //get's 28 day values 
-			  resolve(res);
-			});
-		})
-		.then(function(result){
-			res.render('fbPageSelector')
-		})
-		.catch(console.log)
+		console.log("~~~~~~~~~~~~~~~~~~~~ ",req.query);
+		console.log("~~~~~~~~XXXXXXXX~~~~~~~ ",req.user.facebook.pages);
+		req.user.facebook.pages.push({pageId: req.query.pageId, pageName: req.query.name})
+		console.log("~~~~~~~~XXXXXXXX~~~~~~~ ",req.user.facebook.pages);
+		req.user.save(function(err, success){
+			console.log("Running")
+			if(err){
+				console.log("ERROR ", err)
+			}
+			console.log("YO BITCH",success)
+		});
+		res.render('fbPageSelector', {result: result})
+		
 	}
 	
+})
+//dashboard and dashboard/id that takes id of each client user
+// update route that always pings 
+router.get('/dashboard', function(req, res, next){
+	// executing all 'get data/statistics'
+	FB.setAccessToken(req.user.facebook.token);
+	var test = facebook.time(3);
+
+
+	res.render('dashboard')
+
+})
+
+
+router.get('/update', (req, res, next) => {
+
+	updateFacebook()
+	.then(() => updateInstagram(req.user))
+	.then(() => updateYoutube)
+	.then(() => updateTwitter)
+	.then(() => updateVine)
+	.catch(console.log);
+
 })
 
 
 
-
-// router.get('/auth/vine', vine.login('pleeplace@gmail.com', '0519enter', function (error, client) {
-//     // Make an API request
-//     client.me(function (error, user) {
-//         // Handle failure
-//         if (error) {
-//             throw new Error(error);
-//          }
-//         // Handle success
-//         res.redirect('/');
-//         console.log(user);
-//     })
-//   }
-// ))
 
 
 module.exports = router;
