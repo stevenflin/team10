@@ -21,6 +21,7 @@ var FacebookStrategy = require('passport-facebook'); //not installed
 var YoutubeStrategy = require('passport-youtube-v3').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
+var Vineapple = require('vineapple');
 
 var Facebook = require('fb');
 
@@ -174,12 +175,10 @@ passport.use(new InstagramStrategy({
     // console.log("token", accessToken);
     // console.log("refreshToken", refreshToken);
     console.log("profile", profile);
-    // console.log("fuck", profile._json.data.counts);
     if(!req.user){
       throw new Error ("Error please login")
     } else{
       req.user.instagram.AccessToken = accessToken;
-      req.user.instagram.RefreshToken = refreshToken;
       req.user.instagram.instagramProfile = profile;
     }
     req.user.save(function () {
@@ -211,6 +210,7 @@ passport.use(new TwitterStrategy({
     }
   }
 ));
+
 
 
 var auth = require('./routes/auth');

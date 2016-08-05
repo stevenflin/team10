@@ -19,8 +19,7 @@ var user = new mongoose.Schema({
     email: String
   },
   instagram: {
-    AccessToken: String,
-    RefreshToken: String, 
+    AccessToken: String, 
     instagramProfile: Object
   },
   twitter: {
