@@ -1,13 +1,13 @@
 var router = require('express').Router();
 var passport = require('passport');
 var FB = require('fb');
-<<<<<<< HEAD
 var vine = require('../test/vine.js');
 var instagram = require('../test/ig.js');
-=======
 var ig = require('instagram-node').instagram()
 var facebook = require('../facebook-test.js')
->>>>>>> facebook
+FB.setAccessToken('EAAYsgV1owZC0BAEMGZAdeR0LqZAc97sa9BVWBrkGp1Xmub80rh94JyHxWXzIqZCXh1a2TaAtZAM2rwidFTgfwGdJqe22hWBK8jpAGPk9lCIT9eoCuIbZCuFzP20RqaJgYXiUpYsw9EgLhi2YlY3pwFyzDjvpl5hMRMwl0ky92FbwZDZD');
+// set promise 
+
 
 
 
@@ -17,6 +17,8 @@ var getDay = socialFunctions.getDay;
 var getWeek = socialFunctions.getWeek;
 var getMonth = socialFunctions.getMonth;
 var getYear = socialFunctions.getYear;
+
+var time = facebook.time; //DO NOT COMMENT THIS SHIT OUT **** !!!
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -69,30 +71,47 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 			}
 			console.log("YO BITCH",success)
 		});
-		res.render('fbPageSelector', {result: result})
-		
+		res.render('fbPageSelector', {result: result})	
 	}
 	
 })
 //dashboard and dashboard/id that takes id of each client user
 // update route that always pings 
-router.get('/dashboard', function(req, res, next){
+router.get('/update', function(req, res, next){  //should be /update/page
 	// executing all 'get data/statistics'
-	FB.setAccessToken(req.user.facebook.token);
+	
 	var test = facebook.time(3);
-
-router.get('/update', (req, res, next) => {
-  var socialPromises = Object.keys(socialFunctions).map((socialFunction) => {
-    return socialFunctions[key]();
-  });
-
-  Promise
-    .all(socialPromises)
-    .then((allTheDataEver) => {
-      console.log("[all the data like ever]", allTheDataEver);
-    })
-    .catch(console.log.bind(this, "[social function err]"));
+	var pageId = req.user.facebook.pages[0].pageId;
+	var functions= [ 
+			facebook.pageImpressions(28, pageId),
+			facebook.pageViewsTotal(28, pageId),
+			facebook.pagePostImpressions(28, pageId),
+			facebook.pagePosts(28, pageId)
+		]
+	console.log("FACEBOOK ID ",req.user.facebook.pages[0].pageId)
+	FB.setAccessToken('EAAYsgV1owZC0BAEMGZAdeR0LqZAc97sa9BVWBrkGp1Xmub80rh94JyHxWXzIqZCXh1a2TaAtZAM2rwidFTgfwGdJqe22hWBK8jpAGPk9lCIT9eoCuIbZCuFzP20RqaJgYXiUpYsw9EgLhi2YlY3pwFyzDjvpl5hMRMwl0ky92FbwZDZD');
+	Promise
+	.all([test, functions[0], functions[1], functions[2]])
+	.then((result)=>{
+		console.log("RESULT", result)
+	})	
+	res.render('dashboard', {test: test.since})
 })
+
+
+// router.get('/update', (req, res, next) => {
+//   var socialPromises = Object.keys(socialFunctions).map((socialFunction) => {
+//     return socialFunctions[key]();
+//   });
+
+//   Promise
+//     .all(socialPromises)
+//     .then((allTheDataEver) => {
+//       console.log("[all the data like ever]", allTheDataEver);
+//     })
+//     .catch(console.log.bind(this, "[social function err]"));
+// })
+
 
 
 router.get('/youtube', function(req, res, next) {
@@ -113,9 +132,9 @@ router.get('/youtube', function(req, res, next) {
     })
   })
 })
-	res.render('dashboard')
+	
 
-})
+
 
 
 router.get('/update', (req, res, next) => {

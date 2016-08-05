@@ -5,7 +5,7 @@ function vineInformation(req){
 	var user1;
 	// Authenticate the Vine user
 	vine.login(process.env.VINE_USERNAME, process.env.VINE_PASSWORD, function (error, client) {
-		console.log("login error", error);
+		// console.log("login error", error);
 	    // Make an API request
 	    client.me(function (error, user) {
 	        // Handle failure
@@ -13,19 +13,19 @@ function vineInformation(req){
 	            throw new Error(error);
 	         }
 	        // Handle success
-	        console.log(user);
+	        // console.log(user);
 	    });
 
 	});
 
 	vine.me(function(err, user){
-		console.log("vineapple error", err);
-		console.log("vineapple user", user);
+		// console.log("vineapple error", err);
+		// console.log("vineapple user", user);
 
 	})
 }
 vineInformation();
 
-module.exports{
+module.exports = {
 	vineInformation: vineInformation
 }
