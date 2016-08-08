@@ -3,18 +3,21 @@ var passport = require('passport');
 var FB = require('fb');
 var vine = require('../update/vine.js');
 var instagram = require('../update/ig.js');
-var models = require('../models/models')
+
+var youtubeFunctions = require('../update/youtube');
+var getYoutubeData = youtubeFunctions.getYoutubeData;
+var getDay = youtubeFunctions.getDay;
+var getWeek = youtubeFunctions.getWeek;
+var getMonth = youtubeFunctions.getMonth;
+var getYear = youtubeFunctions.getYear;
+
+// MODELS
+var models = require('../models/models');
+var User = models.User;
 var Profile = models.Profile;
 var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
-
-var socialFunctions = require('../social');
-var getYoutubeData = socialFunctions.getYoutubeData;
-var getDay = socialFunctions.getDay;
-var getWeek = socialFunctions.getWeek;
-var getMonth = socialFunctions.getMonth;
-var getYear = socialFunctions.getYear;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -178,26 +181,65 @@ router.get('/update/instagram', function(req, res, next){
 	}).catch(function(err){ next(err)})
 })
 
+router.get('/update/youtube', function(req, res, next) {
+	getYoutubeData(req.user.youtube.profile.id)
+	.then(function(data) {
+		Profile.findOne({userId: req.user._id},function(err, profile) {
+			if (err) return next(err);
 
+			new ProfileSnapshot({
+				platformID: req.user.youtube.profile.id,
+				platform: 'youtube',
+				followers: data.channel.subscriberCount,
+				posts: data.channel.videoCount,
+				views: data.channel.viewCount,
+				date: new Date(),
+				profileId: profile._id
+			}).save(function(err, p) {
+				if (err) return next(err);
 
+				data.videos.forEach(function(video, i) {
 
-router.get('/update/youtube', (req, res, next) => {
-	var socialPromises = Object.keys(socialFunctions).map((socialFunction) => {
-		return socialFunctions[key]();
-	});
+					Post.findOrCreate({postId: video.id}, {
+						title: video.snippet.title,
+						description: video.snippet.description,
+						postId: video.id,
+						type: 'youtube',
+						profileId: profile._id
+					}, function(err, post) {
+						if (err) return next(err);
 
-	Promise
-	.all(socialPromises)
-	.then((allTheDataEver) => {
-		console.log("[all the data like ever]", allTheDataEver);
-	})
-	.catch(console.log.bind(this, "[social function err]"));
-})
+						new PostSnapshot({
+							profileId: p._id,
+							postId: post.postId,
+							comments: parseInt(video.stats.commentCount),
+							likes: parseInt(video.stats.likeCount),
+							favorites: parseInt(video.stats.favoriteCount),
+							views: parseInt(video.stats.viewCount),
+							dislikes: parseInt(video.stats.dislikeCount),
+							date: p.date
+						}).save(function(err, psnap) {
+							if (err) return next(err);
+
+							post.snapshots.push(psnap._id);
+							post.save(function(err) {
+								if (err) return next(err);
+								if (i === data.videos.length - 1) {
+									res.redirect('/youtube');
+								}
+							});
+						});
+					});
+				});
+			});
+		});
+	}).catch((err) => next(err));
+});
 
 router.get('/youtube', function(req, res, next) {
-	getYoutubeData(req.user.youtube.profile.id)
-	.then((data) => {
-    // console.log('[ALL VIDEOS]', data.videos);
+  getYoutubeData(req.user.youtube.profile.id)
+  .then((data) => {
+    console.log('[ALL VIDEOS]', data.videos);
     var daydata = getDay(data.videos);
     var weekdata = getWeek(data.videos);
     var monthdata = getMonth(data.videos);

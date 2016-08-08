@@ -6,27 +6,23 @@ console.log("INSTAGRAM_CLIENT_ID:", process.env.INSTAGRAM_CLIENT_ID);
 console.log("INSTAGRAM_CLIENT_SECRET:", process.env.INSTAGRAM_CLIENT_SECRET);
 
 
-function instagramInformation(id, accessToken){
-	return new Promise(function(resolve, reject){
-		var bigArr = [];
-		var instagramPages = function (err, medias, pagination, remaining, limit) {
-			// console.log("medias", medias)
-		 	bigArr = bigArr.concat(medias);
-			if(pagination.next) {
-			    pagination.next(instagramPages); // Will get second page results 
-			 } else {
-			 	resolve(bigArr);
-			 }
-			}
-			
-		ig.use({ access_token: process.env.AT });
-		ig.user_media_recent(process.env.ID, {cursor: 30}, instagramPages);
-
-	})
-
+function instagramInformation(cb){
+	var bigArr = [];
+	ig.use({ access_token: process.env.AT });
+	ig.user_media_recent(process.env.ID, {cursor: 30}, function instagramPages(err, medias, pagination, remaining, limit) {
+		// console.log("medias", medias)
+	 	bigArr = bigArr.concat(medias);
+		if(pagination.next) {
+		    pagination.next(instagramPages); // Will get second page results 
+		 } else {
+		 	cb(bigArr);
+		 	// console.log(bigArr.length);
+		 }
+		
+	});
 
 }
-// instagramInformation(process.env.ID, process.env.AT).then(function(data){console.log("bigArr", data)});
+instagramInformation(function() {console.log('shit')});
 
 module.exports={
 	instagramInformation: instagramInformation

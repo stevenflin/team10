@@ -17,6 +17,9 @@ var InstagramStrategy = require('passport-instagram').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var Vineapple = require('vineapple');
 var Facebook = require('fb');
+
+
+
 //** end passport auth **
 //Checks if all the process.env tokensar e there
 var REQUIRED_ENV = "MONGODB_URI SECRET FB_CLIENT_ID FB_CLIENT_SECRET".split(" ");
@@ -43,6 +46,9 @@ app.use(session({
 var models = require('./models/models');
 var User = models.User;
 var Profile = models.Profile;
+
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 // YOUR CODE HERE
@@ -190,6 +196,8 @@ passport.use(new TwitterStrategy({
     }
   }
 ));
+
+
 var auth = require('./routes/auth');
 var routes = require('./routes/index');
 app.use('/', auth(passport));

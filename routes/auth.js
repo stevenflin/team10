@@ -15,19 +15,20 @@ module.exports = function(passport) {
   });
 
   router.post('/register', function(req, res, next) {
-      new User({
-        username: req.body.username,
-        password: req.body.password
-      }).save(function(err, user) {
-        console.log(err);
-        if (err) return next(err);
+  	new User({
+  	  username: req.body.username,
+  	  password: req.body.password
+  	}).save(function(err, user) {
+  	  console.log(err);
+  	  if (err) return next(err);
       new Profile({
         userId: user._id
       }).save(function(err, profile) {
         if (err) return next(err);
         res.redirect('/login');
       })
-      });
+
+  	});
   });
 
   router.get('/login', function(req, res, next) {
