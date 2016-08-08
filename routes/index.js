@@ -9,12 +9,12 @@ var getYear = socialFunctions.getYear;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Express' });
 });
 
 
 router.get('/integrate', function(req, res, next) {
-	res.render('integrate');
+  res.render('integrate');
 });
 
 
