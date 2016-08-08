@@ -25,8 +25,6 @@ var Vineapple = require('vineapple');
 
 var Facebook = require('fb');
 
-var instagram = require('../test/ig.js');
-
 //** end passport auth **
 
 //Checks if all the process.env tokensar e there
@@ -58,7 +56,7 @@ app.use(session({
 
 var models = require('./models/models');
 var User = models.User;
-var postSnapShot = models.postSnapShot;
+var Profile = models.Profile;
 
 
 app.use(passport.initialize());
@@ -147,6 +145,7 @@ passport.use(new YoutubeStrategy({
     }
     
     var user = req.user;
+    console.log('[PROFILE]', profile)
     user.youtube.accessToken = accessToken;
     user.youtube.refreshToken = refreshToken;
     user.youtube.profile = profile;
@@ -154,7 +153,12 @@ passport.use(new YoutubeStrategy({
       if (err) {
         return done(null, false, err);
       }
-      // console.log('[UPDATED USER]', user)
+      Profile.findOne({userId: user._id}, function(err, p) {
+        p.youtube = profile.displayName;
+        p.save(function(err) {
+          if (err) return next(err);
+        })
+      })
       return done(null, user);
     });
   }
@@ -173,11 +177,18 @@ passport.use(new InstagramStrategy({
     console.log("profile", profile);
     if(!req.user){
       throw new Error ("Error please login")
-    } else{
-      req.user.instagram.AccessToken = accessToken;
-      req.user.instagram.instagramProfile = profile;
-    }
-    req.user.save(function () {
+    } 
+
+    var user = req.user;
+    user.instagram.Access.Token = accessToken;
+    user.instagram.instagramProfile = profile;
+    user.save(function () {
+      Profile.findOne({userId: user._id}, function(err, p) {
+        p.instagram = profile.displayName;
+        p.save(function(err) {
+          if (err) return next(err);
+        })
+      })
       return done(null, req.user);
     });
   }
@@ -206,16 +217,6 @@ passport.use(new TwitterStrategy({
     }
   }
 ));
-
-instagram.instagramInformation(comments, likes, post_type, favorites, views, dislikes, snapshot_date){
-  var snapshot = new postsnapShot({
-
-  })
-  snapshot.save(function(error, postsnapShot){
-    return cb(err, req.postsnapShot)
-  })
-}
-
 
 var auth = require('./routes/auth');
 var routes = require('./routes/index');

@@ -3,6 +3,7 @@ var router = require('express').Router();
 var models = require('../models/models');
 var Vineapple = require('vineapple');
 var User = models.User;
+var Profile = models.Profile;
 var vine = new Vineapple();
 var facebook = require('fb');
 
@@ -21,7 +22,12 @@ module.exports = function(passport) {
   	}).save(function(err, user) {
   	  console.log(err);
   	  if (err) return next(err);
-  	  res.redirect('/login');
+      new Profile({
+        userId: user._id
+      }).save(function(err, profile) {
+        if (err) return next(err);
+        res.redirect('/login');
+      })
   	});
   });
 
