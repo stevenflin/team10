@@ -81,8 +81,6 @@ function getDay(videos) {
     if (time > dayAgo) {
       todayVids.push(video);
       // console.log('[DAY VIDEOS]', video);
-    } else {
-      break;
     }
   }
   console.log('[DAY VIDEOS]', todayVids);
@@ -90,23 +88,28 @@ function getDay(videos) {
 }
 
 function getWeek(videos) {
+  // console.log('AM I HERE')
   var weekVids = [];
   for (var i = videos.length - 1; i >= 0; i--) {
-
+    // console.log('AM I HERE')
     // video upload time
     var video = videos[i]
     var time = new Date(videos[i].snippet.publishedAt).getTime();
 
     // one week ago time
     var weekAgo = Date.now() - (days * 7);
+    // console.log('VIDEO PUBLISHED AT', time)
+    // console.log('ONE WEEK AGO WAS', weekAgo)
     if (time > weekAgo) {
+      // console.log('AM I HERE')
       weekVids.push(video);
       // console.log('[WEEK VIDEOS]', video);
     } else {
-      break;
+      // console.log('AM I HERE')
+      // break;
     }
   }
-  console.log('[WEEK VIDEOS]', weekVids);
+  // console.log('[WEEK VIDEOS]', weekVids);
   return weekVids;
 }
 
@@ -127,7 +130,7 @@ function getMonth(videos) {
       break;
     }
   }
-  console.log('[MONTH VIDEOS]', monthVids);
+  // console.log('[MONTH VIDEOS]', monthVids);
   return monthVids;
 }
 
@@ -148,7 +151,7 @@ function getYear(videos) {
       break;
     }
   }
-  console.log('[YEAR VIDEOS]', yearVids);
+  // console.log('[YEAR VIDEOS]', yearVids);
   return yearVids;
 }
 
