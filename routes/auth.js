@@ -1,8 +1,8 @@
-
 var router = require('express').Router();
 var models = require('../models/models');
 var Vineapple = require('vineapple');
 var User = models.User;
+var Profile = models.Profile;
 var vine = new Vineapple();
 var facebook = require('fb');
 
@@ -11,18 +11,23 @@ var facebook = require('fb');
 module.exports = function(passport) {
   
   router.get('/register', function(req, res, next) {
-  	res.render('register');
+      res.render('register');
   });
 
   router.post('/register', function(req, res, next) {
-  	new User({
-  	  username: req.body.username,
-  	  password: req.body.password
-  	}).save(function(err, user) {
-  	  console.log(err);
-  	  if (err) return next(err);
-  	  res.redirect('/login');
-  	});
+      new User({
+        username: req.body.username,
+        password: req.body.password
+      }).save(function(err, user) {
+        console.log(err);
+        if (err) return next(err);
+      new Profile({
+        userId: user._id
+      }).save(function(err, profile) {
+        if (err) return next(err);
+        res.redirect('/login');
+      })
+      });
   });
 
   router.get('/login', function(req, res, next) {
@@ -112,4 +117,3 @@ module.exports = function(passport) {
 
   return router;
 }
-

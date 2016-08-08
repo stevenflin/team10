@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var findOrCreate = require('mongoose-findorcreate');
-
 var user = new mongoose.Schema({
   username: {
     type: String,
@@ -28,17 +27,6 @@ var user = new mongoose.Schema({
     twitterProfile: Object
   },
   youtube: {
-    // title: String,
-    // subscriberCount: String,
-    // videoCount: String,
-    // videos: [{
-    //   title: String,
-    //   desc: String,
-    //   likes: String,
-    //   dislikes: String,
-    //   commentCount: String,
-    //   favoriteCount: String
-    // }]
     profile: Object,
     accessToken: String,
     refreshToken: String,
@@ -50,70 +38,84 @@ var user = new mongoose.Schema({
     profile: Object
   }
 });
-
 var profile = new mongoose.Schema({
-  all 1 time info for a profile 
-  reference User
-  array of posts
+  // all 1 time info for a profile 
+  // reference User
+  // array of posts
+  youtube: String,
+  instagram: String,
+  vine: String,
+  twitter: String,
+  facebook: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 })
-
-var snapshotProfile = new mongoose.Schema({
+var profileSnapshot = new mongoose.Schema({
   platformID: {
     type: String
   },
   platform: {
-    facebook twitter, etc
-
+    type: String,
+    enum: ['youtube', 'instagram', 'vine', 'twitter', 'facebook']
   },
-  displayName: {
-    type: String
-  }, 
   followers: {
+    type: Number
+  },
+  posts: {
+    type: Number
+  },
+  views: {
     type: Number
   },
   date: {
     type: Date
   }, 
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  }
   profileId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profile',
     required: true
   }
 })
-
 var post = new mongoose.Schema({
-  one time post info ie description or media assets, links, refer to profile 
+  // one time post info ie description or media assets, links, refer to profile
+  title: {
+    type: String
+  },
+  description: {
+    type: String
+  },
+  postId: {
+    type: String
+  },
+  type: {
+    type: String,
+    enum: ['youtube', 'instagram', 'vine', 'twitter', 'facebook']
+  },
+  profileId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Profile'
+  },
+  snapshots: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PostSnapshot'
+  }]
 })
-
 var postSnapshot = new mongoose.Schema({
-  userId: {
+  profileId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'ProfileSnapshot',
     required: true
   },
-   profileId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
-    required: true
+  postId: {
+    type: String
   },
-  comments:{
+  comments: {
     type: Number
   }, 
-  likes:{
+  likes: {
     type: Number 
-  },
-  post_type: {
-    videos: {
-      type: String
-    }, 
-    post: {
-      type: String
-    }
   }, 
   favorites: {
     type: String
@@ -121,21 +123,24 @@ var postSnapshot = new mongoose.Schema({
   views: {
     type: Number
   }, 
+  shares: {
+    type:Number
+  },
   dislikes: {
     type: Number
   }, 
-  snapshot_date: {
+  date: {
     type: Date
   } 
 })
-
-
-user.plugin(findOrCreate)
+user.plugin(findOrCreate);
+post.plugin(findOrCreate);
+profile.plugin(findOrCreate);
 
 module.exports = {
   User: mongoose.model('User', user), 
-  snapshotUser: mongoose.model('snapshotUser', snapshotUser),
-  postSnapShot: mongoose.model('postSnapShot', postSnapShot)
+  Profile: mongoose.model('Profile', profile),
+  ProfileSnapshot: mongoose.model('ProfileSnapshot', profileSnapshot),
+  Post: mongoose.model('Post', post),
+  PostSnapshot: mongoose.model('postSnapshot', postSnapshot)
 }
-
-

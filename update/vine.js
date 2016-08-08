@@ -1,6 +1,6 @@
 var Vineapple = require('vineapple');
 
-function vineInformation(req){
+function vineInformation(){
 	var vine = new Vineapple();
 	var user1;
 	// Authenticate the Vine user
@@ -13,14 +13,14 @@ function vineInformation(req){
 	            throw new Error(error);
 	         }
 	        // Handle success
-	        console.log(user);
+	        // console.log(user);
 	    });
 
 	});
 
 	vine.me(function(err, user){
-		console.log("vineapple error", err);
-		console.log("vineapple user", user);
+		// console.log("vineapple error", err);
+		// console.log("vineapple user", user);
 
 	})
 }
