@@ -42,6 +42,7 @@ var user = new mongoose.Schema({
 var profile = new mongoose.Schema({
   all 1 time info for a profile 
   reference User
+  array of posts
 })
 
 var snapshotProfile = new mongoose.Schema({
@@ -68,15 +69,24 @@ var snapshotProfile = new mongoose.Schema({
   }
   profileId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Profile',
     required: true
   }
+})
+
+var post = new mongoose.Schema({
+  one time post info ie description or media assets, links, refer to profile 
 })
 
 var postSnapshot = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true
+  },
+   profileId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Profile',
     required: true
   },
   comments:{
@@ -105,7 +115,6 @@ var postSnapshot = new mongoose.Schema({
   snapshot_date: {
     type: Date
   } 
-
 })
 
 
