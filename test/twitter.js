@@ -42,3 +42,6 @@ twitterInformation();
 // 		console.log(tweet);
 // 	}
 // })
+module.exports = {
+	twitterInformation: twitterInformation
+}

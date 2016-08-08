@@ -68,6 +68,9 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 	
 })
 
+//GETS 
+
+
 
 
 

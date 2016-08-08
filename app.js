@@ -25,6 +25,8 @@ var Vineapple = require('vineapple');
 
 var Facebook = require('fb');
 
+var instagram = require('../test/ig.js');
+
 //** end passport auth **
 
 //Checks if all the process.env tokensar e there
@@ -56,6 +58,7 @@ app.use(session({
 
 var models = require('./models/models');
 var User = models.User;
+var postSnapShot = models.postSnapShot;
 
 
 app.use(passport.initialize());
@@ -211,6 +214,14 @@ passport.use(new TwitterStrategy({
   }
 ));
 
+instagram.instagramInformation(comments, likes, post_type, favorites, views, dislikes, snapshot_date){
+  var snapshot = new postsnapShot({
+
+  })
+  snapshot.save(function(error, postsnapShot){
+    return cb(err, req.postsnapShot)
+  })
+}
 
 
 var auth = require('./routes/auth');

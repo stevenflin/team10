@@ -4,19 +4,18 @@ console.log("AT:", process.env.AT);
 console.log("ID:", process.env.ID);
 console.log("INSTAGRAM_CLIENT_ID:", process.env.INSTAGRAM_CLIENT_ID);
 console.log("INSTAGRAM_CLIENT_SECRET:", process.env.INSTAGRAM_CLIENT_SECRET);
-var parkaplace = process.env.AT;
 
-function instagramInformation(req){
+
+function instagramInformation(cb){
 	var bigArr = [];
 	ig.use({ access_token: process.env.AT });
-	ig.user_media_recent(process.env.ID, {cursor: 30}, function(err, medias, pagination, remaining, limit) {
+	ig.user_media_recent(process.env.ID, {cursor: 30}, function instagramPages(err, medias, pagination, remaining, limit) {
 		console.log("medias", medias)
-		// console.log("pagination", pagination);
-	 	console.log("medias number", medias.length);
 	 	bigArr = bigArr.concat(medias);
 		if(pagination.next) {
-		    pagination.next(instagramInformation); // Will get second page results 
+		    pagination.next(instagramPages); // Will get second page results 
 		 } else {
+		 	cb(bigArr);
 		 	console.log(bigArr.length);
 		 }
 		
@@ -28,3 +27,5 @@ instagramInformation();
 module.exports={
 	instagramInformation: instagramInformation
 }
+
+

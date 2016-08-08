@@ -39,8 +39,82 @@ var user = new mongoose.Schema({
   }
 });
 
+var profile = new mongoose.Schema({
+  all 1 time info for a profile 
+  reference User
+})
+
+var snapshotProfile = new mongoose.Schema({
+  platformID: {
+    type: String
+  },
+  platform: {
+    facebook twitter, etc
+
+  },
+  displayName: {
+    type: String
+  }, 
+  followers: {
+    type: Number
+  },
+  date: {
+    type: Date
+  }, 
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+  profileId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+})
+
+var postSnapshot = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  comments:{
+    type: Number
+  }, 
+  likes:{
+    type: Number 
+  },
+  post_type: {
+    videos: {
+      type: String
+    }, 
+    post: {
+      type: String
+    }
+  }, 
+  favorites: {
+    type: String
+  }, 
+  views: {
+    type: Number
+  }, 
+  dislikes: {
+    type: Number
+  }, 
+  snapshot_date: {
+    type: Date
+  } 
+
+})
+
+
 user.plugin(findOrCreate)
 
 module.exports = {
-  User: mongoose.model('User', user)
+  User: mongoose.model('User', user), 
+  snapshotUser: mongoose.model('snapshotUser', snapshotUser),
+  postSnapShot: mongoose.model('postSnapShot', postSnapShot)
 }
+
+
