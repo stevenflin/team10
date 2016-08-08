@@ -16,7 +16,6 @@ function instagramInformation(id, accessToken){
 			    pagination.next(instagramPages); // Will get second page results 
 			 } else {
 			 	resolve(bigArr);
-			 	console.log(bigArr.length);
 			 }
 			}
 			

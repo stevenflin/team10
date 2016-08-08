@@ -136,6 +136,9 @@ router.get('/update/instagram', function(req, res, next){
 			.save(function(err, p){
 				if(err) return next(err);
 
+
+			 	console.log(data.length);
+
 				data.forEach(function(post, i){
 					var desc = null;
 					if(post.caption){
