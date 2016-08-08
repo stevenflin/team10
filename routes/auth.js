@@ -84,7 +84,17 @@ module.exports = function(passport) {
     // Successful authentication, redirect home.
     res.redirect('/integrate');
   });
-//VINE
+
+
+  router.use(function(req, res, next) {
+    if (!req.user) {
+      res.redirect('/login');
+    } else {
+      next();
+    }
+  });
+
+  //VINE
   router.get('/integrate', function(req, res, next){
     res.render('integrate')
   });
@@ -100,16 +110,6 @@ module.exports = function(passport) {
       res.redirect('/');
     });
 });
-
-
-
-  router.use(function(req, res, next) {
-    if (!req.user) {
-      res.redirect('/login');
-    } else {
-      next();
-    }
-  });
 
   router.get('/logout', function(req, res, next){
     req.logout();
