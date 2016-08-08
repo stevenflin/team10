@@ -14,17 +14,18 @@ var user = new mongoose.Schema({
   facebook: {
     id: String,
     token: String,
-    name: String
+    name: String,
+    manage_pages: String,
+    email: String
   },
   instagram: {
-    id: String,
-    AccessToken: String,
-    RefreshToken: String,
-    name: String
+    AccessToken: String, 
+    instagramProfile: Object
   },
-  twitterToken: {
+  twitter: {
     twitterToken: String,    
-    twitterTokenSecret: String
+    twitterTokenSecret: String, 
+    twitterProfile: Object
   },
   youtube: {
     // title: String,
@@ -40,12 +41,101 @@ var user = new mongoose.Schema({
     // }]
     profile: Object,
     accessToken: String,
-    refreshToken: String
+    refreshToken: String,
+    profile: Object
+  },
+  vine: {
+    username: String,
+    password: String, 
+    profile: Object
   }
 });
+
+var profile = new mongoose.Schema({
+  all 1 time info for a profile 
+  reference User
+  array of posts
+})
+
+var snapshotProfile = new mongoose.Schema({
+  platformID: {
+    type: String
+  },
+  platform: {
+    facebook twitter, etc
+
+  },
+  displayName: {
+    type: String
+  }, 
+  followers: {
+    type: Number
+  },
+  date: {
+    type: Date
+  }, 
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+  profileId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Profile',
+    required: true
+  }
+})
+
+var post = new mongoose.Schema({
+  one time post info ie description or media assets, links, refer to profile 
+})
+
+var postSnapshot = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+   profileId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Profile',
+    required: true
+  },
+  comments:{
+    type: Number
+  }, 
+  likes:{
+    type: Number 
+  },
+  post_type: {
+    videos: {
+      type: String
+    }, 
+    post: {
+      type: String
+    }
+  }, 
+  favorites: {
+    type: String
+  }, 
+  views: {
+    type: Number
+  }, 
+  dislikes: {
+    type: Number
+  }, 
+  snapshot_date: {
+    type: Date
+  } 
+})
+
 
 user.plugin(findOrCreate)
 
 module.exports = {
-  User: mongoose.model('User', user)
+  User: mongoose.model('User', user), 
+  snapshotUser: mongoose.model('snapshotUser', snapshotUser),
+  postSnapShot: mongoose.model('postSnapShot', postSnapShot)
 }
+
+

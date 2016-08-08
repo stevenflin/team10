@@ -21,6 +21,11 @@ var FacebookStrategy = require('passport-facebook'); //not installed
 var YoutubeStrategy = require('passport-youtube-v3').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
+var Vineapple = require('vineapple');
+
+var Facebook = require('fb');
+
+var instagram = require('../test/ig.js');
 
 //** end passport auth **
 
@@ -53,6 +58,7 @@ app.use(session({
 
 var models = require('./models/models');
 var User = models.User;
+var postSnapShot = models.postSnapShot;
 
 
 app.use(passport.initialize());
@@ -65,7 +71,6 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
   User.findById(id, function(err, user) {
-    console.log("deserializeUser error", err);
     done(err, user);
   });
 });
@@ -97,10 +102,12 @@ passport.use(new FacebookStrategy({
     clientID: process.env.FB_CLIENT_ID,
     clientSecret: process.env.FB_CLIENT_SECRET,
     callbackURL: "http://localhost:3000/auth/facebook/cb", //fix when callback URL is updated
-    passReqToCallback: true
+    passReqToCallback: true,
+    profileFields: ['email']
   },
   // facebook will send back the token and profile
   function(req, token, refreshToken, profile, done) {
+    console.log("Profile ", profile)
     // check if the user is already logged in
 
     // asynchronous
@@ -109,14 +116,14 @@ passport.use(new FacebookStrategy({
       if (!req.user) {
         throw new Error("Gotta be logged in maaaaaaan");
       } else {
-        console.log("Updating user with facebook creds: ")
+        console.log("Updating user with facebook creds:"+ profile+ " xx~~~~~~xx")
         // user already exists and is logged in, we have to link accounts
         var user = req.user; // pull the user out of the session
         // update the current users facebook credentials
+        console.log("Profile.id", profile.id)
         user.facebook.id = profile.id;
         user.facebook.token = token;
-        user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-        // user.facebook.email = profile.emails[0].value;
+        user.facebook.email = profile.email;
         // save the user
         user.save(function(err) {
           if (err)
@@ -154,7 +161,6 @@ passport.use(new YoutubeStrategy({
 ));
 
 
-
 passport.use(new InstagramStrategy({
     clientID: process.env.INSTAGRAM_CLIENT_ID,
     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
@@ -162,11 +168,14 @@ passport.use(new InstagramStrategy({
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {
+    // console.log("token", accessToken);
+    // console.log("refreshToken", refreshToken);
+    console.log("profile", profile);
     if(!req.user){
       throw new Error ("Error please login")
     } else{
-      req.user.instagram.instagramAccessToken = accessToken;
-      req.user.instagram.instagramRefreshToken = refreshToken;
+      req.user.instagram.AccessToken = accessToken;
+      req.user.instagram.instagramProfile = profile;
     }
     req.user.save(function () {
       return done(null, req.user);
@@ -174,25 +183,38 @@ passport.use(new InstagramStrategy({
   }
 ));
 
-
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "http://127.0.0.1:3000/auth/twitter/callback", 
+    callbackURL: "http://localhost:3000/auth/twitter/callback", 
      passReqToCallback: true
   },
   function(req, token, tokenSecret, profile, cb) {
+    // console.log("profile", profile);
+    // console.log("followers", profile._json.followers_count);
+    // console.log("retweet count", profile._json.status.retweet_count);
+    // console.log("retweeted status", profile._json.favourites_count);
     if(!req.user){
       throw new Error("twitter failed to login")
     } else {
       req.user.twitter.twitterToken = token;
       req.user.twitter.twitterTokenSecret = tokenSecret;
+      req.user.twitter.twitterProfile = profile;
+      req.user.save(function (err, user) {
+        return cb(err, req.user);
+      });
     }
-    req.user.save(function (err, user) {
-      return cb(err, req.user);
-    });
   }
 ));
+
+instagram.instagramInformation(comments, likes, post_type, favorites, views, dislikes, snapshot_date){
+  var snapshot = new postsnapShot({
+
+  })
+  snapshot.save(function(error, postsnapShot){
+    return cb(err, req.postsnapShot)
+  })
+}
 
 
 var auth = require('./routes/auth');
@@ -200,6 +222,7 @@ var routes = require('./routes/index');
 
 app.use('/', auth(passport));
 app.use('/', routes);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
