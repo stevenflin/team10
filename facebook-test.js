@@ -76,7 +76,7 @@ function pagePosts(days, pageId){
 			  	var arr = [];
 			  	var index= 0;
 			  	console.log(response.data);
-			  	var josh = response.data.map(function(post){
+			  	var data = response.data.map(function(post){
 			  		return {postId: post.id, message: post.message, shares: (post.shares) ? post.shares.count : 0, 
 			  				likes: (post.likes)? post.likes.data.length : 0, comments: (post.comments)? post.comments.data.length : 0}
 			  	})
@@ -86,33 +86,34 @@ function pagePosts(days, pageId){
 			  	// 		arr.push({postId: post.id || "otherValue", message: post.message, shares:post.shares.data.length, 
 			  	// 			likes: post.likes.data.length, comments:post.comments.data.length})
 			  	// 		index++
-			  	// 	})
+			  	// 	}) 
 			  	// }
 			  	console.log("123123123123", arr)
-			  	resolve(arr)
+			  	resolve(data)
 			  })
 	})
 };
 // ~~~~~~~~~~~~~~FUNCTION TO GET NUMBER OF IMPRESSIONS THAT CAME FROM ALL YOUR POSTS
 
 function pagePostImpressions(days, pageId){
-	var timeframe = time(days);
-  FB.api(
-      "/"+pageId+"/insights/page_posts_impressions?since="+timeframe.since+"&&+until="+timeframe.until, //handles pagination by time
-      {
-          "period": "days_28"
-      },
-      function (response) {
-        var arr = [];
-        if (response && !response.error) {
-          response.data[0].values.forEach(function(day){
-            arr.push({value: day.value, end_time: day.end_time}) 
-          })
-          /* handle the result */
-          console.log(arr);
-        }
-     }
-)};
+	return new Promise(function(resolve, reject){
+		var timeframe = time(days);
+		FB.api(
+		  "/"+pageId+"/insights/page_posts_impressions?since="+timeframe.since+"&&+until="+timeframe.until, //handles pagination by time
+		  {
+		      "period": "days_28"
+		  },
+		  function (response) {
+		    var arr = [];
+		    if (response && !response.error) {
+		      response.data[0].values.forEach(function(day){
+		        arr.push({value: day.value, end_time: day.end_time}) 
+		      })
+		      /* handle the result */ 
+		    }resolve(arr);
+		 }
+	)}
+});
 
 
 // // ~~~~~~~~~~~~~~USED TO TEST POST FUNCTIONS
@@ -167,15 +168,19 @@ function pagePostImpressions(days, pageId){
 //   );
 // })
 // console.log("yo",storiesArr); //asynchronous
-// FB.api( //might have to use post id and not blog id
-//       "/1688425971402749/insights/post_impressions", //The number of impressions per post
-//       function (response) {
-//         if (response && !response.error) {
-//           /* handle the result */
-//           console.log("post_impressions",response)
-//         }
-//       }
-//   );
+function postImpressions(days, postId){
+	var timeframe = time(days);
+	FB.api( //might have to use post id and not blog id
+	      "/"+postId+"/insights/post_impressions?since="+timeframe.since+"&&+until="+timeframe.until, //The number of impressions per post
+	      //MAP OR PUSH TO AN ARRAY 
+	      function (response) {
+	        if (response && !response.error) {
+	          /* handle the result */
+	          console.log("post_impressions",response)
+	        }
+	      }
+	);
+}
 // FB.api( //might have to use post id and not blog id
 //       "/1688425971402749/insights/post_video_views", //The number of impressions per post
 //       function (response) {
@@ -232,33 +237,35 @@ function pagePostImpressions(days, pageId){
 //         }
 //       }
 //   );
-// FB.api(
-//       "/1688425971402749/insights/page_fan_adds", //The number of People Talking About the Page by user age and gender
-
-//       {
-//           "period": "days_28"
-//       },
-//       function (response) {
-//         if (response && !response.error) {
-//           /* handle the result */
-//           console.log("post_storytellers_by_gender",response)
-//         }
-//       }
-//   );
+function pageFanAdds(days, pageId){
+	FB.api(
+      "/1688425971402749/insights/page_fan_adds", //The number of People Talking About the Page by user age and gender
+      {
+          "period": "days_28"
+      },
+      function (response) {
+        if (response && !response.error) {
+          /* handle the result */
+          resolve(response)
+        }
+      }
+  	);
+}
 //~~~~~~~~~~~~~~~~~~~~~ page_fans
-// FB.api(
-//       "/1688425971402749/insights/page_fans", //The number of People Talking About the Page by user age and gender
-
-//       {
-//           "period": "days_28"
-//       },
-//       function (response) {
-//         if (response && !response.error) {
-//           /* handle the result */
-//           console.log("post_storytellers_by_gender",response)
-//         }
-//       }
-//   );
+function pageFans(days, pageId){
+	FB.api(
+      "/"+pageId+"/insights/page_fans", //The number of People Talking About the Page by user age and gender
+      {
+          "period": "days_28"
+      },
+      function (response) {
+        if (response && !response.error) {
+          /* handle the result */
+          resolve(response);
+        }
+      }
+ 	);
+}
 // // PAGE LIKES
 // //https://graph.facebook.com/{{pagename}}/insights/page_views?access_token={{access_token_key}}&since=1420070400&until=1421625600 (UNIX TIME)
 

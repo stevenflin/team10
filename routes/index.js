@@ -95,7 +95,7 @@ router.get('/update', function(req, res, next){  //should be /update/page
 	.then((result)=>{
 		console.log("RESULT", result)
 	})	
-	res.render('dashboard', {test: test.since})
+	res.render('dashboard', {test: test.since, })
 })
 
 
