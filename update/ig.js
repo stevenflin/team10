@@ -24,7 +24,6 @@ function instagramInformation(id, accessToken){
 			
 		ig.use({ access_token: process.env.AT });
 		ig.user_media_recent(process.env.ID, {cursor: 30}, instagramPages);
-		// ig.user_followers(process.env.ID, function(err, users, pagination, remaining, limit) {});
 	})
 
 

@@ -5,7 +5,7 @@
 <ul>
 	{{#each result}}
 		<p>{{this.id}}</p>
-		<a href='/fbPageConfirmation?pageId={{this.id}}'> Authorize {{this.name}}</li></a>
+		<a href='/fbPageConfirmation?pageId={{this.id}}&name={{this.name}}'> Authorize {{this.name}}</li></a>
 		<br></br>
 	{{/each}}
 </ul>

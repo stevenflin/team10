@@ -15,7 +15,10 @@ var user = new mongoose.Schema({
     token: String,
     name: String,
     manage_pages: String,
-    email: String
+    pages: [{
+      pageId: String,
+      pageName: String
+    }]
   },
   instagram: {
     AccessToken: String, 
