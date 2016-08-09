@@ -2,6 +2,7 @@ var router = require('express').Router();
 var models = require('../models/models');
 var Vineapple = require('vineapple');
 var User = models.User;
+var Profile = models.Profile;
 var vine = new Vineapple();
 var facebook = require('fb');
 
@@ -10,7 +11,7 @@ var facebook = require('fb');
 module.exports = function(passport) {
   
   router.get('/register', function(req, res, next) {
-  	res.render('register');
+      res.render('register');
   });
 
   router.post('/register', function(req, res, next) {
@@ -20,7 +21,13 @@ module.exports = function(passport) {
   	}).save(function(err, user) {
   	  console.log(err);
   	  if (err) return next(err);
-  	  res.redirect('/login');
+      new Profile({
+        userId: user._id
+      }).save(function(err, profile) {
+        if (err) return next(err);
+        res.redirect('/login');
+      })
+
   	});
   });
 
@@ -62,6 +69,11 @@ module.exports = function(passport) {
     passport.authenticate('youtube', {failureRedirect: '/login'}),
     function(req, res) {
       res.redirect('/youtube');
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> fa539bf9e197da61df4a770c6a88d761c2738874
     }
   );
   
@@ -75,12 +87,24 @@ module.exports = function(passport) {
     // Successful authentication, redirect home.
     res.redirect('/integrate');
   });
-//VINE
+
+
+  router.use(function(req, res, next) {
+    if (!req.user) {
+      return res.redirect('/login');
+    } else {
+      return next();
+    }
+  });
+
+  //VINE
+
   router.get('/integrate', function(req, res, next){
     res.render('integrate')
   });
 
   router.post('/integrate', function(req, res, next){
+
     req.user.vine = {
       username: req.body.username,
       password: req.body.password,
@@ -93,15 +117,6 @@ module.exports = function(passport) {
 });
 
 
-
-  router.use(function(req, res, next) {
-    if (!req.user) {
-      res.redirect('/login');
-    } else {
-      next();
-    }
-  });
-
   router.get('/logout', function(req, res, next){
     req.logout();
     res.redirect('/login');
@@ -109,4 +124,3 @@ module.exports = function(passport) {
 
   return router;
 }
-

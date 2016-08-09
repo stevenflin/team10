@@ -1,6 +1,6 @@
 var Vineapple = require('vineapple');
 
-function vineInformation(req){
+function vineInformation(){
 	var vine = new Vineapple();
 	var user1;
 	// Authenticate the Vine user
@@ -26,6 +26,7 @@ function vineInformation(req){
 }
 vineInformation();
 
-module.exports = {
+
+module.exports={
 	vineInformation: vineInformation
 }
