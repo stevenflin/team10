@@ -251,18 +251,18 @@ router.get('/dashboard', function(req, res, next) {
 		if (err) return next(err);
 		ProfileSnapshot.find({profileId: profile._id}, function(err, psnaps) {
 			if (err) return next(err);
-			var dashboard = {};
+			var followers = {};
 			psnaps.forEach(function(p) {
-				if (!dashboard[p.platform]) {
-					dashboard[p.platform] = [p.followers];
+				if (!followers[p.platform]) {
+					followers[p.platform] = [p.followers];
 				} else {
-					dashboard[p.platform].push(p.followers);
+					followers[p.platform].push(p.followers);
 				}
 			});
-			console.log('[DASHBOARD]', dashboard);
-			console.log('[YOUTUBE]', dashboard.youtube);
+			console.log('[DASHBOARD]', followers);
+			console.log('[YOUTUBE]', followers.youtube);
 			res.render('dashboard', {
-				dashboard
+				followers
 			});
 		});
 	});

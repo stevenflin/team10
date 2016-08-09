@@ -101,10 +101,10 @@ function getYoutubeData(channelId) {
 	});
 }
 
-getYoutubeData('UC3ZrFUfjAjYvMd1HLTuHN8w').then((data) => {
-	console.log("[youtube] data:", data);
-	console.log("[youtube] # of videos:", data.videos.length);
-});
+// getYoutubeData('UC3ZrFUfjAjYvMd1HLTuHN8w').then((data) => {
+// 	console.log("[youtube] data:", data);
+// 	console.log("[youtube] # of videos:", data.videos.length);
+// });
 
 function getDay(videos) {
   var todayVids = [];

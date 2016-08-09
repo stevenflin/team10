@@ -1,12 +1,12 @@
 <h1>JAKE PAUL'S ULTRA DASHBOARD!!!!</h1>
 
 <h2>Instagram</h2>
-{{#each dashboard.instagram}}
+{{#each followers.instagram}}
 <p>Followers: {{this}}</p>
 {{/each}}
 
 <h2>Youtube</h2>
-{{#each dashboard.youtube}}
+{{#each followers.youtube}}
 <p>Subscribers: {{this}}</p>
 {{/each}}
 
@@ -22,7 +22,7 @@
 	        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange", 'as;ldkfj', 'asdf', 'steph'],
 	        datasets: [{
 	            label: '# of Votes',
-	            data: [{{dashboard.youtube}}],
+	            data: [{{followers.youtube}}],
 	            backgroundColor: [
 	                'rgba(255, 99, 132, 0.2)',
 	                'rgba(54, 162, 235, 0.2)',
