@@ -85,23 +85,6 @@ module.exports = function(passport) {
     res.redirect('/integrate');
   });
 //VINE
-  router.get('/integrate', function(req, res, next){
-    res.render('integrate')
-  });
-
-  router.post('/integrate', function(req, res, next){
-    req.user.vine = {
-      username: req.body.username,
-      password: req.body.password,
-    }
-    req.user.save(function(err, user) {
-      console.log(err);
-      if (err) return next(err);
-      res.redirect('/');
-    });
-});
-
-
 
   router.use(function(req, res, next) {
     if (!req.user) {
@@ -110,6 +93,23 @@ module.exports = function(passport) {
       next();
     }
   });
+
+  router.get('/integrate', function(req, res, next){
+    res.render('integrate')
+  });
+
+  router.post('/integrate', function(req, res, next){
+      req.user.vine = {
+        username: req.body.username,
+        password: req.body.password,
+      }
+      req.user.save(function(err, user) {
+        console.log(err);
+        if (err) return next(err);
+        res.redirect('/');
+      });
+  });
+
 
   router.get('/logout', function(req, res, next){
     req.logout();
