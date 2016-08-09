@@ -304,13 +304,7 @@ router.get('/update/twitter', function(req, res, next){
 		// get twitter info
 		twitter.twitterInformation(process.env.TWITTER_ACCESS_TOKEN_KEY, process.env.TWITTER_ACCESS_TOKEN_SECRET)
 		.then(function(data){
-			console.log("[stage] got twitter info")
-
-			// console.log("this is data mofuck", data[0].user.entities);
-			// console.log("this is data mofucka", data);
-
-			// create profile snapshot
-			// console.log("data", data[0]);
+		
 			new ProfileSnapshot({
 				platformID: req.user.twitter.twitterProfile._json.id,
 				platform: 'twitter', 
@@ -320,13 +314,11 @@ router.get('/update/twitter', function(req, res, next){
 				profileId: profile._id
 			})
 			.save(function(err, p){
-				console.log('[stage] made profile snapshot')
-				console.log("ProfileSnapshot", p);
 				if(err) return next(err);
 
 				// iterate through posts
 				data.forEach(function(postData, i){
-					console.log("postdata", postData)
+					// console.log("postdata", postData)
 
 					// If post doesn't exist, create it
 					Post.findOrCreate({postId: postData.id}, {
@@ -346,13 +338,10 @@ router.get('/update/twitter', function(req, res, next){
 							date: p.date
 						})
 						.save(function(err, psnap){
-
-							console.log("PostSnapshot", err)
 							if(err) return next(err);
 
 							post.snapshots.push(psnap._id);
 							post.save(function(err){
-								console.log("snapshots.push error", err)
 								if(err) return next(err);
 
 			
@@ -362,14 +351,29 @@ router.get('/update/twitter', function(req, res, next){
 							})				
 						})
 					})
-
 				});
-
-
 			});
-		})
-		.catch(function(err){
+		}).catch(function(err){
 			console.log("[err]", err);
+		})
+	})
+})
+
+router.get('/update/vine', function(req, res, next){
+	Profile.findOne({userId: req.user._id}, function(err, profile){
+		if(err) return next(err);
+		vine.vineInformation(process.env.VINE_USERNAME, process.env.VINE_PASSWORD)
+		.then(function(data){
+			console.log("User data", data);
+
+			new ProfileSnapshot({
+				platformID: data.userId,
+				platform: 'vine', 
+				followers: data.following, 
+				posts: data.postCount,
+				date: new Date(),
+				profileId: profile._id
+			})
 		})
 	})
 })
