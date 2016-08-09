@@ -95,11 +95,13 @@ module.exports = function(passport) {
   });
 
   //VINE
+
   router.get('/integrate', function(req, res, next){
     res.render('integrate')
   });
 
   router.post('/integrate', function(req, res, next){
+
     req.user.vine = {
       username: req.body.username,
       password: req.body.password,
@@ -110,6 +112,7 @@ module.exports = function(passport) {
       res.redirect('/');
     });
 });
+
 
   router.get('/logout', function(req, res, next){
     req.logout();

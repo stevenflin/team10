@@ -140,8 +140,8 @@ router.get('/update/instagram', function(req, res, next){
 			new ProfileSnapshot({
 				platformID: req.user.instagram.instagramProfile.id,
 				platform: 'instagram', 
-				followers: JSON.parse(req.user.instagram.instagramProfile._raw).data.counts.followed_by, 
-				posts: JSON.parse(req.user.instagram.instagramProfile._raw).data.counts.media,
+				followers: data.profile, 
+				posts: data.bigArr.length,
 				date: new Date(),
 				profileId: profile._id
 			})
@@ -149,7 +149,7 @@ router.get('/update/instagram', function(req, res, next){
 				if(err) return next(err);
 
 				// Iterate through posts and create new snapshots
-				data.forEach(function(post, i){
+				data.bigArr.forEach(function(post, i){
 					var desc = null;
 					if(post.caption){
 						desc = post.caption.text
@@ -179,7 +179,7 @@ router.get('/update/instagram', function(req, res, next){
 							postData.snapshots.push(psnap._id);
 							postData.save(function(err){
 								if(err) return next(err);
-								if(i === data.length -1){
+								if(i === data.bigArr.length -1){
 									res.redirect('/integrate');
 								}
 							})				
