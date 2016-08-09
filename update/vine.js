@@ -13,14 +13,14 @@ function vineInformation(){
 	            throw new Error(error);
 	         }
 	        // Handle success
-	        // console.log(user);
+	        console.log("user", user);
 	    });
 
 	});
 
 	vine.me(function(err, user){
 		// console.log("vineapple error", err);
-		// console.log("vineapple user", user);
+		console.log("vineapple user", user);
 
 	})
 }
