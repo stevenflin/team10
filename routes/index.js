@@ -2,6 +2,7 @@ var router = require('express').Router();
 var passport = require('passport');
 var FB = require('fb');
 
+
 var ig = require('instagram-node').instagram()
 var facebook = require('../facebook-test.js')
 FB.setAccessToken('EAAYsgV1owZC0BAEMGZAdeR0LqZAc97sa9BVWBrkGp1Xmub80rh94JyHxWXzIqZCXh1a2TaAtZAM2rwidFTgfwGdJqe22hWBK8jpAGPk9lCIT9eoCuIbZCuFzP20RqaJgYXiUpYsw9EgLhi2YlY3pwFyzDjvpl5hMRMwl0ky92FbwZDZD');
@@ -11,6 +12,7 @@ FB.setAccessToken('EAAYsgV1owZC0BAEMGZAdeR0LqZAc97sa9BVWBrkGp1Xmub80rh94JyHxWXzI
 
 var vine = require('../update/vine.js');
 var instagram = require('../update/ig.js');
+var twitter = require('../update/twitter.js');
 
 var youtubeFunctions = require('../update/youtube');
 var getYoutubeData = youtubeFunctions.getYoutubeData;
@@ -175,13 +177,7 @@ router.get('/update', function(req, res, next){  //should be /update/page
 //        full_name: 'Parker Place' } },
 
 
-
-var i = 0;
-
 router.get('/update/instagram', function(req, res, next){
-	console.log("[instagram update] iteration:", i);
-	i += 1;
-
 	// Find social media profile
 	Profile.findOne({userId: req.user._id}, function(err, profile){
 		if(err)return next( err)
@@ -189,10 +185,6 @@ router.get('/update/instagram', function(req, res, next){
 		// Get instagram data
 		instagram.instagramInformation(process.env.ID, process.env.AT)
 		.then(function(data) {
-			// console.log('instagramprofile id',req.user.instagram.instagramProfile.id);
-			// console.log('WHAT IS MY TYPE', typeof req.user.instagram.instagramProfile.id)
-
-			console.log("[instagram] data length:", data.length);
 
 			// Create new profile snapshot
 			new ProfileSnapshot({
@@ -303,6 +295,84 @@ router.get('/update/youtube', function(req, res, next) {
 		});
 	}).catch((err) => next(err));
 });
+
+router.get('/update/twitter', function(req, res, next){
+	// get user info
+	Profile.findOne({userId: req.user._id}, function(err, profile){
+		if(err) return next(err);
+
+		// get twitter info
+		twitter.twitterInformation(process.env.TWITTER_ACCESS_TOKEN_KEY, process.env.TWITTER_ACCESS_TOKEN_SECRET)
+		.then(function(data){
+			console.log("[stage] got twitter info")
+
+			// console.log("this is data mofuck", data[0].user.entities);
+			// console.log("this is data mofucka", data);
+
+			// create profile snapshot
+			// console.log("data", data[0]);
+			new ProfileSnapshot({
+				platformID: req.user.twitter.twitterProfile._json.id,
+				platform: 'twitter', 
+				followers: data[0].user.followers_count, 
+				posts: data[0].length,
+				date: new Date(),
+				profileId: profile._id
+			})
+			.save(function(err, p){
+				console.log('[stage] made profile snapshot')
+				console.log("ProfileSnapshot", p);
+				if(err) return next(err);
+
+				// iterate through posts
+				data.forEach(function(postData, i){
+					console.log("postdata", postData)
+
+					// If post doesn't exist, create it
+					Post.findOrCreate({postId: postData.id}, {
+						description: postData.text,
+						postId: postData.id,
+						type: 'twitter',
+						profileId: profile._id
+					}, function(err, post){
+						if(err) return next(err);
+
+						// snapshot it
+						new PostSnapshot({
+							profileId: p._id, 
+							postId: post.id,
+							shares: postData.retweet_count,
+							likes: postData.favourite_count,
+							date: p.date
+						})
+						.save(function(err, psnap){
+
+							console.log("PostSnapshot", err)
+							if(err) return next(err);
+
+							post.snapshots.push(psnap._id);
+							post.save(function(err){
+								console.log("snapshots.push error", err)
+								if(err) return next(err);
+
+			
+								if(i === data.length -1){
+									res.redirect('/integrate');
+								}
+							})				
+						})
+					})
+
+				});
+
+
+			});
+		})
+		.catch(function(err){
+			console.log("[err]", err);
+		})
+	})
+})
 
 router.get('/dashboard', function(req, res, next) {
 	res.redirect('/dashboard/1');

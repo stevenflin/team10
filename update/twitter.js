@@ -1,23 +1,27 @@
 var Twitter = require('twitter');
 
 
-function twitterInformation(id, accessToken, consumerSecret, ){
-	var client = new Twitter({
-	  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-	  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-	  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-	  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-	});
-	var params = {user_id: process.env.TWITTER_ID};
-	client.get('statuses/user_timeline', params, function(error, tweets, response) {
-	  if (!error) {
-	    console.log(tweets);
-	    console.log("suck a dick ");
-	  }
-	});
+function twitterInformation(accessToken, accessTokenSecret){
+	return new Promise(function(resolve, reject){
+		var client = new Twitter({
+		  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+		  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+		  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+		  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+		});
+		var params = {user_id: process.env.TWITTER_ID};
+		client.get('statuses/user_timeline', params, function(error, tweets, response) {
+
+		  if (error) return next(error); 
+		  // console.log("tweets", tweets)
+		  	resolve(tweets)
+		});
+	});		
 }
 
-twitterInformation();
+// twitterInformation(console.log("fuck"));
+
+// }
 
 // client.get('favorites/list', function(error, tweets, response) {
 //   if(error) throw error;
