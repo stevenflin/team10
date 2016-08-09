@@ -88,9 +88,9 @@ module.exports = function(passport) {
 
   router.use(function(req, res, next) {
     if (!req.user) {
-      res.redirect('/login');
+      return res.redirect('/login');
     } else {
-      next();
+      return next();
     }
   });
 

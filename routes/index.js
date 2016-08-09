@@ -118,15 +118,25 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 
 
 
-
+var i = 0;
 
 router.get('/update/instagram', function(req, res, next){
-	instagram.instagramInformation(process.env.ID, process.env.AT)
-	.then(function(data) {
-		Profile.findOne({userId: req.user._id}, function(err, profile){
-			if(err)return next( err)
-				// console.log('instagramprofile id',req.user.instagram.instagramProfile.id);
-				// console.log('WHAT IS MY TYPE', typeof req.user.instagram.instagramProfile.id)
+	console.log("[instagram update] iteration:", i);
+	i += 1;
+
+	// Find social media profile
+	Profile.findOne({userId: req.user._id}, function(err, profile){
+		if(err)return next( err)
+
+		// Get instagram data
+		instagram.instagramInformation(process.env.ID, process.env.AT)
+		.then(function(data) {
+			// console.log('instagramprofile id',req.user.instagram.instagramProfile.id);
+			// console.log('WHAT IS MY TYPE', typeof req.user.instagram.instagramProfile.id)
+
+			console.log("[instagram] data length:", data.length);
+
+			// Create new profile snapshot
 			new ProfileSnapshot({
 				platformID: req.user.instagram.instagramProfile.id,
 				platform: 'instagram', 
@@ -138,14 +148,14 @@ router.get('/update/instagram', function(req, res, next){
 			.save(function(err, p){
 				if(err) return next(err);
 
-
-			 	console.log(data.length);
-
+				// Iterate through posts and create new snapshots
 				data.forEach(function(post, i){
 					var desc = null;
 					if(post.caption){
 						desc = post.caption.text
 					}
+
+					// If post doesn't exist, create it
 					Post.findOrCreate({postId: post.id}, {
 						description: desc,
 						postId: post.id,
@@ -153,8 +163,9 @@ router.get('/update/instagram', function(req, res, next){
 						profileId: profile._id
 					}, function(err, postData){
 						if(err) return next(err);
-						console.log("creating post for:", post.id);
+						console.log("[creating post] for:", post.id);
 
+						// snapshot it
 						new PostSnapshot({
 							profileId: p._id, 
 							postId: postData.id,
@@ -165,7 +176,6 @@ router.get('/update/instagram', function(req, res, next){
 						.save(function(err, psnap){
 							if(err) return next(err);
 
-							console.log("creating post snapshots for:", post.id);
 							postData.snapshots.push(psnap._id);
 							postData.save(function(err){
 								if(err) return next(err);
@@ -236,6 +246,28 @@ router.get('/update/youtube', function(req, res, next) {
 	}).catch((err) => next(err));
 });
 
+router.get('/dashboard', function(req, res, next) {
+	Profile.findOne({userId: req.user._id}, function(err, profile) {
+		if (err) return next(err);
+		ProfileSnapshot.find({profileId: profile._id}, function(err, psnaps) {
+			if (err) return next(err);
+			var dashboard = {};
+			psnaps.forEach(function(p) {
+				if (!dashboard[p.platform]) {
+					dashboard[p.platform] = [p.followers];
+				} else {
+					dashboard[p.platform].push(p.followers);
+				}
+			});
+			console.log('[DASHBOARD]', dashboard);
+			console.log('[YOUTUBE]', dashboard.youtube);
+			res.render('dashboard', {
+				dashboard
+			});
+		});
+	});
+});
+
 router.get('/youtube', function(req, res, next) {
   getYoutubeData(req.user.youtube.profile.id)
   .then((data) => {
@@ -252,7 +284,7 @@ router.get('/youtube', function(req, res, next) {
     	monthdata,
     	yeardata
     })
-})
+  })
 })
 
 

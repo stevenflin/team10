@@ -9,4 +9,4 @@ models.Post.remove({}, (err, r) => {
 models.PostSnapshot.remove({}, (err, r) => {
 	console.log("removed the post snapshots");
 })
-process.exit();
+// process.exit();
