@@ -111,9 +111,9 @@ function pagePostImpressions(days, pageId){
 		      })
 		      /* handle the result */ 
 		    }resolve(arr);
-		 }
-	)}
-});
+		 })
+	});
+};
 
 
 // // ~~~~~~~~~~~~~~USED TO TEST POST FUNCTIONS

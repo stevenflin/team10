@@ -35,7 +35,7 @@ function getYoutubeData(channelId) {
 				function recurseSearch(pageToken) {
 
 					// Get channel videos
-					Youtube.search.list({ part: "snippet", channelId: channelId, maxResults: 1, order: 'date', pageToken: pageToken}, (err, list) => {
+					Youtube.search.list({ part: "snippet", channelId: channelId, maxResults: 50, order: 'date', pageToken: pageToken}, (err, list) => {
 						// console.log('[NEW LIST]', list.items);
 						if (err) return masterReject(err);
 
