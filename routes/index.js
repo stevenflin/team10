@@ -249,20 +249,40 @@ router.get('/update/youtube', function(req, res, next) {
 router.get('/dashboard', function(req, res, next) {
 	Profile.findOne({userId: req.user._id}, function(err, profile) {
 		if (err) return next(err);
-		ProfileSnapshot.find({profileId: profile._id}, function(err, psnaps) {
+		ProfileSnapshot.find({profileId: profile._id})
+		.limit(10)
+		.exec(function(err, psnaps) {
 			if (err) return next(err);
 			var followers = {};
+			var posts = {};
+			var views = {};
 			psnaps.forEach(function(p) {
 				if (!followers[p.platform]) {
 					followers[p.platform] = [p.followers];
 				} else {
 					followers[p.platform].push(p.followers);
 				}
+				if (!posts[p.platform]) {
+					posts[p.platform] = [p.posts];
+				} else {
+					posts[p.platform].push(p.posts);
+				}
+				if (!views[p.platform]) {
+					views[p.platform] = [p.views];
+				} else {
+					views[p.platform].push(p.views);
+				}
+				PostSnapshot.find({profileId: p._id}, function(err, postsnaps) {
+					
+				})
 			});
-			console.log('[DASHBOARD]', followers);
-			console.log('[YOUTUBE]', followers.youtube);
+			console.log('[FOLLOWERS]', followers.youtube);
+			console.log('[POSTS]', posts.youtube);
+			console.log('[VIEWS]', views.youtube);
 			res.render('dashboard', {
-				followers
+				followers,
+				posts,
+				views
 			});
 		});
 	});
