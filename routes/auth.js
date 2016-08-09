@@ -84,31 +84,34 @@ module.exports = function(passport) {
     // Successful authentication, redirect home.
     res.redirect('/integrate');
   });
-//VINE
+
 
   router.use(function(req, res, next) {
     if (!req.user) {
-      res.redirect('/login');
+      return res.redirect('/login');
     } else {
-      next();
+      return next();
     }
   });
+
+  //VINE
 
   router.get('/integrate', function(req, res, next){
     res.render('integrate')
   });
 
   router.post('/integrate', function(req, res, next){
-      req.user.vine = {
-        username: req.body.username,
-        password: req.body.password,
-      }
-      req.user.save(function(err, user) {
-        console.log(err);
-        if (err) return next(err);
-        res.redirect('/');
-      });
-  });
+
+    req.user.vine = {
+      username: req.body.username,
+      password: req.body.password,
+    }
+    req.user.save(function(err, user) {
+      console.log(err);
+      if (err) return next(err);
+      res.redirect('/');
+    });
+});
 
 
   router.get('/logout', function(req, res, next){

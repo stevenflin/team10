@@ -1,5 +1,4 @@
 var express = require('express');
-var passport = require('passport');
 var util = require('util');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -8,6 +7,7 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var MongoStore = require('connect-mongo')(session);
 var app = express();
+
 //** for passport auth **
 var passport = require('passport'); //not installed
 var LocalStrategy = require('passport-local').Strategy;//not installed
@@ -17,8 +17,6 @@ var InstagramStrategy = require('passport-instagram').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var Vineapple = require('vineapple');
 var Facebook = require('fb');
-
-
 
 //** end passport auth **
 //Checks if all the process.env tokensar e there
@@ -202,6 +200,7 @@ var auth = require('./routes/auth');
 var routes = require('./routes/index');
 app.use('/', auth(passport));
 app.use('/', routes);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
