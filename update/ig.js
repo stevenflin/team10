@@ -15,14 +15,16 @@ function instagramInformation(id, accessToken){
 			if(pagination.next) {
 			    pagination.next(instagramPages); // Will get second page results 
 			 } else {
-			 	resolve(bigArr);
-			 	console.log(bigArr.length);
+			 	ig.user(id, function(err, result, remaining, limit) {
+			 		if(err) return next(err);
+			 			resolve({bigArr, profile: result.counts.followed_by})
+			 	});
 			 }
 			}
 			
 		ig.use({ access_token: process.env.AT });
 		ig.user_media_recent(process.env.ID, {cursor: 30}, instagramPages);
-
+		// ig.user_followers(process.env.ID, function(err, users, pagination, remaining, limit) {});
 	})
 
 
