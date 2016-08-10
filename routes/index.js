@@ -1,17 +1,19 @@
 var router = require('express').Router();
 var passport = require('passport');
 var FB = require('fb');
-
-
 var ig = require('instagram-node').instagram()
+
 var facebook = require('../facebook-test.js')
-
-
-
+var facebookUpdate = facebook.facebookUpdate;
 
 var vine = require('../update/vine.js');
+var vineUpdate = vine.vineUpdate;
+
 var instagram = require('../update/ig.js');
+var instagramUpdate = instagram.instagramUpdate;
+
 var twitter = require('../update/twitter.js');
+var twitterUpdate = twitter.twitterUpdate;
 
 var youtubeFunctions = require('../update/youtube');
 var getYoutubeData = youtubeFunctions.getYoutubeData;
@@ -71,10 +73,7 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 	if (req.query.pageId) {
 		FB.setAccessToken(req.user.facebook.token);
 
-		console.log("~~~~~~~~~~~~~~~~~~~~ ",req.query);
-		console.log("~~~~~~~~XXXXXXXX~~~~~~~ ",req.user.facebook.pages);
 		req.user.facebook.pages.push({pageId: req.query.pageId, pageName: req.query.name})
-		console.log("~~~~~~~~XXXXXXXX~~~~~~~ ",req.user.facebook.pages);
 		req.user.save(function(err, success){
 			console.log("Running")
 			if(err){
@@ -82,7 +81,7 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 			}
 			console.log("YO BITCH",success)
 		});
-		res.render('fbPageSelector', {result: result})	
+		res.render('integrate')	
 		new Promise(function(resolve, reject){
 
 			FB.api(`/${req.query.pageId}/insights/page_views_total`, function (res) {
@@ -108,36 +107,6 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 
 //dashboard and dashboard/id that takes id of each client user
 // update route that always pings 
-
-router.get('/update/facebook', function(req, res, next){  //should be /update/page
-	facebook.facebookUpdate(req.user._id)
-	.then(()=> res.redirect('/integrate'));
-})
-
-router.get('/update/instagram', function(req, res, next){
-	// Find social media profile
-	instagram.instagramUpdate(req.user._id)
-	.then(() => res.redirect('/integrate'));
-})
-
-router.get('/update/youtube', function(req, res, next) {
-	youtubeUpdate(req.user._id)
-	.then(() => res.redirect('/integrate'));
-});
-
-router.get('/update/twitter', function(req, res, next){
-	twitter.twitterUpdate(req.user._id)
-	.then(() => res.redirect('/integrate'));	
-})
-
-router.get('/update/vine', function(req, res, next){
-	vine.vineUpdate(req.user._id)
-	.then(()=> res.redirect('/integrate'));
-})
-
-router.get('/dashboard', function(req, res, next) {
-	res.redirect('/dashboard/1');
-})
 
 router.get('/dashboard/:id', function(req, res, next) {
 	var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
@@ -179,8 +148,16 @@ router.get('/dashboard/:id', function(req, res, next) {
 				}
 			})
 			// console.log('[THESE ARE THE RESULTS THE RESULTS ARE THESE]', results);
-			// console.log('[FORMATTED DATA]', followers)
+			console.log('[FORMATTED DATA]', followers)
+			console.log('SNAPS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', snaps)
+			console.log('followers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', followers)
+			console.log('REcent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', recent)
+			console.log('Change~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', change)
+
+
+
 			console.log('these are the data results..............', followers)
+
 			res.render('dashboard', {
 				snaps,
 				followers,
@@ -190,7 +167,9 @@ router.get('/dashboard/:id', function(req, res, next) {
 		}).catch((err) => console.log(err));
 	});
 });
-
+router.get('/tableTest', function(req, res, next){
+	res.render('tableTest')
+})
 router.get('/posts', function(req, res, next) {
 	var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 	Profile.findOne({userId: req.user._id}, function(err, profile) {
@@ -256,12 +235,11 @@ router.get('/posts', function(req, res, next) {
 						data[d.type] = d.posts
 					}
 				})
-				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
 				console.log('what does this look like......', data.vine[0].snippet);
 				console.log('what aboutthis look like......', data.vine[0].snaps);
-				res.render('posts', {
-					data
-				})
+				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
+				res.render('tableTest', {
+					data	
 			}).catch((err) => console.log(err));
 		}).catch((err) => console.log(err));
 	});
@@ -289,21 +267,46 @@ router.get('/youtube', function(req, res, next) {
   })
 })
 	
+// DAILY SNAPSHOTS
 
-
-
-
-router.get('/update', (req, res, next) => {
-
-	updateFacebook()
-	.then(() => updateInstagram(req.user))
-	.then(() => updateYoutube)
-	.then(() => updateTwitter)
-	.then(() => updateVine)
-	.catch(console.log);
-
+router.get('/update/facebook', function(req, res, next){  //should be /update/page
+	facebookUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));
 })
 
+router.get('/update/instagram', function(req, res, next){
+	// Find social media profile
+	instagramUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));
+})
 
+router.get('/update/youtube', function(req, res, next) {
+	youtubeUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));
+});
+
+router.get('/update/twitter', function(req, res, next){
+	twitterUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));	
+})
+
+router.get('/update/vine', function(req, res, next){
+	vineUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));
+})
+
+router.get('/update', (req, res, next) => {
+	var id = req.user._id;
+	instagramUpdate(id)
+	.then(() => youtubeUpdate(id))
+	.then(() => twitterUpdate(id))
+	.then(() => vineUpdate(id))
+	.then(() => facebookUpdate(id))
+	.then(() => res.redirect('/integrate'));
+})
+
+router.get('/dashboard', function(req, res, next) {
+	res.redirect('/dashboard/1');
+})
 
 module.exports = router;
