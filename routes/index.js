@@ -5,7 +5,6 @@ var FB = require('fb');
 
 var ig = require('instagram-node').instagram()
 var facebook = require('../facebook-test.js')
-FB.setAccessToken('EAAYsgV1owZC0BAEMGZAdeR0LqZAc97sa9BVWBrkGp1Xmub80rh94JyHxWXzIqZCXh1a2TaAtZAM2rwidFTgfwGdJqe22hWBK8jpAGPk9lCIT9eoCuIbZCuFzP20RqaJgYXiUpYsw9EgLhi2YlY3pwFyzDjvpl5hMRMwl0ky92FbwZDZD'); //put into function themselves or process.env
 
 
 
@@ -499,7 +498,13 @@ router.get('/dashboard/:id', function(req, res, next) {
 			})
 			// console.log('[THESE ARE THE RESULTS THE RESULTS ARE THESE]', results);
 			// console.log('[FORMATTED DATA]', followers)
-			console.log('these are the data results..............', snaps)
+			console.log('SNAPS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', snaps)
+			console.log('followers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', followers)
+			console.log('REcent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', recent)
+			console.log('Change~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', change)
+
+
+
 			res.render('dashboard', {
 				snaps,
 				followers,
@@ -509,7 +514,9 @@ router.get('/dashboard/:id', function(req, res, next) {
 		}).catch((err) => console.log(err));
 	});
 });
-
+router.get('/tableTest', function(req, res, next){
+	res.render('tableTest')
+})
 router.get('/posts', function(req, res, next) {
 	var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 	Profile.findOne({userId: req.user._id}, function(err, profile) {
@@ -576,9 +583,7 @@ router.get('/posts', function(req, res, next) {
 					}
 				})
 				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
-				console.log('what does this look like......', data.youtube[0].snippet);
-				console.log('what aboutthis look like......', data.youtube[0].snaps);
-				res.render('posts', {
+				res.render('tableTest', {
 					data
 				})
 			}).catch((err) => console.log(err));

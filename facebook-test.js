@@ -259,7 +259,7 @@ function pageFans(days, pageId){
 	          resolve(numLikes);
 	        }
 	        else{ 
-	        	console.log("ERROR123", err)
+
 	        }
 	      }
 	 	);

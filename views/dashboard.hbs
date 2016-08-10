@@ -22,6 +22,9 @@
 
     <!-- Custom Theme Style -->
     <link href="../build/css/custom.min.css" rel="stylesheet">
+    <!-- DATA TABLE CSS AND JS -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <link rel="stylehseet" type="text/css" href="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
   </head>
 
   <body class="nav-md">
@@ -289,6 +292,11 @@
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{change.twitter}}% </i> Since Yesterday</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> Facebook Page Fans</span>
+              <div class="count green">{{recent.facebook.followers}}</div>
+              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{change.facebook}}% </i> Since Yesterday</span>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Total Females</span>
               <div class="count">4,567</div>
               <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>
@@ -308,6 +316,7 @@
 
           <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
+<!--             start dashboard graph-->              
               <div class="dashboard_graph">
 
                 <div class="row x_title">
@@ -325,7 +334,30 @@
                 <div class="col-md-9 col-sm-9 col-xs-12">
                   <div id="placeholder33" style="height: 260px; display: none" class="demo-placeholder"></div>
                   <div style="width: 100%;">
-                    <div id="canvas_dahs" class="demo-placeholder" style="width: 100%; height:270px;"></div>
+<!--                   Canvas DAHS
+ -->                <table id="facebookTable" class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Project</th>
+                          <th>School</th>
+                          <th>% Funded</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <!-- ko foreach: proposals() -->
+                        <tr>
+                        {{#each snaps.facebook}}
+
+                          <td>snaps.facebook.data</td>
+                          <td>test 2</span></td>
+                          <td>test 3</span></td>
+                        {{/each}}
+                        </tr>
+                      <!-- /ko -->
+                      </tbody>
+                    </table>
+
+ <!--  <div id="canvas_dahs" class="demo-placeholder" style="width: 100%; height:270px;"></div> 
                   </div>
                 </div>
                 <div class="col-md-3 col-sm-3 col-xs-12 bg-white">
@@ -375,7 +407,8 @@
 
                 <div class="clearfix"></div>
               </div>
-            </div>
+            </div> -->
+<!--             END DASHBOARD GRAPH-->              
 
           </div>
           <br />
@@ -1006,17 +1039,26 @@
     <script src="js/flot/date.js"></script>
     <script src="js/flot/jquery.flot.spline.js"></script>
     <script src="js/flot/curvedLines.js"></script>
+    
     <!-- jVectorMap -->
     <script src="js/maps/jquery-jvectormap-2.0.3.min.js"></script>
     <!-- bootstrap-daterangepicker -->
-    <script src="js/moment/moment.min.js"></script>
     <script src="js/datepicker/daterangepicker.js"></script>
+
+    <!--     dataTables-->    
+    <script src ='cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js'></script>
 
     <!-- Custom Theme Scripts -->
     <script src="../build/js/custom.min.js"></script>
 
     <!-- Flot -->
     <script>
+    //function knockout view model
+    //knocout mapping JSON data to view model
+    // get data
+    //bind data
+    //apply dataTables 
+    $("#facebookTable").DataTable( { responsive: true } );
       $(document).ready(function() {
         var data1 = [
           [gd(2012, 1, 1), 17],
@@ -1043,6 +1085,9 @@
         ];
 
         // data2 = [ {{followers.youtube}} ];
+        //Fix- make custom table and insert into chart.js
+        //graph is inserted here mane
+        //
 
         $("#canvas_dahs").length && $.plot($("#canvas_dahs"), [
           data1, data2
@@ -1261,6 +1306,14 @@
     </script>
     <!-- /bootstrap-daterangepicker -->
 
+    <!-- jQuery DataTables http://datatables.net -->
+    <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
+
+    <!-- Bootstrap DataTables http://www.datatables.net/manual/styling/bootstrap -->
+    <script src="//cdn.datatables.net/plug-ins/a5734b29083/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+
+    <!-- Responsive DataTables http://www.datatables.net/extensions/responsive/ -->
+    <script src="//cdn.datatables.net/responsive/1.0.1/js/dataTables.responsive.js"></script>
     <!-- gauge.js -->
     <script>
       var opts = {
