@@ -130,7 +130,7 @@ var post = new mongoose.Schema({
     type: Number
   }, 
   date: {
-    type: Date
+    type: Number
   },
   profileId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -181,5 +181,5 @@ module.exports = {
   Profile: mongoose.model('Profile', profile),
   ProfileSnapshot: mongoose.model('ProfileSnapshot', profileSnapshot),
   Post: mongoose.model('Post', post),
-  PostSnapshot: mongoose.model('postSnapshot', postSnapshot)
+  PostSnapshot: mongoose.model('PostSnapshot', postSnapshot)
 }
