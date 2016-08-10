@@ -172,7 +172,7 @@ passport.use(new InstagramStrategy({
       Profile.findOne({userId: user._id}, function(err, p) {
         p.instagram = profile.displayName;
         p.save(function(err) {
-          if (err) return next(err);
+          if (err) return console.log(err);
         })
       })
       return done(null, req.user);
