@@ -108,56 +108,58 @@ function getYoutubeData(channelId) {
 }
 
 function youtubeUpdate(id) {
-	User.findById(id, function(err, user) {
-		getYoutubeData(user.youtube.profile.id)
-		.then(function(data) {
-			Profile.findOne({userId: user._id},function(err, profile) {
-				if (err) return next(err);
-
-				new ProfileSnapshot({
-					platformID: user.youtube.profile.id,
-					platform: 'youtube',
-					followers: data.channel.subscriberCount,
-					posts: data.channel.videoCount,
-					views: data.channel.viewCount,
-					date: new Date(),
-					profileId: profile._id
-				}).save(function(err, p) {
+	return new Promise(function(resolve, reject) {
+		User.findById(id, function(err, user) {
+			getYoutubeData(user.youtube.profile.id)
+			.then(function(data) {
+				Profile.findOne({userId: user._id},function(err, profile) {
 					if (err) return next(err);
 
-					data.videos.forEach(function(video, i) {
+					new ProfileSnapshot({
+						platformID: user.youtube.profile.id,
+						platform: 'youtube',
+						followers: data.channel.subscriberCount,
+						posts: data.channel.videoCount,
+						views: data.channel.viewCount,
+						date: new Date(),
+						profileId: profile._id
+					}).save(function(err, p) {
+						if (err) return next(err);
 
-						Post.findOrCreate({postId: video.id}, {
-							title: video.snippet.title,
-							description: video.snippet.description,
-							postId: video.id,
-							type: 'youtube',
-							profileId: profile._id
-						}, function(err, post) {
-							if (err) return next(err);
+						data.videos.forEach(function(video, i) {
 
-							new PostSnapshot({
-								profileId: p._id,
-								postId: post.postId,
-								comments: parseInt(video.stats.commentCount),
-								likes: parseInt(video.stats.likeCount),
-								favorites: parseInt(video.stats.favoriteCount),
-								views: parseInt(video.stats.viewCount),
-								dislikes: parseInt(video.stats.dislikeCount),
-								date: p.date
-							}).save(function(err, psnap) {
+							Post.findOrCreate({postId: video.id}, {
+								title: video.snippet.title,
+								description: video.snippet.description,
+								postId: video.id,
+								type: 'youtube',
+								profileId: profile._id
+							}, function(err, post) {
 								if (err) return next(err);
 
-								post.snapshots.push(psnap._id);
-								post.save(function(err) {
+								new PostSnapshot({
+									profileId: p._id,
+									postId: post.postId,
+									comments: parseInt(video.stats.commentCount),
+									likes: parseInt(video.stats.likeCount),
+									favorites: parseInt(video.stats.favoriteCount),
+									views: parseInt(video.stats.viewCount),
+									dislikes: parseInt(video.stats.dislikeCount),
+									date: p.date
+								}).save(function(err, psnap) {
 									if (err) return next(err);
+
+									post.snapshots.push(psnap._id);
+									post.save(function(err) {
+										if (err) return next(err);
+									});
 								});
 							});
 						});
 					});
 				});
-			});
-		}).catch((err) => next(err));
+			}).catch((err) => next(err));
+		})
 	})
 }
 

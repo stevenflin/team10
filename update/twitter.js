@@ -75,10 +75,9 @@ function twitterUpdate(id){
 						})
 
 					});
+
 				});
-			}).catch(function(err){
-				console.log("[err]", err);
-			})
+			}).catch((err) => console.log(err))
 		})
 	})
 }

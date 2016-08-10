@@ -134,7 +134,7 @@ passport.use(new YoutubeStrategy({
     }
     
     var user = req.user;
-    console.log('[PROFILE]', profile)
+    // console.log('[PROFILE]', profile)
     user.youtube.accessToken = accessToken;
     user.youtube.refreshToken = refreshToken;
     user.youtube.profile = profile;
@@ -143,9 +143,9 @@ passport.use(new YoutubeStrategy({
         return done(null, false, err);
       }
       Profile.findOne({userId: user._id}, function(err, p) {
-        p.youtube = profile.displayName;
+        p.youtube.displayName = profile.displayName;
         p.save(function(err) {
-          if (err) return next(err);
+          if (err) return console.log(err);
         })
       })
       return done(null, user);
@@ -161,7 +161,7 @@ passport.use(new InstagramStrategy({
   function(req, accessToken, refreshToken, profile, done) {
     // console.log("token", accessToken);
     // console.log("refreshToken", refreshToken);
-    console.log("profile", profile);
+    // console.log("profile", profile);
     if(!req.user){
       throw new Error ("Error please login")
     } 
@@ -170,7 +170,7 @@ passport.use(new InstagramStrategy({
     user.instagram.instagramProfile = profile;
     user.save(function () {
       Profile.findOne({userId: user._id}, function(err, p) {
-        p.instagram = profile.displayName;
+        p.instagram.displayName = profile.displayName;
         p.save(function(err) {
           if (err) return console.log(err);
         })
