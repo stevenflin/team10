@@ -240,10 +240,11 @@ router.get('/posts', function(req, res, next) {
 				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
 				res.render('tableTest', {
 					data	
+				}).catch((err) => console.log(err));
 			}).catch((err) => console.log(err));
-		}).catch((err) => console.log(err));
+		});
 	});
-});
+})
 
 
 					
