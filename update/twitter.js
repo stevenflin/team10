@@ -1,15 +1,15 @@
 var Twitter = require('twitter');
 
 
-function twitterInformation(accessToken, accessTokenSecret){
+function twitterInformation(accessToken, accessTokenSecret, id){
 	return new Promise(function(resolve, reject){
 		var client = new Twitter({
 		  consumer_key: process.env.TWITTER_CONSUMER_KEY,
 		  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-		  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-		  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+		  access_token_key: accessToken,
+		  access_token_secret: accessTokenSecret
 		});
-		var params = {user_id: process.env.TWITTER_ID};
+		var params = {user_id: id};
 		client.get('statuses/user_timeline', params, function(error, tweets, response) {
 
 		  if (error) return next(error); 

@@ -6,7 +6,7 @@ function vineInformation(username, password){
 		var vine = new Vineapple();
 		var user1;
 		// Authenticate the Vine user
-		vine.login(process.env.VINE_USERNAME, process.env.VINE_PASSWORD, function (error, client) {
+		vine.login(username, password, function (error, client) {
 			// console.log("login error", error);
 		    // Make an API request
 		    client.me(function (error, user) {

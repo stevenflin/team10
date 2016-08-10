@@ -260,7 +260,7 @@ router.get('/update/instagram', function(req, res, next){
 		if(err)return next( err)
 
 		// Get instagram data
-		instagram.instagramInformation(process.env.ID, process.env.AT)
+		instagram.instagramInformation(req.user.instagram.instagramProfile.id, req.user.instagram.AccessToken)
 		.then(function(data) {
 
 			// Create new profile snapshot
@@ -378,7 +378,7 @@ router.get('/update/twitter', function(req, res, next){
 		if(err) return next(err);
 
 		// get twitter info
-		twitter.twitterInformation(process.env.TWITTER_ACCESS_TOKEN_KEY, process.env.TWITTER_ACCESS_TOKEN_SECRET)
+		twitter.twitterInformation(req.user.twitter.twitterToken, req.user.twitter.twitterTokenSecret)
 		.then(function(data){
 		
 			new ProfileSnapshot({
@@ -438,7 +438,7 @@ router.get('/update/twitter', function(req, res, next){
 router.get('/update/vine', function(req, res, next){
 	Profile.findOne({userId: req.user._id}, function(err, profile){
 		if(err) return next(err);
-		vine.vineInformation(process.env.VINE_USERNAME, process.env.VINE_PASSWORD)
+		vine.vineInformation(req.user.vine.username, req.user.vine.password)
 		.then(function(data){
 			// console.log("User data", data.userId);
 

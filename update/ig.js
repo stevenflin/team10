@@ -1,9 +1,6 @@
 var ig = require('instagram-node').instagram()
 
-console.log("AT:", process.env.AT);
-console.log("ID:", process.env.ID);
-console.log("INSTAGRAM_CLIENT_ID:", process.env.INSTAGRAM_CLIENT_ID);
-console.log("INSTAGRAM_CLIENT_SECRET:", process.env.INSTAGRAM_CLIENT_SECRET);
+
 
 
 function instagramInformation(id, accessToken){
@@ -22,8 +19,8 @@ function instagramInformation(id, accessToken){
 			  }
 			}
 			
-		ig.use({ access_token: process.env.AT });
-		ig.user_media_recent(process.env.ID, {cursor: 30}, instagramPages);
+		ig.use({ access_token: accessToken });
+		ig.user_media_recent(id, {cursor: 30}, instagramPages);
 	})
 }
 // instagramInformation(process.env.ID, process.env.AT).then(function(data){console.log("bigArr", data)});
