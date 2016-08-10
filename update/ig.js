@@ -25,8 +25,6 @@ function instagramInformation(id, accessToken){
 		ig.use({ access_token: process.env.AT });
 		ig.user_media_recent(process.env.ID, {cursor: 30}, instagramPages);
 	})
-
-
 }
 // instagramInformation(process.env.ID, process.env.AT).then(function(data){console.log("bigArr", data)});
 

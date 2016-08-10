@@ -105,11 +105,19 @@ passport.use(new FacebookStrategy({
         user.facebook.token = token;
         user.facebook.email = profile.email;
         // save the user
-        user.save(function(err) {
+        user.save(function(err, p) {
           if (err)
             throw err;
           return done(null, user);
         });
+        Profile.findOne({userId: user._id}, function(err, p){ //Fix-  check if this works
+          p.facebook = JSON.parse(profile.displayName); //Fix-  check if this works
+          p.save(function(err){
+            if(err) return next(err);
+            console.log('pdiddy', p)
+          })
+        })
+        return done(null, user) //Fix-  check if this works
       }
     });
   }));
@@ -178,10 +186,6 @@ passport.use(new TwitterStrategy({
      passReqToCallback: true
   },
   function(req, token, tokenSecret, profile, cb) {
-    // console.log("profile", profile);
-    // console.log("followers", profile._json.followers_count);
-    // console.log("retweet count", profile._json.status.retweet_count);
-    // console.log("twitterID", profile._json.id);
     if(!req.user){
       throw new Error("twitter failed to login")
     } else {
