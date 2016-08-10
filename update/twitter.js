@@ -84,9 +84,7 @@ function twitterUpdate(id){
 }
 
 
-// twitterUpdate( {
-//         "$oid": "57ab4d6a182a3fe6145eb198"
-//     })
+
 
 module.exports = {
 	twitterInformation: twitterInformation,

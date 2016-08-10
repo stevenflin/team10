@@ -219,62 +219,8 @@ router.get('/update/twitter', function(req, res, next){
 })
 
 router.get('/update/vine', function(req, res, next){
-	Profile.findOne({userId: req.user._id}, function(err, profile){
-		if(err) return next(err);
-		vine.vineInformation(req.user.vine.username, req.user.vine.password)
-		.then(function(data){
-			console.log('what does this look like........', data)
-
-				new ProfileSnapshot({
-					platformID: data.userId,
-					platform: 'vine', 
-					followers: data.user.followerCount, 
-					posts: data.user.postCount,
-					date: new Date(),
-					profileId: profile._id
-				}).save(function(err, p){
-					if(err) return next(err);
-					// console.log('what does this look like.......', p);
-					// console.log('what about this................', p.followers);
-
-					data.data.records.forEach(function(postData, i){
-
-						Post.findOrCreate({postId: postData.postId}, {
-						description: postData.description,
-						postId: postData.postId,
-						type: 'vine',
-						profileId: profile._id
-					}, function(err, post){
-						if(err) return next(err);
-
-						new PostSnapshot({
-							profileId: p._id, 
-							postId: post.postId,
-							comments: postData.comments.count,
-							shares: postData.reposts.count,
-							likes: postData.likes.count,
-							views: postData.loops.count, 
-							date: p.date
-						})
-						.save(function(err, psnap){
-							if(err) return next(err);
-
-							post.snapshots.push(psnap._id);
-							post.save(function(err){
-								if(err) return next(err);
-
-			
-								if(i === data.data.records.length -1){
-									res.redirect('/integrate');
-								}
-							})	
-						})
-					})
-				})
-
-			})
-		}).catch((err) => next(err));
-	})
+	vine.vineUpdate(req.user._id)
+	.then(()=> res.redirect('/integrate'));
 })
 
 router.get('/dashboard', function(req, res, next) {
