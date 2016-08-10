@@ -13,10 +13,10 @@ function pageViewsTotal(days, pageId){
 		FB.api('/'+pageId+'/insights/page_views_total?since='+timeframe.since+'&until='+timeframe.until, 
 			function (response) {
 			  if(!response || response.error) {
-			   console.log(!response ? 'error occurred' : response.error);
+			   // console.log(!response ? 'error occurred' : response.error);
 			   reject(error);
 			  }
-			  console.log("PAGE VIEWS TOTAL",response.data[2].values)
+			  // console.log("PAGE VIEWS TOTAL",response.data[2].values)
 			  resolve (response.data[2].values); //get's 28 day values
 		})
 	})
@@ -37,14 +37,14 @@ function pageImpressions(days, pageId){
 			  "/"+pageId+"/insights/page_impressions?since="+timeframe.since+"&until="+timeframe.until, //handles pagination by time
 
 			  function (response) {
-			  	console.log("COOL",response)
+			  	// console.log("COOL",response)
 			    var arr = [];
 			    if (response && !response.error) {
 			      response.data[0].values.forEach(function(day){
 			        arr.push({value: day.value, end_time: day.end_time}) 
 			      })
 			    }
-			    console.log("arrarrarr",arr)
+			    // console.log("arrarrarr",arr)
 			    resolve(arr);
 			  }
 		)
@@ -242,7 +242,7 @@ function pageFans(days, pageId){
 	        if (response && !response.error) {
 	          /* handle the result */
 	          var numLikes = response.data[0].values[response.data[0].values.length-1].value
-	          console.log("yomane", numLikes)
+	          // console.log("yomane", numLikes)
 	          resolve(numLikes);
 	        }
 	        else{ 
@@ -270,7 +270,7 @@ function facebookUpdate(id){
 	return new Promise(function(resolve, reject){
 	User.findById(id, function(err, user){
 			Profile.findOne({userId: user._id}, function(err, profile){
-			console.log("hoesxx", profile)
+			// console.log("hoesxx", profile)
 			if(err) return next(err)
 			var test = time(3);
 			var pageId = user.facebook.pages[0].pageId;
@@ -281,12 +281,12 @@ function facebookUpdate(id){
 					pagePosts(28, pageId), //
 					pageFans(28, pageId) //fix-undefiened
 				]
-			console.log("FACEBOOK ID ", user.facebook.pages[0].pageId)
+			// console.log("FACEBOOK ID ", user.facebook.pages[0].pageId)
 			FB.setAccessToken(user.facebook.token);
 			Promise
 			.all([functions[0], functions[1], functions[2], functions[3], functions[4]])
 			.then((result)=>{ // create profile and profile snapshot here
-				console.log("$$0")
+				// console.log("$$0")
 
 				try {
 
@@ -329,7 +329,7 @@ function facebookUpdate(id){
 								})
 								.save(function(err, psnap){
 
-									console.log('$$3')
+									// console.log('$$3')
 									if(err) return next(err);
 
 									postData.snapshots.push(psnap._id);
