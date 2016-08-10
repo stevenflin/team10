@@ -71,10 +71,7 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 	if (req.query.pageId) {
 		FB.setAccessToken(req.user.facebook.token);
 
-		console.log("~~~~~~~~~~~~~~~~~~~~ ",req.query);
-		console.log("~~~~~~~~XXXXXXXX~~~~~~~ ",req.user.facebook.pages);
 		req.user.facebook.pages.push({pageId: req.query.pageId, pageName: req.query.name})
-		console.log("~~~~~~~~XXXXXXXX~~~~~~~ ",req.user.facebook.pages);
 		req.user.save(function(err, success){
 			console.log("Running")
 			if(err){
@@ -82,7 +79,7 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 			}
 			console.log("YO BITCH",success)
 		});
-		res.render('fbPageSelector', {result: result})	
+		res.render('integrate')	
 		new Promise(function(resolve, reject){
 
 			FB.api(`/${req.query.pageId}/insights/page_views_total`, function (res) {
@@ -266,7 +263,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 				}
 			})
 			// console.log('[THESE ARE THE RESULTS THE RESULTS ARE THESE]', results);
-console.log('[FORMATTED DATA]', followers)
+			console.log('[FORMATTED DATA]', followers)
 			console.log('SNAPS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', snaps)
 			console.log('followers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', followers)
 			console.log('REcent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', recent)
