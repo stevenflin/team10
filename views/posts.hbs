@@ -1,48 +1,59 @@
-<h1>Youtube</h1>
-{{#each data.youtube}}
-<h2>Title: {{this.snippet.title}}</h2>
-<h3>Description: {{this.snippet.description}}</h3>
-{{#each this.snaps}}
-<div>
-<p>Likes: {{this.likes}}</p>
-<p>Dislikes: {{this.dislikes}}</p>
-<p>Comments: {{this.comments}}</p>
+<div style='float: left; margin-right: 15px'>
+	<h1>Youtube</h1>
+	{{#each data.youtube}}
+	<h3>Title: {{this.snippet.title}}</h3>
+	<h2>Description: {{this.snippet.description}}</h2>
+	{{#each this.snaps}}
+	<div>
+	<p>Date: {{this.date}}</p>
+	<p>Likes: {{this.likes}}</p>
+	<p>Dislikes: {{this.dislikes}}</p>
+	<p>Comments: {{this.comments}}</p>
+	<p>Views: {{this.views}}</p>
+	<p>Favorites: {{this.favorites}}</p>
+	</div>
+	{{/each}}
+	{{/each}}
 </div>
-{{/each}}
-{{/each}}
-{{!-- <h1>Instagram</h1>
-{{#each data.youtube}}
-<p>Title: {{this.snippet.title}}</p>
-<p>Description: {{this.snippet.description}}</p>
-{{#each this.snaps}}
-<p>Likes: {{this.likes}}</p>
-<p>Dislikes: {{this.dislikes}}</p>
-{{/each}}
-{{/each}}
-<h1>Vine</h1>
-{{#each data.youtube}}
-<p>Title: {{this.snippet.title}}</p>
-<p>Description: {{this.snippet.description}}</p>
-{{#each this.snaps}}
-<p>Likes: {{this.likes}}</p>
-<p>Dislikes: {{this.dislikes}}</p>
-{{/each}}
-{{/each}}
-<h1>Facebook</h1>
-{{#each data.youtube}}
-<p>Title: {{this.snippet.title}}</p>
-<p>Description: {{this.snippet.description}}</p>
-{{#each this.snaps}}
-<p>Likes: {{this.likes}}</p>
-<p>Dislikes: {{this.dislikes}}</p>
-{{/each}}
-{{/each}}
-<h1>Twitter</h1>
-{{#each data.youtube}}
-<p>Title: {{this.snippet.title}}</p>
-<p>Description: {{this.snippet.description}}</p>
-{{#each this.snaps}}
-<p>Likes: {{this.likes}}</p>
-<p>Dislikes: {{this.dislikes}}</p>
-{{/each}}
-{{/each}} --}}
+<div style='float: left; margin-right: 15px'>
+	<h1>Instagram</h1>
+	{{#each data.instagram}}
+	<h3>Title: {{this.snippet.title}}</h3>
+	<h2>Description: {{this.snippet.description}}</h2>
+	{{#each this.snaps}}
+	<div>
+	<p>Date: {{this.date}}</p>
+	<p>Likes: {{this.likes}}</p>
+	<p>Comments: {{this.comments}}</p>
+	</div>
+	{{/each}}
+	{{/each}}
+</div>
+<div style='float: left; margin-right: 15px'>
+	<h1>Twitter</h1>
+	{{#each data.twitter}}
+	<h3>Title: {{this.snippet.title}}</h3>
+	<h2>Description: {{this.snippet.description}}</h2>
+	{{#each this.snaps}}
+	<div>
+	<p>Date: {{this.date}}</p>
+	<p>Retweets: {{this.shares}}</p>
+	</div>
+	{{/each}}
+	{{/each}}
+</div>
+<div style='float: left; margin-right: 15px'>
+	<h1>Facebook</h1>
+	{{#each data.facebook}}
+	<h3>Title: {{this.snippet.title}}</h3>
+	<h2>Description: {{this.snippet.description}}</h2>
+	{{#each this.snaps}}
+	<div>
+	<p>Date: {{this.date}}</p>
+	<p>Likes: {{this.likes}}</p>
+	<p>Shares: {{this.shares}}</p>
+	<p>Comments: {{this.comments}}</p>
+	</div>
+	{{/each}}
+	{{/each}}
+</div>

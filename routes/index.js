@@ -215,7 +215,7 @@ router.get('/update/facebook', function(req, res, next){  //should be /update/pa
 							// snapshot it
 							new PostSnapshot({
 								profileId: p._id, 
-								postId: postData.id,
+								postId: postData.postId,
 								comments: post.comments,
 								likes: post.likes,
 								shares: post.shares,
