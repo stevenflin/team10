@@ -364,17 +364,57 @@ router.get('/update/vine', function(req, res, next){
 		if(err) return next(err);
 		vine.vineInformation(process.env.VINE_USERNAME, process.env.VINE_PASSWORD)
 		.then(function(data){
-			console.log("User data", data);
+			// console.log("User data", data.userId);
 
-			new ProfileSnapshot({
-				platformID: data.userId,
-				platform: 'vine', 
-				followers: data.following, 
-				posts: data.postCount,
-				date: new Date(),
-				profileId: profile._id
+				new ProfileSnapshot({
+					platformID: data.userId,
+					platform: 'vine', 
+					followers: data.following, 
+					posts: data.postCount,
+					date: new Date(),
+					profileId: profile._id
+				}).save(function(err, p){
+					if(err) return next(err);
+
+					data.data.records.forEach(function(postData, i){
+
+						// console.log("postData", postData)
+
+						Post.findOrCreate({postId: postData.id}, {
+						description: postData.description,
+						postId: postData.postId,
+						type: 'vine',
+						profileId: profile._id
+					}, function(err, post){
+						if(err) return next(err);
+
+						new PostSnapshot({
+							profileId: p._id, 
+							postId: post.id,
+							comments: postData.comments.count,
+							shares: postData.reposts.count,
+							likes: postData.likes.count,
+							views: postData.loops.count, 
+							date: p.date
+						})
+						.save(function(err, psnap){
+							if(err) return next(err);
+
+							post.snapshots.push(psnap._id);
+							post.save(function(err){
+								if(err) return next(err);
+
+			
+								if(i === data.data.records.length -1){
+									res.redirect('/integrate');
+								}
+							})	
+						})
+					})
+				})
+
 			})
-		})
+		}).catch((err) => next(err));
 	})
 })
 
