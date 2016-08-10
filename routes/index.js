@@ -388,20 +388,23 @@ router.get('/update/vine', function(req, res, next){
 		if(err) return next(err);
 		vine.vineInformation(req.user.vine.username, req.user.vine.password)
 		.then(function(data){
+			console.log('what does this look like........', data)
 
 				new ProfileSnapshot({
 					platformID: data.userId,
 					platform: 'vine', 
-					followers: data.following, 
-					posts: data.postCount,
+					followers: data.user.followerCount, 
+					posts: data.user.postCount,
 					date: new Date(),
 					profileId: profile._id
 				}).save(function(err, p){
 					if(err) return next(err);
+					// console.log('what does this look like.......', p);
+					// console.log('what about this................', p.followers);
 
 					data.data.records.forEach(function(postData, i){
 
-						Post.findOrCreate({postId: postData.id}, {
+						Post.findOrCreate({postId: postData.postId}, {
 						description: postData.description,
 						postId: postData.postId,
 						type: 'vine',
@@ -411,7 +414,7 @@ router.get('/update/vine', function(req, res, next){
 
 						new PostSnapshot({
 							profileId: p._id, 
-							postId: post.id,
+							postId: post.postId,
 							comments: postData.comments.count,
 							shares: postData.reposts.count,
 							likes: postData.likes.count,
@@ -484,7 +487,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 			})
 			// console.log('[THESE ARE THE RESULTS THE RESULTS ARE THESE]', results);
 			// console.log('[FORMATTED DATA]', followers)
-			console.log('these are the data results..............', snaps)
+			console.log('these are the data results..............', followers)
 			res.render('dashboard', {
 				snaps,
 				followers,
@@ -561,8 +564,8 @@ router.get('/posts', function(req, res, next) {
 					}
 				})
 				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
-				console.log('what does this look like......', data.youtube[0].snippet);
-				console.log('what aboutthis look like......', data.youtube[0].snaps);
+				console.log('what does this look like......', data.vine[0].snippet);
+				console.log('what aboutthis look like......', data.vine[0].snaps);
 				res.render('posts', {
 					data
 				})

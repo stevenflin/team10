@@ -57,3 +57,19 @@
 	{{/each}}
 	{{/each}}
 </div>
+<div style='float: left; margin-right: 15px'>
+	<h1>Vine</h1>
+	{{#each data.vine}}
+	<h3>Title: {{this.snippet.title}}</h3>
+	<h2>Description: {{this.snippet.description}}</h2>
+	{{#each this.snaps}}
+	<div>
+	<p>Date: {{this.date}}</p>
+	<p>Loops: {{this.views}}</p>
+	<p>Likes: {{this.likes}}</p>
+	<p>Shares: {{this.shares}}</p>
+	<p>Comments: {{this.comments}}</p>
+	</div>
+	{{/each}}
+	{{/each}}
+</div>
