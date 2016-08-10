@@ -130,7 +130,7 @@ var post = new mongoose.Schema({
     type: Number
   }, 
   date: {
-    type: Date
+    type: Number
   },
   profileId: {
     type: mongoose.Schema.Types.ObjectId,
