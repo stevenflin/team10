@@ -1,5 +1,10 @@
 var Twitter = require('twitter');
-
+var models = require('../models/models');
+var User = models.User;
+var Profile = models.Profile;
+var ProfileSnapshot = models.ProfileSnapshot;
+var Post = models.Post;
+var PostSnapshot = models.PostSnapshot;
 
 function twitterInformation(accessToken, accessTokenSecret, id){
 	return new Promise(function(resolve, reject){
@@ -19,34 +24,71 @@ function twitterInformation(accessToken, accessTokenSecret, id){
 	});		
 }
 
-// twitterInformation(console.log("fuck"));
+function twitterUpdate(id){
+	User.findById(id, function(err, user) {
+		Profile.findOne({userId: user._id}, function(err, profile){
+			if(err) return next(err);
 
-// }
+			// get twitter info
+			twitterInformation(user.twitter.twitterToken, user.twitter.twitterTokenSecret)
+			.then(function(data){
+			
+				new ProfileSnapshot({
+					platformID: user.twitter.twitterProfile._json.id,
+					platform: 'twitter', 
+					followers: data[0].user.followers_count, 
+					posts: data[0].length,
+					date: new Date(),
+					profileId: profile._id
+				})
+				.save(function(err, p){
+					if(err) return next(err);
 
-// client.get('favorites/list', function(error, tweets, response) {
-//   if(error) throw error;
-//   console.log(tweets);  // The favorites. 
-//   // console.log(response);  // Raw response object. 
-// });
-// client.get('search/tweets', {q: 'node.js'}, function(error, tweets, response) {
-//    console.log(tweets);
-// });
+					// iterate through posts
+					data.forEach(function(postData, i){
 
-// client.get('search/tweets', function(error, tweets, response) {
-//   if(error) throw error;
-//   console.log(tweets);  // The favorites. 
-  // console.log(response);  // Raw response object. 
-// });
-// client.post('statuses/update', {status: 'I am a tweet'}, function(error, tweet, response) {
-//   if (!error) {
-//     console.log(tweet);
-//   }
-// });
-// client.get('', function(error, tweet, response){
-// 	if(!error){
-// 		console.log(tweet);
-// 	}
-// })
+						// If post doesn't exist, create it
+						Post.findOrCreate({postId: postData.id}, {
+							description: postData.text,
+							postId: postData.id,
+							type: 'twitter',
+							profileId: profile._id
+						}, function(err, post){
+							if(err) return next(err);
+
+							// snapshot it
+							new PostSnapshot({
+								profileId: p._id, 
+								postId: post.postId,
+								shares: postData.retweet_count,
+								likes: postData.favourite_count,
+								date: p.date
+							})
+							.save(function(err, psnap){
+								if(err) return next(err);
+
+								post.snapshots.push(psnap._id);
+								post.save(function(err){
+									if(err) return next(err);
+								})				
+							})
+						})
+					})
+					});
+				});
+			}).catch(function(err){
+				console.log("[err]", err);
+			})
+		})
+	})
+}
+
+
+// twitterUpdate( {
+//         "$oid": "57ab4d6a182a3fe6145eb198"
+//     })
+
 module.exports = {
-	twitterInformation: twitterInformation
+	twitterInformation: twitterInformation,
+	twitterUpdate: twitterUpdate
 }

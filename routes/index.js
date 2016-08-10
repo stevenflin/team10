@@ -265,65 +265,8 @@ router.get('/update/youtube', function(req, res, next) {
 });
 
 router.get('/update/twitter', function(req, res, next){
-	// get user info
-	Profile.findOne({userId: req.user._id}, function(err, profile){
-		if(err) return next(err);
-
-		// get twitter info
-		twitter.twitterInformation(req.user.twitter.twitterToken, req.user.twitter.twitterTokenSecret)
-		.then(function(data){
-		
-			new ProfileSnapshot({
-				platformID: req.user.twitter.twitterProfile._json.id,
-				platform: 'twitter', 
-				followers: data[0].user.followers_count, 
-				posts: data[0].length,
-				date: new Date(),
-				profileId: profile._id
-			})
-			.save(function(err, p){
-				if(err) return next(err);
-
-				// iterate through posts
-				data.forEach(function(postData, i){
-
-					// If post doesn't exist, create it
-					Post.findOrCreate({postId: postData.id}, {
-						description: postData.text,
-						postId: postData.id,
-						type: 'twitter',
-						profileId: profile._id
-					}, function(err, post){
-						if(err) return next(err);
-
-						// snapshot it
-						new PostSnapshot({
-							profileId: p._id, 
-							postId: post.postId,
-							shares: postData.retweet_count,
-							likes: postData.favourite_count,
-							date: p.date
-						})
-						.save(function(err, psnap){
-							if(err) return next(err);
-
-							post.snapshots.push(psnap._id);
-							post.save(function(err){
-								if(err) return next(err);
-
-			
-								if(i === data.length -1){
-									res.redirect('/integrate');
-								}
-							})				
-						})
-					})
-				});
-			});
-		}).catch(function(err){
-			console.log("[err]", err);
-		})
-	})
+	twitter.twitterUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));	
 })
 
 router.get('/update/vine', function(req, res, next){
