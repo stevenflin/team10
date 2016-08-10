@@ -83,8 +83,8 @@ function instagramUpdate(id) {
 						})
 					})
 				})
-			})
-		}).catch(function(err){ next(err)})
+			}).catch(function(err){ next(err)})
+		})
 	})
 }
 

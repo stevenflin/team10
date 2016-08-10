@@ -16,6 +16,7 @@ var twitter = require('../update/twitter.js');
 
 var youtubeFunctions = require('../update/youtube');
 var getYoutubeData = youtubeFunctions.getYoutubeData;
+var youtubeUpdate = youtubeFunctions.youtubeUpdate;
 var getDay = youtubeFunctions.getDay;
 var getWeek = youtubeFunctions.getWeek;
 var getMonth = youtubeFunctions.getMonth;
@@ -201,8 +202,6 @@ router.get('/update/facebook', function(req, res, next){  //should be /update/pa
 	
 })
 
-var i = 0;
-
 router.get('/update/instagram', function(req, res, next){
 	// Find social media profile
 	instagram.instagramUpdate(req.user._id)
@@ -210,58 +209,8 @@ router.get('/update/instagram', function(req, res, next){
 })
 
 router.get('/update/youtube', function(req, res, next) {
-	getYoutubeData(req.user.youtube.profile.id)
-	.then(function(data) {
-		Profile.findOne({userId: req.user._id},function(err, profile) {
-			if (err) return next(err);
-
-			new ProfileSnapshot({
-				platformID: req.user.youtube.profile.id,
-				platform: 'youtube',
-				followers: data.channel.subscriberCount,
-				posts: data.channel.videoCount,
-				views: data.channel.viewCount,
-				date: new Date(),
-				profileId: profile._id
-			}).save(function(err, p) {
-				if (err) return next(err);
-
-				data.videos.forEach(function(video, i) {
-
-					Post.findOrCreate({postId: video.id}, {
-						title: video.snippet.title,
-						description: video.snippet.description,
-						postId: video.id,
-						type: 'youtube',
-						profileId: profile._id
-					}, function(err, post) {
-						if (err) return next(err);
-
-						new PostSnapshot({
-							profileId: p._id,
-							postId: post.postId,
-							comments: parseInt(video.stats.commentCount),
-							likes: parseInt(video.stats.likeCount),
-							favorites: parseInt(video.stats.favoriteCount),
-							views: parseInt(video.stats.viewCount),
-							dislikes: parseInt(video.stats.dislikeCount),
-							date: p.date
-						}).save(function(err, psnap) {
-							if (err) return next(err);
-
-							post.snapshots.push(psnap._id);
-							post.save(function(err) {
-								if (err) return next(err);
-								if (i === data.videos.length - 1) {
-									res.redirect('/youtube');
-								}
-							});
-						});
-					});
-				});
-			});
-		});
-	}).catch((err) => next(err));
+	youtubeUpdate(req.user._id)
+	.then(() => res.redirect('/youtube'));
 });
 
 router.get('/update/twitter', function(req, res, next){
