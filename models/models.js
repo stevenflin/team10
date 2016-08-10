@@ -131,7 +131,7 @@ var post = new mongoose.Schema({
   }, 
   date: {
     type: Date
-  } 
+  },
   profileId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profile'

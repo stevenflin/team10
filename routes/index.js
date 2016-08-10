@@ -205,65 +205,8 @@ var i = 0;
 
 router.get('/update/instagram', function(req, res, next){
 	// Find social media profile
-	Profile.findOne({userId: req.user._id}, function(err, profile){
-		if(err)return next( err)
-
-		// Get instagram data
-		instagram.instagramInformation(req.user.instagram.instagramProfile.id, req.user.instagram.AccessToken)
-		.then(function(data) {
-
-			// Create new profile snapshot
-			new ProfileSnapshot({
-				platformID: req.user.instagram.instagramProfile.id,
-				platform: 'instagram', 
-				followers: data.profile, 
-				posts: data.bigArr.length,
-				date: new Date(),
-				profileId: profile._id
-			})
-			.save(function(err, p){
-				if(err) return next(err);
-
-				// Iterate through posts and create new snapshots
-				data.bigArr.forEach(function(post, i){
-					var desc = null;
-					if(post.caption){
-						desc = post.caption.text
-					}
-
-					// If post doesn't exist, create it
-					Post.findOrCreate({postId: post.id}, {
-						description: desc,
-						postId: post.id,
-						type: 'instagram',
-						profileId: profile._id
-					}, function(err, postData){
-						if(err) return next(err);
-						console.log("[creating post] for:", post.id);
-
-						// snapshot it
-						new PostSnapshot({
-							profileId: p._id, 
-							postId: postData.postId,
-							comments: post.comments.count,
-							likes: post.likes.count,
-							date: p.date
-						})
-						.save(function(err, psnap){
-							if(err) return next(err);
-							postData.snapshots.push(psnap._id);
-							postData.save(function(err){
-								if(err) return next(err);
-								if(i === data.bigArr.length -1){
-									res.redirect('/integrate');
-								}
-							})				
-						})
-					})
-				})
-			})
-		})
-	}).catch(function(err){ next(err)})
+	instagram.instagramUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));
 })
 
 router.get('/update/youtube', function(req, res, next) {
