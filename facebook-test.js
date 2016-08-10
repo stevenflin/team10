@@ -54,7 +54,7 @@ function pagePosts(days, pageId){
 	var timeframe = time(days);
 	return new Promise(function(resolve, reject){
 		FB.api(
-			  "/"+pageId+"/posts?since="+timeframe.since+"&until="+timeframe.until+"&fields=message,shares,likes.summary(true),comments.summary(true)",
+			  "/"+pageId+"/posts?since="+timeframe.since+"&until="+timeframe.until+"&fields=message,created_time,shares,likes.summary(true),comments.summary(true)",
 			   //handles pagination by time
 			  {
 			      "period": "days_28"
@@ -64,7 +64,7 @@ function pagePosts(days, pageId){
 			  	var index= 0;
 			  	console.log("COOL SHIT", response.data);
 			  	var data = response.data.map(function(post){
-			  		return {postId: post.id, message: post.message, shares: (post.shares) ? post.shares.count : 0, 
+			  		return {postId: post.id, message: post.message, shares: (post.shares) ? post.shares.count : 0, date: new Date(post.created_time).getTime(),
 			  				likes: (post.likes)? post.likes.data.length : 0, comments: (post.comments)? post.comments.data.length : 0}
 			  	})
 			  	// if(response && !response.error){
