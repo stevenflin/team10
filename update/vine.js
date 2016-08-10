@@ -43,57 +43,59 @@ function vineInformation(username, password){
 
 
 function vineUpdate(id){
-	User.findById(id, function(err, user){
-		Profile.findOne({userId: user._id}, function(err, profile){
-		if(err) return next(err);
-		vineInformation(user.vine.username, user.vine.password)
-		.then(function(data){
-			// console.log('what does this look like........', data)
+	return new Promise(function(resolve, reject) {
+		User.findById(id, function(err, user){
+			Profile.findOne({userId: user._id}, function(err, profile){
+			if(err) return next(err);
+			vineInformation(user.vine.username, user.vine.password)
+			.then(function(data){
+				// console.log('what does this look like........', data)
 
-				new ProfileSnapshot({
-					platformID: data.userId,
-					platform: 'vine', 
-					followers: data.user.followerCount, 
-					posts: data.user.postCount,
-					date: new Date(),
-					profileId: profile._id
-				}).save(function(err, p){
-					if(err) return next(err);
-					// console.log('what does this look like.......', p);
-					// console.log('what about this................', p.followers);
-
-					data.data.records.forEach(function(postData, i){
-
-						Post.findOrCreate({postId: postData.postId}, {
-						description: postData.description,
-						postId: postData.postId,
-						type: 'vine',
+					new ProfileSnapshot({
+						platformID: data.userId,
+						platform: 'vine', 
+						followers: data.user.followerCount, 
+						posts: data.user.postCount,
+						date: new Date(),
 						profileId: profile._id
-					}, function(err, post){
+					}).save(function(err, p){
 						if(err) return next(err);
+						// console.log('what does this look like.......', p);
+						// console.log('what about this................', p.followers);
 
-						new PostSnapshot({
-							profileId: p._id, 
-							postId: post.postId,
-							comments: postData.comments.count,
-							shares: postData.reposts.count,
-							likes: postData.likes.count,
-							views: postData.loops.count, 
-							date: p.date
-						})
-						.save(function(err, psnap){
+						data.data.records.forEach(function(postData, i){
+
+							Post.findOrCreate({postId: postData.postId}, {
+							description: postData.description,
+							postId: postData.postId,
+							type: 'vine',
+							profileId: profile._id
+						}, function(err, post){
 							if(err) return next(err);
 
-							post.snapshots.push(psnap._id);
-							post.save(function(err){
+							new PostSnapshot({
+								profileId: p._id, 
+								postId: post.postId,
+								comments: postData.comments.count,
+								shares: postData.reposts.count,
+								likes: postData.likes.count,
+								views: postData.loops.count, 
+								date: p.date
+							})
+							.save(function(err, psnap){
 								if(err) return next(err);
 
-								})	
+								post.snapshots.push(psnap._id);
+								post.save(function(err){
+									if(err) return next(err);
+									resolve();
+									})	
+								})
 							})
 						})
 					})
-				})
-			}).catch((err) => next(err));
+				}).catch((err) => next(err));
+			})
 		})
 	})
 }
