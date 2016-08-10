@@ -73,10 +73,7 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 	if (req.query.pageId) {
 		FB.setAccessToken(req.user.facebook.token);
 
-		console.log("~~~~~~~~~~~~~~~~~~~~ ",req.query);
-		console.log("~~~~~~~~XXXXXXXX~~~~~~~ ",req.user.facebook.pages);
 		req.user.facebook.pages.push({pageId: req.query.pageId, pageName: req.query.name})
-		console.log("~~~~~~~~XXXXXXXX~~~~~~~ ",req.user.facebook.pages);
 		req.user.save(function(err, success){
 			console.log("Running")
 			if(err){
@@ -84,7 +81,7 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 			}
 			console.log("YO BITCH",success)
 		});
-		res.render('fbPageSelector', {result: result})	
+		res.render('integrate')	
 		new Promise(function(resolve, reject){
 
 			FB.api(`/${req.query.pageId}/insights/page_views_total`, function (res) {
@@ -151,8 +148,16 @@ router.get('/dashboard/:id', function(req, res, next) {
 				}
 			})
 			// console.log('[THESE ARE THE RESULTS THE RESULTS ARE THESE]', results);
-			// console.log('[FORMATTED DATA]', followers)
+			console.log('[FORMATTED DATA]', followers)
+			console.log('SNAPS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', snaps)
+			console.log('followers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', followers)
+			console.log('REcent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', recent)
+			console.log('Change~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', change)
+
+
+
 			console.log('these are the data results..............', followers)
+
 			res.render('dashboard', {
 				snaps,
 				followers,
@@ -162,7 +167,9 @@ router.get('/dashboard/:id', function(req, res, next) {
 		}).catch((err) => console.log(err));
 	});
 });
-
+router.get('/tableTest', function(req, res, next){
+	res.render('tableTest')
+})
 router.get('/posts', function(req, res, next) {
 	var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 	Profile.findOne({userId: req.user._id}, function(err, profile) {
@@ -228,12 +235,11 @@ router.get('/posts', function(req, res, next) {
 						data[d.type] = d.posts
 					}
 				})
-				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
 				console.log('what does this look like......', data.vine[0].snippet);
 				console.log('what aboutthis look like......', data.vine[0].snaps);
-				res.render('posts', {
-					data
-				})
+				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
+				res.render('tableTest', {
+					data	
 			}).catch((err) => console.log(err));
 		}).catch((err) => console.log(err));
 	});
