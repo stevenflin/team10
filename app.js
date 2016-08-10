@@ -193,6 +193,12 @@ passport.use(new TwitterStrategy({
       req.user.twitter.twitterTokenSecret = tokenSecret;
       req.user.twitter.twitterProfile = profile;
       req.user.save(function (err, user) {
+        Profile.findOne({userId: user._id}, function(err, p) {
+        p.twitter.displayName = profile.displayName;
+        p.save(function(err) {
+              if (err) return console.log(err);
+            })
+          })
         return cb(err, req.user);
       });
     }
