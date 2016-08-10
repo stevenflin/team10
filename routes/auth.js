@@ -69,6 +69,7 @@ module.exports = function(passport) {
     passport.authenticate('youtube', {failureRedirect: '/login'}),
     function(req, res) {
       res.redirect('/youtube');
+
     }
   );
   

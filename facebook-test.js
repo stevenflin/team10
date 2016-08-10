@@ -23,13 +23,15 @@ console.log("yo")
 function pageViewsTotal(days, pageId){
 	var timeframe = time(days);
 	return new Promise(function(resolve, reject){
-		FB.api('/'+pageId+'/insights/page_views_total', function (response) {
-	  if(!response || response.error) {
-	   console.log(!response ? 'error occurred' : response.error);
-	   reject(error);
-	  }
-	  resolve (response.data[2].values); //get's 28 day values
-	})
+		FB.api('/'+pageId+'/insights/page_views_total?since='+timeframe.since+'&until='+timeframe.until, 
+			function (response) {
+			  if(!response || response.error) {
+			   console.log(!response ? 'error occurred' : response.error);
+			   reject(error);
+			  }
+			  console.log("PAGE VIEWS TOTAL",response.data[2].values)
+			  resolve (response.data[2].values); //get's 28 day values
+		})
 	})
 }
 	//GETS PAGE IMPRESSIONS OVER 1 MONTH, PERIOD (**, week, day) 
@@ -45,10 +47,8 @@ function pageImpressions(days, pageId){
 	var timeframe = time(days);
 	return new Promise(function(resolve, reject){
 		FB.api(
-			  "/"+pageId+"/insights/page_impressions?since="+timeframe.since+"&&+until="+timeframe.until, //handles pagination by time
-			  {
-			      "period": "days_28"
-			  },
+			  "/"+pageId+"/insights/page_impressions?since="+timeframe.since+"&until="+timeframe.until, //handles pagination by time
+
 			  function (response) {
 			  	console.log("COOL",response)
 			    var arr = [];
@@ -67,7 +67,7 @@ function pagePosts(days, pageId){
 	var timeframe = time(days);
 	return new Promise(function(resolve, reject){
 		FB.api(
-			  "/"+pageId+"/posts?fields=message,shares,likes.summary(true),comments.summary(true)",
+			  "/"+pageId+"/posts?since="+timeframe.since+"&until="+timeframe.until+"&fields=message,shares,likes.summary(true),comments.summary(true)",
 			   //handles pagination by time
 			  {
 			      "period": "days_28"
@@ -91,18 +91,16 @@ function pagePosts(days, pageId){
 			  	console.log("123123123123", arr)
 			  	resolve(data)
 			  })
+		
 	})
 };
 // ~~~~~~~~~~~~~~FUNCTION TO GET NUMBER OF IMPRESSIONS THAT CAME FROM ALL YOUR POSTS
-
 function pagePostImpressions(days, pageId){
 	return new Promise(function(resolve, reject){
 		var timeframe = time(days);
 		FB.api(
 		  "/"+pageId+"/insights/page_posts_impressions?since="+timeframe.since+"&&+until="+timeframe.until, //handles pagination by time
-		  {
-		      "period": "days_28"
-		  },
+		  
 		  function (response) {
 		    var arr = [];
 		    if (response && !response.error) {
@@ -170,7 +168,7 @@ function pagePostImpressions(days, pageId){
 function postImpressions(days, postId){
 	var timeframe = time(days);
 	FB.api( //might have to use post id and not blog id
-	      "/"+postId+"/insights/post_impressions?since="+timeframe.since+"&&+until="+timeframe.until, //The number of impressions per post
+	      "/"+postId+"/insights/post_impressions?since="+timeframe.since+"&until="+timeframe.until, //The number of impressions per post
 	      //MAP OR PUSH TO AN ARRAY 
 	      function (response) {
 	        if (response && !response.error) {
@@ -238,10 +236,7 @@ function postImpressions(days, postId){
 //   );
 function pageFanAdds(days, pageId){
 	FB.api(
-      "/1688425971402749/insights/page_fan_adds", //The number of People Talking About the Page by user age and gender
-      {
-          "period": "days_28"
-      },
+      "/"+pageId+"/insights/page_fan_adds?since="+timeframe.since+"&until="+timeframe.until, //The number of People Talking About the Page by user age and gender
       function (response) {
         if (response && !response.error) {
           /* handle the result */
@@ -252,18 +247,23 @@ function pageFanAdds(days, pageId){
 }
 //~~~~~~~~~~~~~~~~~~~~~ page_fans
 function pageFans(days, pageId){
-	FB.api(
-      "/"+pageId+"/insights/page_fans", //The number of People Talking About the Page by user age and gender
-      {
-          "period": "days_28"
-      },
-      function (response) {
-        if (response && !response.error) {
-          /* handle the result */
-          resolve(response);
-        }
-      }
- 	);
+	var timeframe = time(days);
+	return new Promise(function(resolve, reject){
+		FB.api(
+	      "/"+pageId+"/insights/page_fans?"+timeframe.since+"&until="+timeframe.until, //The number of People Talking About the Page by user age and gender
+	      function (response) {
+	        if (response && !response.error) {
+	          /* handle the result */
+	          var numLikes = response.data[0].values[response.data[0].values.length-1].value
+	          console.log("yomane", numLikes)
+	          resolve(numLikes);
+	        }
+	        else{ 
+	        	console.log("ERROR123", err)
+	        }
+	      }
+	 	);
+	 })
 }
 // // PAGE LIKES
 // //https://graph.facebook.com/{{pagename}}/insights/page_views?access_token={{access_token_key}}&since=1420070400&until=1421625600 (UNIX TIME)
@@ -283,6 +283,8 @@ module.exports = {
   pageImpressions: pageImpressions,
   pageViewsTotal: pageViewsTotal,
   pagePostImpressions: pagePostImpressions,
-  pagePosts: pagePosts
+  pagePosts: pagePosts,
+  pageFans: pageFans,
+  pageFanAdds: pageFanAdds
 }
 //make function for rendering page names by id, and then adding that page to the dashboard by id
