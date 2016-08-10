@@ -340,7 +340,7 @@ router.get('/update/twitter', function(req, res, next){
 						// snapshot it
 						new PostSnapshot({
 							profileId: p._id, 
-							postId: post.id,
+							postId: post.postId,
 							shares: postData.retweet_count,
 							likes: postData.favourite_count,
 							date: p.date
@@ -431,50 +431,83 @@ router.get('/dashboard/:id', function(req, res, next) {
 });
 
 router.get('/posts', function(req, res, next) {
-	// return new Promise(function(masterResolve, masterReject) {
-		var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
-		Profile.findOne({userId: req.user._id}, function(err, profile) {
-			if (err) return next(err);
-			platforms = platforms.map(function(p) {
-				return new Promise(function(resolve, reject) {
-					Post.find({profileId: profile._id, type: p}, function(err, posts) {
-						if (err) reject(err);
-						console.log('these are the posts.......', posts);
-						// console.log('did i make it here at least');
-						resolve({
-							type: p,
-							posts: posts
-						});
+	var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
+	Profile.findOne({userId: req.user._id}, function(err, profile) {
+		if (err) return next(err);
+		platforms = platforms.map(function(p) {
+			return new Promise(function(resolve, reject) {
+				Post.find({profileId: profile._id, type: p}, function(err, posts) {
+					if (err) reject(err);
+					// console.log('these are the posts.......', posts);
+					// console.log('did i make it here at least');
+					resolve({
+						type: p,
+						posts: posts
 					});
 				});
 			});
-			Promise
-			.all(platforms)
-			.then((data) => {
-				console.log('hopefully this works on the first try.......', data);
-				// data.forEach(function(posts) {
-					
-				// })
-				res.send('hi');
-			}).catch((err) => console.log(err));
 		});
-	// });
+		Promise
+		.all(platforms)
+		.then((data) => {
+			// console.log('hopefully this works on the first try.......', data);
+			// console.log('what does this look like.......', data[0].posts[0])
+
+			var arr = data.map(function(platform) {
+				return new Promise(function(resolve, reject) {
+					if (platform.posts.length) {
+						var bigArr = [];
+						platform.posts.forEach(function(post, i) {
+							PostSnapshot.find({postId: post.postId})
+							.limit(10)
+							.exec(function(err, postsnaps) {
+								if (err) reject(err);
+								bigArr = bigArr.concat({snippet: post, snaps: postsnaps});
+								if (i === platform.posts.length - 1) {
+									resolve({
+										type: platform.type,
+										posts: bigArr
+									});
+								}
+							});
+						});
+					} else {
+						resolve({
+							type: platform.type,
+							posts: []
+						});
+					}
+				});
+			});
+			Promise
+			.all(arr)
+			.then((alldata) => {
+				// console.log('hopefully this really did work.....', alldata);
+				// console.log('what does this look like.....', alldata[0].posts[0]);
+				// var youtube = {};
+				// var instagram = {};
+				// var vine = {};
+				// var facebook = {};
+				// var twitter = {};
+				var data = {};
+				alldata.forEach(function(d) {
+					if (!data[d.type]) {
+						data[d.type] = d.posts
+					}
+				})
+				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
+				console.log('what does this look like......', data.youtube[0].snippet);
+				console.log('what aboutthis look like......', data.youtube[0].snaps);
+				res.render('posts', {
+					data
+				})
+			}).catch((err) => console.log(err));
+		}).catch((err) => console.log(err));
+	});
 });
 
 
-					// posts.forEach(function(post) {
-					// 	PostSnapshot.find({postId: post.postId}, function(err, postsnaps) {
-					// 		if (err) reject(err);
-					// 		// console.log('these are the postsnaps.......', postsnaps);
-					// 		resolve({
-					// 			type: p,
-					// 			post: {
-					// 				snippet: post,
-					// 				snap: postsnaps
-					// 			}
-					// 		});
-					// 	});
-					// });
+					
 
 router.get('/youtube', function(req, res, next) {
   getYoutubeData(req.user.youtube.profile.id)
