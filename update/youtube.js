@@ -152,6 +152,7 @@ function youtubeUpdate(id) {
 									post.snapshots.push(psnap._id);
 									post.save(function(err) {
 										if (err) return next(err);
+										resolve();
 									});
 								});
 							});
