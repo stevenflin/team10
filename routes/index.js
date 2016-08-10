@@ -106,57 +106,6 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 
 //GETS 
 
-// router.get('/update', (req, res, next) => {
-//   var socialPromises = Object.keys(socialFunctions).map((socialFunction) => {
-//     return socialFunctions[key]();
-//   });
-
-//   Promise
-//     .all(socialPromises)
-//     .then((allTheDataEver) => {
-//       console.log("[all the data like ever]", allTheDataEver);
-//     })
-//     .catch(console.log.bind(this, "[social function err]"));
-// })
-
-
-// { attribution: null,
-//     tags: 
-//      [ 'guerillamarketing',
-//        'entrepreneur',
-//        'pokemon',
-//        'growthhacking' ],
-//     type: 'image',
-//     location: 
-//      { latitude: 39.951695887205,
-//        name: 'University of Pennsylvania',
-//        longitude: -75.194293192075,
-//        id: 180841 },
-//     comments: { count: 0 },
-//     filter: 'Reyes',
-//     created_time: '1470431285',
-//     link: 'https://www.instagram.com/p/BIvdVwDB8uc/',
-//     likes: { count: 98 },
-//     images: 
-//      { low_resolution: [Object],
-//        thumbnail: [Object],
-//        standard_resolution: [Object] },
-//     users_in_photo: [],
-//     caption: 
-//      { created_time: '1470431285',
-//        text: 'Peep the bar in the truck bed. Only in Philly #guerillamarketing #growthhacking #entrepreneur #pokemon',
-//        from: [Object],
-//        id: '17860941652046758' },
-//     user_has_liked: false,
-//     id: '1310395054636387228_440696783',
-//     user: 
-//      { username: 'pakaplace',
-//        profile_picture: 'https://scontent.cdninstagram.com/t51.2885-19/s150x150/13774404_1154932207906735_80316018_a.jpg',
-//        id: '440696783',
-//        full_name: 'Parker Place' } },
-
-
-
 //dashboard and dashboard/id that takes id of each client user
 // update route that always pings 
 var i = 0;
