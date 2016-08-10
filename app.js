@@ -111,7 +111,7 @@ passport.use(new FacebookStrategy({
           return done(null, user);
         });
         Profile.findOne({userId: user._id}, function(err, p){ //Fix-  check if this works
-          p.facebook = JSON.parse(profile.displayName); //Fix-  check if this works
+          p.facebook = profile.displayName; //Fix-  check if this works
           p.save(function(err){
             if(err) return next(err);
             console.log('pdiddy', p)
