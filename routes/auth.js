@@ -38,7 +38,7 @@ module.exports = function(passport) {
   router.post('/login', 
     passport.authenticate('local', { failureRedirect: '/login' }),
     function(req, res) {
-      res.redirect('/');
+      res.redirect('/integrate');
   });
 
   // FACEBOOK
@@ -107,8 +107,15 @@ module.exports = function(passport) {
     }
     req.user.save(function(err, user) {
       console.log(err);
+      console.log("vine user", user)
       if (err) return next(err);
-      res.redirect('/');
+      Profile.findOne({userId: user._id}, function(err, p){
+        p.vine = user.vine.username;
+        p.save(function(err){
+          if(err) return next(err);
+        })
+      })  
+        res.redirect('/integrate');
     });
 });
 

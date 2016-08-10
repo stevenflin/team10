@@ -96,23 +96,21 @@ function pagePosts(days, pageId){
 };
 // ~~~~~~~~~~~~~~FUNCTION TO GET NUMBER OF IMPRESSIONS THAT CAME FROM ALL YOUR POSTS
 function pagePostImpressions(days, pageId){
-    return new Promise(function(resolve, reject){
-        var timeframe = time(days);
-        FB.api(
-          "/"+pageId+"/insights/page_posts_impressions?since="+timeframe.since+"&until="+timeframe.until, //handles pagination by time
-          {
-              "period": "days_28"
-          },
-          function (response) {
-            var arr = [];
-            if (response && !response.error) {
-              response.data[0].values.forEach(function(day){
-                arr.push({value: day.value, end_time: day.end_time}) 
-              })
-              /* handle the result */ 
-            }resolve(arr);
-         })
-    });
+	return new Promise(function(resolve, reject){
+		var timeframe = time(days);
+		FB.api(
+		  "/"+pageId+"/insights/page_posts_impressions?since="+timeframe.since+"&&+until="+timeframe.until, //handles pagination by time
+		  
+		  function (response) {
+		    var arr = [];
+		    if (response && !response.error) {
+		      response.data[0].values.forEach(function(day){
+		        arr.push({value: day.value, end_time: day.end_time}) 
+		      })
+		      /* handle the result */ 
+		    }resolve(arr);
+		 })
+	});
 };
 
 // // ~~~~~~~~~~~~~~USED TO TEST POST FUNCTIONS

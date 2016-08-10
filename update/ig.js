@@ -14,12 +14,12 @@ function instagramInformation(id, accessToken){
 		 	bigArr = bigArr.concat(medias);
 			if(pagination.next) {
 			    pagination.next(instagramPages); // Will get second page results 
-			 } else {
+			  } else {
 			 	ig.user(id, function(err, result, remaining, limit) {
 			 		if(err) return next(err);
 			 			resolve({bigArr, profile: result.counts.followed_by})
 			 	});
-			 }
+			  }
 			}
 			
 		ig.use({ access_token: process.env.AT });
