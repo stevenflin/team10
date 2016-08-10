@@ -28,62 +28,65 @@ function instagramInformation(id, accessToken){
 }
 
 function instagramUpdate(id) {
-	User.findById(id, function(err, user) {
-		Profile.findOne({userId: user._id}, function(err, profile){
-			if(err)return next( err)
+	return new Promise(function(resolve, reject) {
+		User.findById(id, function(err, user) {
+			Profile.findOne({userId: user._id}, function(err, profile){
+				if(err)return next( err)
 
-			// Get instagram data
-			instagramInformation(user.instagram.instagramProfile.id, user.instagram.AccessToken)
-			.then(function(data) {
+				// Get instagram data
+				instagramInformation(user.instagram.instagramProfile.id, user.instagram.AccessToken)
+				.then(function(data) {
 
-				// Create new profile snapshot
-				new ProfileSnapshot({
-					platformID: user.instagram.instagramProfile.id,
-					platform: 'instagram', 
-					followers: data.profile, 
-					posts: data.bigArr.length,
-					date: new Date(),
-					profileId: profile._id
-				})
-				.save(function(err, p){
-					if(err) return next(err);
+					// Create new profile snapshot
+					new ProfileSnapshot({
+						platformID: user.instagram.instagramProfile.id,
+						platform: 'instagram', 
+						followers: data.profile, 
+						posts: data.bigArr.length,
+						date: new Date(),
+						profileId: profile._id
+					})
+					.save(function(err, p){
+						if(err) return next(err);
 
-					// Iterate through posts and create new snapshots
-					data.bigArr.forEach(function(post, i){
-						var desc = null;
-						if(post.caption){
-							desc = post.caption.text
-						}
+						// Iterate through posts and create new snapshots
+						data.bigArr.forEach(function(post, i){
+							var desc = null;
+							if(post.caption){
+								desc = post.caption.text
+							}
 
-						// If post doesn't exist, create it
-						Post.findOrCreate({postId: post.id}, {
-							description: desc,
-							postId: post.id,
-							type: 'instagram',
-							profileId: profile._id
-						}, function(err, postData){
-							if(err) return next(err);
-							console.log("[creating post] for:", post.id);
-
-							// snapshot it
-							new PostSnapshot({
-								profileId: p._id, 
-								postId: postData.postId,
-								comments: post.comments.count,
-								likes: post.likes.count,
-								date: p.date
-							})
-							.save(function(err, psnap){
+							// If post doesn't exist, create it
+							Post.findOrCreate({postId: post.id}, {
+								description: desc,
+								postId: post.id,
+								type: 'instagram',
+								profileId: profile._id
+							}, function(err, postData){
 								if(err) return next(err);
-								postData.snapshots.push(psnap._id);
-								postData.save(function(err){
+								console.log("[creating post] for:", post.id);
+
+								// snapshot it
+								new PostSnapshot({
+									profileId: p._id, 
+									postId: postData.postId,
+									comments: post.comments.count,
+									likes: post.likes.count,
+									date: p.date
+								})
+								.save(function(err, psnap){
 									if(err) return next(err);
-								})				
+									postData.snapshots.push(psnap._id);
+									postData.save(function(err){
+										if(err) return next(err);
+										resolve();
+									})				
+								})
 							})
 						})
 					})
-				})
-			}).catch(function(err){ next(err)})
+				}).catch(function(err){ next(err)})
+			})
 		})
 	})
 }
