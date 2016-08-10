@@ -343,7 +343,6 @@ router.get('/update/twitter', function(req, res, next){
 
 				// iterate through posts
 				data.forEach(function(postData, i){
-					// console.log("postdata", postData)
 
 					// If post doesn't exist, create it
 					Post.findOrCreate({postId: postData.id}, {
@@ -389,7 +388,6 @@ router.get('/update/vine', function(req, res, next){
 		if(err) return next(err);
 		vine.vineInformation(req.user.vine.username, req.user.vine.password)
 		.then(function(data){
-			// console.log("User data", data.userId);
 
 				new ProfileSnapshot({
 					platformID: data.userId,
@@ -402,8 +400,6 @@ router.get('/update/vine', function(req, res, next){
 					if(err) return next(err);
 
 					data.data.records.forEach(function(postData, i){
-
-						// console.log("postData", postData)
 
 						Post.findOrCreate({postId: postData.id}, {
 						description: postData.description,
