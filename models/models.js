@@ -181,5 +181,5 @@ module.exports = {
   Profile: mongoose.model('Profile', profile),
   ProfileSnapshot: mongoose.model('ProfileSnapshot', profileSnapshot),
   Post: mongoose.model('Post', post),
-  PostSnapshot: mongoose.model('postSnapshot', postSnapshot)
+  PostSnapshot: mongoose.model('PostSnapshot', postSnapshot)
 }

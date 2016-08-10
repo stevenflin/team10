@@ -148,15 +148,15 @@ router.get('/dashboard/:id', function(req, res, next) {
 				}
 			})
 			// console.log('[THESE ARE THE RESULTS THE RESULTS ARE THESE]', results);
-			console.log('[FORMATTED DATA]', followers)
-			console.log('SNAPS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', snaps)
-			console.log('followers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', followers)
-			console.log('REcent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', recent)
-			console.log('Change~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', change)
+			// console.log('[FORMATTED DATA]', followers)
+			// console.log('SNAPS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', snaps)
+			// console.log('followers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', followers)
+			// console.log('REcent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', recent)
+			// console.log('Change~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', change)
 
 
 
-			console.log('these are the data results..............', followers)
+			// console.log('these are the data results..............', followers)
 
 			res.render('dashboard', {
 				snaps,
@@ -167,16 +167,21 @@ router.get('/dashboard/:id', function(req, res, next) {
 		}).catch((err) => console.log(err));
 	});
 });
+
 router.get('/tableTest', function(req, res, next){
 	res.render('tableTest')
 })
+
 router.get('/posts', function(req, res, next) {
 	var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 	Profile.findOne({userId: req.user._id}, function(err, profile) {
 		if (err) return next(err);
 		platforms = platforms.map(function(p) {
 			return new Promise(function(resolve, reject) {
-				Post.find({profileId: profile._id, type: p}, function(err, posts) {
+				Post.find({profileId: profile._id, type: p})
+				.sort({'date': 1})
+				.populate('snapshots')
+				.exec(function(err, posts) {
 					if (err) reject(err);
 					// console.log('these are the posts.......', posts);
 					// console.log('did i make it here at least');
@@ -190,64 +195,12 @@ router.get('/posts', function(req, res, next) {
 		Promise
 		.all(platforms)
 		.then((data) => {
-			// console.log('hopefully this works on the first try.......', data);
-			// console.log('what does this look like.......', data[0].posts[0])
-
-			var arr = data.map(function(platform) {
-				return new Promise(function(resolve, reject) {
-					if (platform.posts.length) {
-						var bigArr = [];
-						platform.posts.forEach(function(post, i) {
-							PostSnapshot.find({postId: post.postId})
-							.limit(10)
-							.exec(function(err, postsnaps) {
-								if (err) reject(err);
-								bigArr = bigArr.concat({snippet: post, snaps: postsnaps});
-								if (i === platform.posts.length - 1) {
-									resolve({
-										type: platform.type,
-										posts: bigArr
-									});
-								}
-							});
-						});
-					} else {
-						resolve({
-							type: platform.type,
-							posts: []
-						});
-					}
-				});
-			});
-			Promise
-			.all(arr)
-			.then((alldata) => {
-				// console.log('hopefully this really did work.....', alldata);
-				// console.log('what does this look like.....', alldata[0].posts[0]);
-				// var youtube = {};
-				// var instagram = {};
-				// var vine = {};
-				// var facebook = {};
-				// var twitter = {};
-				var data = {};
-				alldata.forEach(function(d) {
-					if (!data[d.type]) {
-						data[d.type] = d.posts
-					}
-				})
-				console.log('what does this look like......', data.vine[0].snippet);
-				console.log('what aboutthis look like......', data.vine[0].snaps);
-				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
-				res.render('tableTest', {
-					data	
-				}).catch((err) => console.log(err));
-			}).catch((err) => console.log(err));
-		});
+			console.log('hopefully this works on the first try.......', data);
+			console.log('what does this look like....................', data[0].posts[0])
+			res.send('hi');
+		}).catch((err) => console.log(err));
 	});
-})
-
-
-					
+})			
 
 router.get('/youtube', function(req, res, next) {
   getYoutubeData(req.user.youtube.profile.id)
