@@ -45,11 +45,26 @@ var profile = new mongoose.Schema({
   // all 1 time info for a profile 
   // reference User
   // array of posts
-  youtube: String,
-  instagram: String,
-  vine: String,
-  twitter: String,
-  facebook: String,
+  youtube: {
+    displayName: String,
+    followers: Number
+  },
+  instagram: {
+    displayName: String,
+    followers: Number
+  },
+  vine: {
+    displayName: String,
+    followers: Number
+  },
+  twitter: {
+    displayName: String,
+    followers: Number
+  },
+  facebook: {
+    displayName: String,
+    followers: Number
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -95,6 +110,27 @@ var post = new mongoose.Schema({
   type: {
     type: String,
     enum: ['youtube', 'instagram', 'vine', 'twitter', 'facebook']
+  },
+  comments: {
+    type: Number
+  }, 
+  likes: {
+    type: Number 
+  }, 
+  favorites: {
+    type: String
+  }, 
+  views: {
+    type: Number
+  }, 
+  shares: {
+    type:Number
+  },
+  dislikes: {
+    type: Number
+  }, 
+  date: {
+    type: Date
   },
   profileId: {
     type: mongoose.Schema.Types.ObjectId,

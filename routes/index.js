@@ -15,6 +15,7 @@ var twitter = require('../update/twitter.js');
 
 var youtubeFunctions = require('../update/youtube');
 var getYoutubeData = youtubeFunctions.getYoutubeData;
+var youtubeUpdate = youtubeFunctions.youtubeUpdate;
 var getDay = youtubeFunctions.getDay;
 var getWeek = youtubeFunctions.getWeek;
 var getMonth = youtubeFunctions.getMonth;
@@ -105,57 +106,6 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 
 //GETS 
 
-// router.get('/update', (req, res, next) => {
-//   var socialPromises = Object.keys(socialFunctions).map((socialFunction) => {
-//     return socialFunctions[key]();
-//   });
-
-//   Promise
-//     .all(socialPromises)
-//     .then((allTheDataEver) => {
-//       console.log("[all the data like ever]", allTheDataEver);
-//     })
-//     .catch(console.log.bind(this, "[social function err]"));
-// })
-
-
-// { attribution: null,
-//     tags: 
-//      [ 'guerillamarketing',
-//        'entrepreneur',
-//        'pokemon',
-//        'growthhacking' ],
-//     type: 'image',
-//     location: 
-//      { latitude: 39.951695887205,
-//        name: 'University of Pennsylvania',
-//        longitude: -75.194293192075,
-//        id: 180841 },
-//     comments: { count: 0 },
-//     filter: 'Reyes',
-//     created_time: '1470431285',
-//     link: 'https://www.instagram.com/p/BIvdVwDB8uc/',
-//     likes: { count: 98 },
-//     images: 
-//      { low_resolution: [Object],
-//        thumbnail: [Object],
-//        standard_resolution: [Object] },
-//     users_in_photo: [],
-//     caption: 
-//      { created_time: '1470431285',
-//        text: 'Peep the bar in the truck bed. Only in Philly #guerillamarketing #growthhacking #entrepreneur #pokemon',
-//        from: [Object],
-//        id: '17860941652046758' },
-//     user_has_liked: false,
-//     id: '1310395054636387228_440696783',
-//     user: 
-//      { username: 'pakaplace',
-//        profile_picture: 'https://scontent.cdninstagram.com/t51.2885-19/s150x150/13774404_1154932207906735_80316018_a.jpg',
-//        id: '440696783',
-//        full_name: 'Parker Place' } },
-
-
-
 //dashboard and dashboard/id that takes id of each client user
 // update route that always pings 
 var i = 0;
@@ -214,7 +164,7 @@ router.get('/update/facebook', function(req, res, next){  //should be /update/pa
 							// snapshot it
 							new PostSnapshot({
 								profileId: p._id, 
-								postId: postData.id,
+								postId: postData.postId,
 								comments: post.comments,
 								likes: post.likes,
 								shares: post.shares,
@@ -251,206 +201,25 @@ router.get('/update/facebook', function(req, res, next){  //should be /update/pa
 	
 })
 
-var i = 0;
-
 router.get('/update/instagram', function(req, res, next){
 	// Find social media profile
-	Profile.findOne({userId: req.user._id}, function(err, profile){
-		if(err)return next( err)
-
-		// Get instagram data
-		instagram.instagramInformation(process.env.ID, process.env.AT)
-		.then(function(data) {
-
-			// Create new profile snapshot
-			new ProfileSnapshot({
-				platformID: req.user.instagram.instagramProfile.id,
-				platform: 'instagram', 
-				followers: data.profile, 
-				posts: data.bigArr.length,
-				date: new Date(),
-				profileId: profile._id
-			})
-			.save(function(err, p){
-				if(err) return next(err);
-
-				// Iterate through posts and create new snapshots
-				data.bigArr.forEach(function(post, i){
-					var desc = null;
-					if(post.caption){
-						desc = post.caption.text
-					}
-
-					// If post doesn't exist, create it
-					Post.findOrCreate({postId: post.id}, {
-						description: desc,
-						postId: post.id,
-						type: 'instagram',
-						profileId: profile._id
-					}, function(err, postData){
-						if(err) return next(err);
-						console.log("[creating post] for:", post.id);
-
-						// snapshot it
-						new PostSnapshot({
-							profileId: p._id, 
-							postId: postData.postId,
-							comments: post.comments.count,
-							likes: post.likes.count,
-							date: p.date
-						})
-						.save(function(err, psnap){
-							if(err) return next(err);
-							postData.snapshots.push(psnap._id);
-							postData.save(function(err){
-								if(err) return next(err);
-								if(i === data.bigArr.length -1){
-									res.redirect('/integrate');
-								}
-							})				
-						})
-					})
-				})
-			})
-		})
-	}).catch(function(err){ next(err)})
+	instagram.instagramUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));
 })
 
 router.get('/update/youtube', function(req, res, next) {
-	getYoutubeData(req.user.youtube.profile.id)
-	.then(function(data) {
-		Profile.findOne({userId: req.user._id},function(err, profile) {
-			if (err) return next(err);
-
-			new ProfileSnapshot({
-				platformID: req.user.youtube.profile.id,
-				platform: 'youtube',
-				followers: data.channel.subscriberCount,
-				posts: data.channel.videoCount,
-				views: data.channel.viewCount,
-				date: new Date(),
-				profileId: profile._id
-			}).save(function(err, p) {
-				if (err) return next(err);
-
-				data.videos.forEach(function(video, i) {
-
-					Post.findOrCreate({postId: video.id}, {
-						title: video.snippet.title,
-						description: video.snippet.description,
-						postId: video.id,
-						type: 'youtube',
-						profileId: profile._id
-					}, function(err, post) {
-						if (err) return next(err);
-
-						new PostSnapshot({
-							profileId: p._id,
-							postId: post.postId,
-							comments: parseInt(video.stats.commentCount),
-							likes: parseInt(video.stats.likeCount),
-							favorites: parseInt(video.stats.favoriteCount),
-							views: parseInt(video.stats.viewCount),
-							dislikes: parseInt(video.stats.dislikeCount),
-							date: p.date
-						}).save(function(err, psnap) {
-							if (err) return next(err);
-
-							post.snapshots.push(psnap._id);
-							post.save(function(err) {
-								if (err) return next(err);
-								if (i === data.videos.length - 1) {
-									res.redirect('/youtube');
-								}
-							});
-						});
-					});
-				});
-			});
-		});
-	}).catch((err) => next(err));
+	youtubeUpdate(req.user._id)
+	.then(() => res.redirect('/youtube'));
 });
 
 router.get('/update/twitter', function(req, res, next){
-	// get user info
-	Profile.findOne({userId: req.user._id}, function(err, profile){
-		if(err) return next(err);
-
-		// get twitter info
-		twitter.twitterInformation(process.env.TWITTER_ACCESS_TOKEN_KEY, process.env.TWITTER_ACCESS_TOKEN_SECRET)
-		.then(function(data){
-		
-			new ProfileSnapshot({
-				platformID: req.user.twitter.twitterProfile._json.id,
-				platform: 'twitter', 
-				followers: data[0].user.followers_count, 
-				posts: data[0].length,
-				date: new Date(),
-				profileId: profile._id
-			})
-			.save(function(err, p){
-				if(err) return next(err);
-
-				// iterate through posts
-				data.forEach(function(postData, i){
-					// console.log("postdata", postData)
-
-					// If post doesn't exist, create it
-					Post.findOrCreate({postId: postData.id}, {
-						description: postData.text,
-						postId: postData.id,
-						type: 'twitter',
-						profileId: profile._id
-					}, function(err, post){
-						if(err) return next(err);
-
-						// snapshot it
-						new PostSnapshot({
-							profileId: p._id, 
-							postId: post.postId,
-							shares: postData.retweet_count,
-							likes: postData.favourite_count,
-							date: p.date
-						})
-						.save(function(err, psnap){
-							if(err) return next(err);
-
-							post.snapshots.push(psnap._id);
-							post.save(function(err){
-								if(err) return next(err);
-
-			
-								if(i === data.length -1){
-									res.redirect('/integrate');
-								}
-							})				
-						})
-					})
-				});
-			});
-		}).catch(function(err){
-			console.log("[err]", err);
-		})
-	})
+	twitter.twitterUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));	
 })
 
 router.get('/update/vine', function(req, res, next){
-	Profile.findOne({userId: req.user._id}, function(err, profile){
-		if(err) return next(err);
-		vine.vineInformation(process.env.VINE_USERNAME, process.env.VINE_PASSWORD)
-		.then(function(data){
-			console.log("User data", data);
-
-			new ProfileSnapshot({
-				platformID: data.userId,
-				platform: 'vine', 
-				followers: data.following, 
-				posts: data.postCount,
-				date: new Date(),
-				profileId: profile._id
-			})
-		})
-	})
+	vine.vineUpdate(req.user._id)
+	.then(()=> res.redirect('/integrate'));
 })
 
 router.get('/dashboard', function(req, res, next) {
@@ -497,13 +266,15 @@ router.get('/dashboard/:id', function(req, res, next) {
 				}
 			})
 			// console.log('[THESE ARE THE RESULTS THE RESULTS ARE THESE]', results);
-			// console.log('[FORMATTED DATA]', followers)
+console.log('[FORMATTED DATA]', followers)
 			console.log('SNAPS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', snaps)
 			console.log('followers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', followers)
 			console.log('REcent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', recent)
 			console.log('Change~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', change)
 
 
+
+			console.log('these are the data results..............', followers)
 
 			res.render('dashboard', {
 				snaps,
@@ -582,10 +353,11 @@ router.get('/posts', function(req, res, next) {
 						data[d.type] = d.posts
 					}
 				})
+				console.log('what does this look like......', data.vine[0].snippet);
+				console.log('what aboutthis look like......', data.vine[0].snaps);
 				console.log('aksdjf;lkasjf;lasj;fjsdd......', data)
 				res.render('tableTest', {
-					data
-				})
+					data	
 			}).catch((err) => console.log(err));
 		}).catch((err) => console.log(err));
 	});

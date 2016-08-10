@@ -110,7 +110,7 @@ module.exports = function(passport) {
       console.log("vine user", user)
       if (err) return next(err);
       Profile.findOne({userId: user._id}, function(err, p){
-        p.vine = user.vine.username;
+        p.vine.displayName = user.vine.username;
         p.save(function(err){
           if(err) return next(err);
         })

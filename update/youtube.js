@@ -1,4 +1,10 @@
 const Youtube = require("youtube-api");
+var models = require('../models/models');
+var User = models.User;
+var Profile = models.Profile;
+var ProfileSnapshot = models.ProfileSnapshot;
+var Post = models.Post;
+var PostSnapshot = models.PostSnapshot;
 
 var minutes = 1000 * 60;
 var hours = minutes * 60;
@@ -101,10 +107,62 @@ function getYoutubeData(channelId) {
 	});
 }
 
-// getYoutubeData('UC3ZrFUfjAjYvMd1HLTuHN8w').then((data) => {
-// 	console.log("[youtube] data:", data);
-// 	console.log("[youtube] # of videos:", data.videos.length);
-// });
+function youtubeUpdate(id) {
+	return new Promise(function(resolve, reject) {
+		User.findById(id, function(err, user) {
+			getYoutubeData(user.youtube.profile.id)
+			.then(function(data) {
+				Profile.findOne({userId: user._id},function(err, profile) {
+					if (err) return next(err);
+
+					new ProfileSnapshot({
+						platformID: user.youtube.profile.id,
+						platform: 'youtube',
+						followers: data.channel.subscriberCount,
+						posts: data.channel.videoCount,
+						views: data.channel.viewCount,
+						date: new Date(),
+						profileId: profile._id
+					}).save(function(err, p) {
+						if (err) return next(err);
+
+						data.videos.forEach(function(video, i) {
+
+							Post.findOrCreate({postId: video.id}, {
+								title: video.snippet.title,
+								description: video.snippet.description,
+								postId: video.id,
+								type: 'youtube',
+								profileId: profile._id
+							}, function(err, post) {
+								if (err) return next(err);
+
+								new PostSnapshot({
+									profileId: p._id,
+									postId: post.postId,
+									comments: parseInt(video.stats.commentCount),
+									likes: parseInt(video.stats.likeCount),
+									favorites: parseInt(video.stats.favoriteCount),
+									views: parseInt(video.stats.viewCount),
+									dislikes: parseInt(video.stats.dislikeCount),
+									date: p.date
+								}).save(function(err, psnap) {
+									if (err) return next(err);
+
+									post.snapshots.push(psnap._id);
+									post.save(function(err) {
+										if (err) return next(err);
+										resolve();
+									});
+								});
+							});
+						});
+					});
+				});
+			}).catch((err) => next(err));
+		})
+	})
+}
 
 function getDay(videos) {
   var todayVids = [];
@@ -198,6 +256,7 @@ function getYear(videos) {
 
 module.exports = {
   getYoutubeData: getYoutubeData,
+  youtubeUpdate: youtubeUpdate,
   getDay: getDay,
   getWeek: getWeek,
   getMonth: getMonth,
