@@ -127,13 +127,16 @@ function youtubeUpdate(id) {
 						if (err) return next(err);
 
 						data.videos.forEach(function(video, i) {
-
+							console.log('what does this look like...........', video);
+							console.log('what about this....................', video.snippet.publishedAt)
+							console.log('HOLY FUCKING SHIT..................', new Date(video.snippet.publishedAt).getTime())
 							Post.findOrCreate({postId: video.id}, {
 								title: video.snippet.title,
 								description: video.snippet.description,
 								postId: video.id,
 								type: 'youtube',
-								profileId: profile._id
+								profileId: profile._id,
+								date: new Date(video.snippet.publishedAt).getTime()
 							}, function(err, post) {
 								if (err) return next(err);
 
