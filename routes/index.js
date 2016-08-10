@@ -108,6 +108,38 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 //dashboard and dashboard/id that takes id of each client user
 // update route that always pings 
 
+router.get('/update/facebook', function(req, res, next){  //should be /update/page
+	FB.setAccessToken(req.user.facebook.token);
+
+	facebook.facebookUpdate(req.user._id)
+	.then(()=> res.redirect('/integrate'));
+})
+
+router.get('/update/instagram', function(req, res, next){
+	// Find social media profile
+	instagram.instagramUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));
+})
+
+router.get('/update/youtube', function(req, res, next) {
+	youtubeUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));
+});
+
+router.get('/update/twitter', function(req, res, next){
+	twitter.twitterUpdate(req.user._id)
+	.then(() => res.redirect('/integrate'));	
+})
+
+router.get('/update/vine', function(req, res, next){
+	vine.vineUpdate(req.user._id)
+	.then(()=> res.redirect('/integrate'));
+})
+
+router.get('/dashboard', function(req, res, next) {
+	res.redirect('/dashboard/1');
+})
+
 router.get('/dashboard/:id', function(req, res, next) {
 	var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 	Profile.findOne({userId: req.user._id}, function(err, profile) {
@@ -245,6 +277,7 @@ router.get('/posts', function(req, res, next) {
 		});
 	});
 })
+
 
 
 					
