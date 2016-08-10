@@ -1,25 +1,12 @@
 var FB = require('fb');
-console.log("yo")
-//horizons id 229300807402194
-//parker's id 1688425971402749
-// var fb = Facebook.withAccessToken('EAAYsgV1owZC0BALvQNXJKmSmlhWk4LYaZAZBoCOw3j1enc9UyPZCcnbYRkkVxmKnrRPAZCfezhHNVbIOW1M7hgdeWILcnXb9lPpHoLZBuzimBHfv4ZCCrSZC2ZCBxsPodDbOzdMezcfAoORRts55CpO2BQp7zGj981EAZD')
-// FB.setAccessToken(userToken); //put at top of index route
-// module.exports = {
-// fb = new FB.Facebook({
-//             access_token:'EAAYsgV1owZC0BALvQNXJKmSmlhWk4LYaZAZBoCOw3j1enc9UyPZCcnbYRkkVxmKnrRPAZCfezhHNVbIOW1M7hgdeWILcnXb9lPpHoLZBuzimBHfv4ZCCrSZC2ZCBxsPodDbOzdMezcfAoORRts55CpO2BQp7zGj981EAZD', 
-//             appId:process.env.FB_CLIENT_ID, 
-//             appSecret: process.env.FB_CLIENT_SECRET});
-// FB.options({
-//             access_token:'EAAYsgV1owZC0BALvQNXJKmSmlhWk4LYaZAZBoCOw3j1enc9UyPZCcnbYRkkVxmKnrRPAZCfezhHNVbIOW1M7hgdeWILcnXb9lPpHoLZBuzimBHfv4ZCCrSZC2ZCBxsPodDbOzdMezcfAoORRts55CpO2BQp7zGj981EAZD', 
-//             appId:process.env.FB_CLIENT_ID, 
-//             appSecret: process.env.FB_CLIENT_SECRET})
-// FB.api('/10209110890401272/accounts', function (res) { //takes facebook user id and gets pages that they administer
-//   if(!res || res.error) {
-//    console.log(!res ? 'error occurred' : res.error);
-//    return;
-//   }
-//   console.log(res);
-// });
+var models = require('./models/models');
+var User = models.User;
+var Profile = models.Profile;
+var ProfileSnapshot = models.ProfileSnapshot;
+var Post = models.Post;
+var PostSnapshot = models.PostSnapshot;
+
+
 function pageViewsTotal(days, pageId){
 	var timeframe = time(days);
 	return new Promise(function(resolve, reject){
@@ -278,6 +265,100 @@ function pageFans(days, pageId){
 // );
 // }
 
+
+function facebookUpdate(id){
+	return new Promise(function(resolve, reject){
+	User.findById(id, function(err, user){
+			Profile.findOne({userId: user._id}, function(err, profile){
+			console.log("hoesxx", profile)
+			if(err) return next(err)
+			var test = time(3);
+			var pageId = user.facebook.pages[0].pageId;
+			var functions= [ 
+					pageImpressions(28, pageId),
+					pageViewsTotal(28, pageId), //fix- currently only had last 3 days
+					pagePostImpressions(28, pageId), 
+					pagePosts(28, pageId), //
+					pageFans(28, pageId) //fix-undefiened
+				]
+			console.log("FACEBOOK ID ", user.facebook.pages[0].pageId)
+			FB.setAccessToken(user.facebook.token);
+			Promise
+			.all([functions[0], functions[1], functions[2], functions[3], functions[4]])
+			.then((result)=>{ // create profile and profile snapshot here
+				console.log("$$0")
+
+				try {
+
+					new ProfileSnapshot({
+						platformId: user.facebook.id,
+						platform: 'facebook',
+						followers: result[4],
+						views: result[0][result[0].length-1].value,
+						posts: result[3].length,
+						date: new Date(),
+						profileId: profile._id
+					})
+					.save(function(err, p){
+
+						console.log('$$1')
+						if(err) return next(err);
+
+						result[3].forEach(function(post, i){
+
+							Post.findOrCreate({postId: post.postId}, {
+								description: post.message,
+								postId: post.postId,
+								type: 'facebook',
+								profileId: profile._id
+							}, function(err, postData){
+
+								console.log('$$2')
+								if(err) return next(err);
+
+								console.log("[creating post] for:", post.postId);
+
+								// snapshot it
+								new PostSnapshot({
+									profileId: p._id, 
+									postId: postData.postId,
+									comments: post.comments,
+									likes: post.likes,
+									shares: post.shares,
+									date: p.date
+								})
+								.save(function(err, psnap){
+
+									console.log('$$3')
+									if(err) return next(err);
+
+									postData.snapshots.push(psnap._id);
+									postData.save(function(err){
+										if(err) return next(err);
+
+										resolve();
+										
+									})				
+								})
+
+						})
+
+					})	
+				})
+				}
+				catch (error) {
+					console.log(error);
+				}
+			})
+			.catch(console.log)
+		})
+
+	})
+
+})
+
+}
+
 module.exports = {
   time: time,
   pageImpressions: pageImpressions,
@@ -285,6 +366,8 @@ module.exports = {
   pagePostImpressions: pagePostImpressions,
   pagePosts: pagePosts,
   pageFans: pageFans,
-  pageFanAdds: pageFanAdds
+  pageFanAdds: pageFanAdds,
+  facebookUpdate: facebookUpdate
+
 }
 //make function for rendering page names by id, and then adding that page to the dashboard by id

@@ -5,7 +5,6 @@ var FB = require('fb');
 
 var ig = require('instagram-node').instagram()
 var facebook = require('../facebook-test.js')
-FB.setAccessToken('EAAYsgV1owZC0BAEMGZAdeR0LqZAc97sa9BVWBrkGp1Xmub80rh94JyHxWXzIqZCXh1a2TaAtZAM2rwidFTgfwGdJqe22hWBK8jpAGPk9lCIT9eoCuIbZCuFzP20RqaJgYXiUpYsw9EgLhi2YlY3pwFyzDjvpl5hMRMwl0ky92FbwZDZD'); //put into function themselves or process.env
 
 
 
@@ -109,97 +108,10 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 
 //dashboard and dashboard/id that takes id of each client user
 // update route that always pings 
-var i = 0;
+
 router.get('/update/facebook', function(req, res, next){  //should be /update/page
-	// executing all 'get data/statistics'
-	console.log("kool", req.user._id);
-	Profile.findOne({userId: req.user._id}, function(err, profile){
-		console.log("hoesxx", profile)
-		if(err) return next(err)
-		var test = facebook.time(3);
-		var pageId = req.user.facebook.pages[0].pageId;
-		var functions= [ 
-				facebook.pageImpressions(28, pageId),
-				facebook.pageViewsTotal(28, pageId), //fix- currently only had last 3 days
-				facebook.pagePostImpressions(28, pageId), 
-				facebook.pagePosts(28, pageId), //
-				facebook.pageFans(28, pageId) //fix-undefiened
-			]
-		console.log("FACEBOOK ID ",req.user.facebook.pages[0].pageId)
-		FB.setAccessToken(req.user.facebook.token); //for testing purposes- EAAYsgV1owZC0BAEMGZAdeR0LqZAc97sa9BVWBrkGp1Xmub80rh94JyHxWXzIqZCXh1a2TaAtZAM2rwidFTgfwGdJqe22hWBK8jpAGPk9lCIT9eoCuIbZCuFzP20RqaJgYXiUpYsw9EgLhi2YlY3pwFyzDjvpl5hMRMwl0ky92FbwZDZD
-		Promise
-		.all([functions[0], functions[1], functions[2], functions[3], functions[4]])
-		.then((result)=>{ // create profile and profile snapshot here
-			console.log("$$0")
-
-			try {
-
-				new ProfileSnapshot({
-					platformId: req.user.facebook.id,
-					platform: 'facebook',
-					followers: result[4],
-					views: result[0][result[0].length-1].value,
-					posts: result[3].length,
-					date: new Date(),
-					profileId: profile._id
-				})
-				.save(function(err, p){
-
-					console.log('$$1')
-					if(err) return next(err);
-
-					result[3].forEach(function(post, i){
-
-						Post.findOrCreate({postId: post.postId}, {
-							description: post.message,
-							postId: post.postId,
-							type: 'facebook',
-							profileId: profile._id
-						}, function(err, postData){
-
-							console.log('$$2')
-							if(err) return next(err);
-
-							console.log("[creating post] for:", post.postId);
-
-							// snapshot it
-							new PostSnapshot({
-								profileId: p._id, 
-								postId: postData.postId,
-								comments: post.comments,
-								likes: post.likes,
-								shares: post.shares,
-								date: p.date
-							})
-							.save(function(err, psnap){
-
-								console.log('$$3')
-								if(err) return next(err);
-
-								postData.snapshots.push(psnap._id);
-								postData.save(function(err){
-									if(err) return next(err);
-
-									if (i === result[3].length-1) {
-
-										res.render('dashboard')
-									}
-									
-								})				
-							})
-
-					})
-
-				})	
-			})
-			}
-			catch (error) {
-				console.log(error);
-			}
-		})
-		.catch(console.log)
-	})
-	
+	facebook.facebookUpdate(req.user._id)
+	.then(()=> res.redirect('/integrate'));
 })
 
 router.get('/update/instagram', function(req, res, next){
@@ -210,7 +122,7 @@ router.get('/update/instagram', function(req, res, next){
 
 router.get('/update/youtube', function(req, res, next) {
 	youtubeUpdate(req.user._id)
-	.then(() => res.redirect('/youtube'));
+	.then(() => res.redirect('/integrate'));
 });
 
 router.get('/update/twitter', function(req, res, next){
