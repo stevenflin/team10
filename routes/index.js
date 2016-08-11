@@ -151,6 +151,19 @@ router.get('/update', (req, res, next) => {
 	.then(() => res.redirect('/integrate'));
 })
 
+// call this FUNction every 20 minutes
+
+router.get('/updateFrequent', (req, res, next) => {
+	var id = req.user._id;
+	var isTwenty = true;
+	instagramUpdate(id, isTwenty)
+	.then(() => youtubeUpdate(id, isTwenty))
+	.then(() => twitterUpdate(id, isTwenty))
+	.then(() => vineUpdate(id, isTwenty))
+	// .then(() => facebookUpdate(id))
+	.then(() => res.redirect('/integrate'));
+})
+
 // DASHBOARD ROUTES
 
 router.get('/dashboard', function(req, res, next) {
@@ -168,8 +181,8 @@ router.get('/dashboard/:id', function(req, res, next) {
 			// data["platformData"] = platformData;
 			getPosts(id)
 			.then((postData) => {
-				console.log('titties~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ',postData)
-				console.log('did i do this right?..........', postData.youtube);
+				// console.log('titties~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ',postData)
+				// console.log('did i do this right?..........', postData.youtube);
 				// console.log('what does this look like?........', platformData.recent.twitter);
 				// console.log('what about this shit.............', postData.youtube[0].snapshots)
 				res.render('dashboard', {
