@@ -68,7 +68,7 @@ router.get('/fbPageSelector', function(req, res, next) {
 	})
 	.then((result) => {
 		console.log('here2')
-		res.render('fbPageSelector', {result: result.data})
+		return res.render('fbPageSelector', {result: result.data})
 	})
 	.catch(console.log)
 });
@@ -85,24 +85,28 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 				console.log("ERROR ", err)
 			}
 			console.log("YO BITCH",success)
+
+			new Promise(function(resolve, reject){
+
+				FB.api(`/${req.query.pageId}/insights/page_views_total`, function (res) {
+					if(!res || res.error) {
+						console.log(!res ? 'error occurred' : res.error);
+						reject(res.error);
+					}
+
+				  console.log("RESPONSE   ", res.data[2].values); //get's 28 day values 
+				  resolve(res);
+				});
+			})
+			.then(function(result){
+				res.render('fbPageSelector')
+			})
+			.catch(console.log)
 		});
-		res.render('integrate')	
-		new Promise(function(resolve, reject){
-
-			FB.api(`/${req.query.pageId}/insights/page_views_total`, function (res) {
-				if(!res || res.error) {
-					console.log(!res ? 'error occurred' : res.error);
-					reject(res.error);
-				}
-
-			  console.log("RESPONSE   ", res.data[2].values); //get's 28 day values 
-			  resolve(res);
-			});
+	} else {
+		res.status(400).json({
+			message: "Kinda missing a pageId there bud"
 		})
-		.then(function(result){
-			res.render('fbPageSelector')
-		})
-		.catch(console.log)
 	}
 	
 })

@@ -110,22 +110,20 @@ passport.use(new FacebookStrategy({
         user.facebook.email = profile.email;
         // save the user
         user.save(function(err, p) {
-          if (err)
-            throw err;
-          return done(null, user);
-        });
-        Profile.findOne({userId: user._id}, function(err, p){ //Fix-  check if this works
+          if (err) return console.log(err);
+          Profile.findOne({userId: user._id}, function(err, p){ //Fix-  check if this works
 
-          p.facebook = profile.displayName; //Fix-  check if this works
+            p.facebook = profile.displayName; //Fix-  check if this works
 
-          p.facebook.displayName = profile.displayName; //Fix-  check if this works
+            p.facebook.displayName = profile.displayName; //Fix-  check if this works
 
-          p.save(function(err){
-            if(err) return next(err);
-            console.log('pdiddy', p)
+            p.save(function(err){
+              if(err) return next(err);
+              console.log('pdiddy', p)
+            })
           })
-        })
-        return done(null, user) //Fix-  check if this works
+          return done(null, user) //Fix-  check if this works
+        });
       }
     });
   }));
