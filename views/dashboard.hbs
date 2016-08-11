@@ -366,11 +366,8 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="row">
+
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
@@ -396,7 +393,173 @@
                     <p class="text-muted font-13 m-b-30">
                       Description goes here
                     </p>
-                    <table id="datatable" class="table table-striped table-bordered">
+                    <table id="datatable2" class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Caption</th>
+                          <th>Date</th>
+                          <th>Likes</th>
+                          <th>Comments</th>
+                        </tr>
+                      </thead>
+
+
+                      <tbody>
+                        {{#each postData.instagram.posts}}
+                        <tr>
+                          <td>{{this.[0].description}}</td>
+                          <td>{{this.[0].date}}</td>
+                          <td>{{this.[1].likes}}</td>
+                          <td>{{this.[1].comments}}</td>
+                        </tr>
+                        {{/each}}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Vine</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <p class="text-muted font-13 m-b-30">
+                      Description goes here
+                    </p>
+                    <table id="datatable3" class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Date</th>
+                          <th>Likes</th>
+                          <th>Dislikes</th>
+                          <th>Views</th>
+                          <th>Comments</th>
+                          <th>Favorites</th>
+                        </tr>
+                      </thead>
+
+
+                      <tbody>
+                        {{#each postData.youtube.posts}}
+                        <tr>
+                          <td>{{this.[0].title}}</td>
+                          <td>{{this.[0].date}}</td>
+                          <td>{{this.[1].likes}}</td>
+                          <td>{{this.[1].dislikes}}</td>
+                          <td>{{this.[1].views}}</td>
+                          <td>{{this.[1].comments}}</td>
+                          <td>{{this.[1].favorites}}</td>
+                        </tr>
+                        {{/each}}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Facebook</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <p class="text-muted font-13 m-b-30">
+                      Description goes here
+                    </p>
+                    <table id="datatable4" class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Date</th>
+                          <th>Likes</th>
+                          <th>Dislikes</th>
+                          <th>Views</th>
+                          <th>Comments</th>
+                          <th>Favorites</th>
+                        </tr>
+                      </thead>
+
+
+                      <tbody>
+                        {{#each postData.youtube.posts}}
+                        <tr>
+                          <td>{{this.[0].title}}</td>
+                          <td>{{this.[0].date}}</td>
+                          <td>{{this.[1].likes}}</td>
+                          <td>{{this.[1].dislikes}}</td>
+                          <td>{{this.[1].views}}</td>
+                          <td>{{this.[1].comments}}</td>
+                          <td>{{this.[1].favorites}}</td>
+                        </tr>
+                        {{/each}}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Twitter</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <p class="text-muted font-13 m-b-30">
+                      Description goes here
+                    </p>
+                    <table id="datatable5" class="table table-striped table-bordered">
                       <thead>
                         <tr>
                           <th>Title</th>
@@ -430,6 +593,8 @@
             </div>
           </div>
         </div>
+
+
         <!-- /page content -->
 
         <!-- footer content -->
@@ -514,6 +679,7 @@
           };
         }();
 
+        // table 1
         $('#datatable').dataTable();
         $('#datatable-keytable').DataTable({
           keys: true
@@ -530,6 +696,86 @@
         });
 
         var table = $('#datatable-fixed-header').DataTable({
+          fixedHeader: true
+        });
+
+        // table 2
+        $('#datatable2').dataTable();
+        $('#datatable-keytable2').DataTable({
+          keys: true
+        });
+
+        $('#datatable-responsive2').DataTable();
+
+        $('#datatable-scroller2').DataTable({
+          ajax: "js/datatables/json/scroller-demo.json",
+          deferRender: true,
+          scrollY: 380,
+          scrollCollapse: true,
+          scroller: true
+        });
+
+        var table = $('#datatable-fixed-header2').DataTable({
+          fixedHeader: true
+        });
+
+        // table 3
+        $('#datatable3').dataTable();
+        $('#datatable-keytable3').DataTable({
+          keys: true
+        });
+
+        $('#datatable-responsive3').DataTable();
+
+        $('#datatable-scroller3').DataTable({
+          ajax: "js/datatables/json/scroller-demo.json",
+          deferRender: true,
+          scrollY: 380,
+          scrollCollapse: true,
+          scroller: true
+        });
+
+        var table = $('#datatable-fixed-header3').DataTable({
+          fixedHeader: true
+        });
+
+        // table 4
+        $('#datatable4').dataTable();
+        $('#datatable-keytable4').DataTable({
+          keys: true
+        });
+
+        $('#datatable-responsive4').DataTable();
+
+        $('#datatable-scroller4').DataTable({
+          ajax: "js/datatables/json/scroller-demo.json",
+          deferRender: true,
+          scrollY: 380,
+          scrollCollapse: true,
+          scroller: true
+        });
+
+        var table = $('#datatable-fixed-header4').DataTable({
+          fixedHeader: true
+        });
+
+        //table 5
+        $('#datatable5').dataTable();
+        $('#datatable-keytable5').DataTable({
+          keys: true
+        });
+
+        $('#datatable-responsive5').DataTable();
+
+        $('#datatable-scroller5').DataTable({
+          ajax: "js/datatables/json/scroller-demo.json",
+          deferRender: true,
+          scrollY: 380,
+          scrollCollapse: true,
+          scroller: true
+        });
+
+        var table = $('#datatable-fixed-header5').DataTable({
           fixedHeader: true
         });
 
