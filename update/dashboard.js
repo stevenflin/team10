@@ -63,13 +63,14 @@ function getPosts(id) {
 			platforms = platforms.map(function(p) {
 				return new Promise(function(resolve, reject) {
 					Post.find({profileId: profile._id, type: p})
-					.sort({'date': 1})
+					.sort({'date': -1})
 					.populate('snapshots')
 					.exec(function(err, posts) {
 						if (err) reject(err);
 						resolve({
 							type: p,
-							posts: posts
+							posts: posts,
+							lastSnapshots: posts.map((post) => post.snapshots[post.snapshots.length -1])
 						});
 					});
 				});
@@ -80,7 +81,9 @@ function getPosts(id) {
 				var stats = {};
 				data.forEach(function(d) {
 					if (!stats[d.type]) {
-						stats[d.type] = d.posts;
+						stats[d.type] = {
+							posts: d.posts.map((item, i) => { return [item, d.lastSnapshots[i]]})
+						};
 					}
 				})
 				masterResolve(stats);
