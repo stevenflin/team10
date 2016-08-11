@@ -65,12 +65,21 @@ function getPosts(id) {
 					Post.find({profileId: profile._id, type: p})
 					.sort({'date': -1})
 					.populate('snapshots')
+					.lean()
 					.exec(function(err, posts) {
 						if (err) reject(err);
+
 						resolve({
 							type: p,
-							posts: posts,
-							lastSnapshots: posts.map((post) => post.snapshots[post.snapshots.length -1])
+							posts: posts.map((post) => {
+								var d = new Date(post.date)
+								console.log("First Date~~~~~~~~~~~", d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear())
+								console.log("POSTS",post.date)
+								post.date = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
+								console.log("POSTS",post.date)
+								return post
+							}),
+							lastSnapshots: posts.map((post) =>  post.snapshots[post.snapshots.length -1])
 						});
 					});
 				});
