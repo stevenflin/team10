@@ -70,8 +70,18 @@ function getPosts(id) {
 						resolve({
 							type: p,
 							posts: posts,
-							lastSnapshots: posts.map((post) => post.snapshots[post.snapshots.length -1])
-							// going to need to add a growth % for all stats
+							lastSnapshots: posts.map((post) => post.snapshots[post.snapshots.length - 1]),
+							growth: posts.map((post) => {
+								var growth = {},
+								snaps = post.snapshots
+								for (var key in snaps[0]) {
+									console.log('what the fuck does this look like............', key)
+									// if (!growth[key]) {
+									// 	growth[key] = (parseInt(snaps[snaps.length - 1][key]) - parseInt(snaps[snaps.length - 2][key])) / parseInt(snaps[snaps.length-2][key])
+									// }
+								}
+								return growth;
+							})
 						});
 					});
 				});
@@ -83,7 +93,7 @@ function getPosts(id) {
 				data.forEach(function(d) {
 					if (!stats[d.type]) {
 						stats[d.type] = {
-							posts: d.posts.map((item, i) => { return [item, d.lastSnapshots[i]]})
+							posts: d.posts.map((item, i) => { return [item, d.lastSnapshots[i], d.growth]})
 						};
 					}
 				})
