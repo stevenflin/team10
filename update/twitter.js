@@ -54,7 +54,7 @@ function twitterUpdate(id){
 								postId: postData.id,
 								type: 'twitter',
 								profileId: profile._id,
-								date: new Date(postData.created_at).getTime()
+								date: new Date(postData.created_at).getTime() / 1000
 							}, function(err, post){
 								if(err) return next(err);
 

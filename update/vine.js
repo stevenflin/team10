@@ -70,7 +70,7 @@ function vineUpdate(id){
 							postId: postData.postId,
 							type: 'vine',
 							profileId: profile._id,
-							date: new Date(postData.created).getTime()
+							date: new Date(postData.created).getTime() / 1000
 						}, function(err, post){
 							if(err) return next(err);
 

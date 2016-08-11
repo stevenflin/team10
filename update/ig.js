@@ -94,7 +94,7 @@ function instagramUpdate(id) {
 	})
 }
 
-module.exports={
+module.exports = {
 	instagramInformation: instagramInformation,
 	instagramUpdate: instagramUpdate
 }

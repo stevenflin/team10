@@ -1,7 +1,12 @@
 var router = require('express').Router();
 var passport = require('passport');
 var FB = require('fb');
-var ig = require('instagram-node').instagram()
+var ig = require('instagram-node').instagram();
+
+
+var dashboardFunctions = require('../update/dashboard');
+var getPosts = dashboardFunctions.getPosts;
+var getGeneral = dashboardFunctions.getGeneral;
 
 var facebook = require('../facebook-test.js')
 var facebookUpdate = facebook.facebookUpdate;
@@ -102,123 +107,8 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 	
 })
 
-
-//GETS 
-
-//dashboard and dashboard/id that takes id of each client user
-// update route that always pings 
-
-router.get('/dashboard/:id', function(req, res, next) {
-	var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
-	Profile.findOne({userId: req.user._id}, function(err, profile) {
-		if (err) return next(err);
-		platforms = platforms.map(function(p) {
-			return new Promise(function(resolve, reject) {
-				ProfileSnapshot.find({profileId: profile._id, platform: p})
-				.limit(10)
-				.exec(function(err, psnaps) {
-					if (err) reject(err);
-					var followers = [];
-					psnaps.forEach(function(psnap) {
-						followers.push(psnap.followers);
-					})
-					resolve({
-						type: p,
-						data: psnaps,
-						followers
-					});
-				});
-			});
-		});
-
-
-		Promise
-		.all(platforms)
-		.then((results) => {
-			snaps = {};
-			followers = {};
-			recent = {};
-			change = {};
-			results.forEach(function(result, i) {
-				snaps[result.type] = result.data;
-				followers[result.type] = result.followers;
-				recent[result.type] = result.data[result.data.length - 1];
-				if (result.data.length > 1) {
-					change[result.type] = parseInt(((result.data[result.data.length - 1].followers - result.data[result.data.length - 2].followers) / result.data[result.data.length - 2].followers) * 100);
-				}
-			})
-			// console.log('[THESE ARE THE RESULTS THE RESULTS ARE THESE]', results);
-			// console.log('[FORMATTED DATA]', followers)
-			// console.log('SNAPS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', snaps)
-			// console.log('followers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', followers)
-			// console.log('REcent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', recent)
-			// console.log('Change~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', change)
-
-
-
-			// console.log('these are the data results..............', followers)
-
-			res.render('dashboard', {
-				snaps,
-				followers,
-				recent,
-				change
-			});
-		}).catch((err) => console.log(err));
-	});
-});
-
 router.get('/tableTest', function(req, res, next){
 	res.render('tableTest')
-})
-
-router.get('/posts', function(req, res, next) {
-	var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
-	Profile.findOne({userId: req.user._id}, function(err, profile) {
-		if (err) return next(err);
-		platforms = platforms.map(function(p) {
-			return new Promise(function(resolve, reject) {
-				Post.find({profileId: profile._id, type: p})
-				.sort({'date': 1})
-				.populate('snapshots')
-				.exec(function(err, posts) {
-					if (err) reject(err);
-					// console.log('these are the posts.......', posts);
-					// console.log('did i make it here at least');
-					resolve({
-						type: p,
-						posts: posts
-					});
-				});
-			});
-		});
-		Promise
-		.all(platforms)
-		.then((data) => {
-			console.log('hopefully this works on the first try.......', data);
-			console.log('what does this look like....................', data[0].posts[0])
-			res.send('hi');
-		}).catch((err) => console.log(err));
-	});
-})			
-
-router.get('/youtube', function(req, res, next) {
-  getYoutubeData(req.user.youtube.profile.id)
-  .then((data) => {
-    console.log('[ALL VIDEOS]', data.videos);
-    var daydata = getDay(data.videos);
-    var weekdata = getWeek(data.videos);
-    var monthdata = getMonth(data.videos);
-    var yeardata = getYear(data.videos);
-    res.render('youtube', {
-    	channelName: req.user.youtube.profile.displayName,
-    	channel: data.channel,
-    	daydata,
-    	weekdata,
-    	monthdata,
-    	yeardata
-    })
-  })
 })
 	
 // DAILY SNAPSHOTS
@@ -249,18 +139,53 @@ router.get('/update/vine', function(req, res, next){
 	.then(() => res.redirect('/integrate'));
 })
 
+// call this function everyday
+
 router.get('/update', (req, res, next) => {
 	var id = req.user._id;
 	instagramUpdate(id)
 	.then(() => youtubeUpdate(id))
 	.then(() => twitterUpdate(id))
 	.then(() => vineUpdate(id))
-	.then(() => facebookUpdate(id))
+	// .then(() => facebookUpdate(id))
 	.then(() => res.redirect('/integrate'));
 })
+
+// DASHBOARD ROUTES
 
 router.get('/dashboard', function(req, res, next) {
 	res.redirect('/dashboard/1');
 })
+
+//dashboard and dashboard/id that takes id of each client user
+// update route that always pings 
+
+router.get('/dashboard/:id', function(req, res, next) {
+	var id = req.user._id;
+	var data = {};
+	getGeneral(id)
+	.then((platformData) => {
+		// data["platformData"] = platformData;
+		getPosts(id)
+		.then((postData) => {
+			// data["postData"] = postData;
+			// console.log('did i do this right?..........', data);
+			console.log('what does this look like?........', platformData.recent.twitter)
+			res.render('dashboard', {
+				platformData: platformData,
+				postData: postData
+			});
+		});
+	});
+});
+
+router.get('/posts', function(req, res, next) {
+	getPosts(req.user._id)
+	.then((data) => {
+		res.render('posts', {
+			data
+		});
+	});
+});	
 
 module.exports = router;

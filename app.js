@@ -125,6 +125,7 @@ passport.use(new FacebookStrategy({
       }
     });
   }));
+
 passport.use(new YoutubeStrategy({
     clientID: process.env.YOUTUBE_CLIENT_ID,
     clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
@@ -156,6 +157,7 @@ passport.use(new YoutubeStrategy({
     });
   }
 ));
+
 passport.use(new InstagramStrategy({
     clientID: process.env.INSTAGRAM_CLIENT_ID,
     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,

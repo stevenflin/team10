@@ -68,7 +68,7 @@ module.exports = function(passport) {
   router.get('/auth/youtube/callback',
     passport.authenticate('youtube', {failureRedirect: '/login'}),
     function(req, res) {
-      res.redirect('/youtube');
+      res.redirect('/integrate');
 
     }
   );

@@ -1,9 +1,10 @@
 <div style='float: left; margin-right: 15px'>
 	<h1>Youtube</h1>
 	{{#each data.youtube}}
-	<h3>Title: {{this.snippet.title}}</h3>
-	<h2>Description: {{this.snippet.description}}</h2>
-	{{#each this.snaps}}
+	<h3>Title: {{this.title}}</h3>
+	<h2>Description: {{this.description}}</h2>
+	<h2>Published: {{this.date}}</h2>
+	{{#each this.snapshots}}
 	<div>
 	<p>Date: {{this.date}}</p>
 	<p>Likes: {{this.likes}}</p>
@@ -18,9 +19,10 @@
 <div style='float: left; margin-right: 15px'>
 	<h1>Instagram</h1>
 	{{#each data.instagram}}
-	<h3>Title: {{this.snippet.title}}</h3>
-	<h2>Description: {{this.snippet.description}}</h2>
-	{{#each this.snaps}}
+	<h3>Title: {{this.title}}</h3>
+	<h2>Description: {{this.description}}</h2>
+	<h2>Published: {{this.date}}</h2>
+	{{#each this.snapshots}}
 	<div>
 	<p>Date: {{this.date}}</p>
 	<p>Likes: {{this.likes}}</p>
@@ -32,9 +34,10 @@
 <div style='float: left; margin-right: 15px'>
 	<h1>Twitter</h1>
 	{{#each data.twitter}}
-	<h3>Title: {{this.snippet.title}}</h3>
-	<h2>Description: {{this.snippet.description}}</h2>
-	{{#each this.snaps}}
+	<h3>Title: {{this.title}}</h3>
+	<h2>Description: {{this.description}}</h2>
+	<h2>Published: {{this.date}}</h2>
+	{{#each this.snapshots}}
 	<div>
 	<p>Date: {{this.date}}</p>
 	<p>Retweets: {{this.shares}}</p>
@@ -45,9 +48,10 @@
 <div style='float: left; margin-right: 15px'>
 	<h1>Facebook</h1>
 	{{#each data.facebook}}
-	<h3>Title: {{this.snippet.title}}</h3>
-	<h2>Description: {{this.snippet.description}}</h2>
-	{{#each this.snaps}}
+	<h3>Title: {{this.title}}</h3>
+	<h2>Description: {{this.description}}</h2>
+	<h2>Published: {{this.date}}</h2>
+	{{#each this.snapshots}}
 	<div>
 	<p>Date: {{this.date}}</p>
 	<p>Likes: {{this.likes}}</p>
@@ -60,9 +64,10 @@
 <div style='float: left; margin-right: 15px'>
 	<h1>Vine</h1>
 	{{#each data.vine}}
-	<h3>Title: {{this.snippet.title}}</h3>
-	<h2>Description: {{this.snippet.description}}</h2>
-	{{#each this.snaps}}
+	<h3>Title: {{this.title}}</h3>
+	<h2>Description: {{this.description}}</h2>
+	<h2>Published: {{this.date}}</h2>
+	{{#each this.snapshots}}
 	<div>
 	<p>Date: {{this.date}}</p>
 	<p>Loops: {{this.views}}</p>
