@@ -7,7 +7,7 @@ var PostSnapshot = models.PostSnapshot;
 
 function getGeneral(id) {
 	return new Promise(function(masterResolve, masterReject) {
-		var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
+		var platforms = ['youtube', 'instagram', 'vine', 'twitter'];
 		Profile.findOne({userId: id}, function(err, profile) {
 			if (err) return next(err);
 			platforms = platforms.map(function(p) {
@@ -15,6 +15,7 @@ function getGeneral(id) {
 					ProfileSnapshot.find({profileId: profile._id, platform: p})
 					.limit(10)
 					.exec(function(err, psnaps) {
+						console.log("poooop", psnaps[0].date)
 						if (err) reject(err);
 						var followers = [];
 						psnaps.forEach(function(psnap) {

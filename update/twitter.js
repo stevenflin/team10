@@ -24,7 +24,7 @@ function twitterInformation(accessToken, accessTokenSecret, id){
 	});		
 }
 
-function twitterUpdate(id){
+function twitterUpdate(id, isTwenty){
 	return new Promise(function(resolve, reject) {
 		User.findById(id, function(err, user) {
 			Profile.findOne({userId: user._id}, function(err, profile){
