@@ -267,6 +267,7 @@ function facebookUpdate(id){
 	return new Promise(function(resolve, reject){
 	User.findById(id, function(err, user){
 			Profile.findOne({userId: user._id}, function(err, profile){
+			FB.setAccessToken(User.facebook.token)
 
 			if(err) return next(err)
 			var test = time(3);

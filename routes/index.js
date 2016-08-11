@@ -147,7 +147,7 @@ router.get('/update', (req, res, next) => {
 	.then(() => youtubeUpdate(id))
 	.then(() => twitterUpdate(id))
 	.then(() => vineUpdate(id))
-	// .then(() => facebookUpdate(id))
+	.then(() => facebookUpdate(id))
 	.then(() => res.redirect('/integrate'));
 })
 
@@ -167,7 +167,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 		// data["platformData"] = platformData;
 		getPosts(id)
 		.then((postData) => {
-			// data["postData"] = postData;
+			console.log('titties~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ',postData)
 			console.log('did i do this right?..........', postData.youtube);
 			// console.log('what does this look like?........', platformData.recent.twitter);
 			// console.log('what about this shit.............', postData.youtube[0].snapshots)
