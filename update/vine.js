@@ -98,6 +98,7 @@ function vineUpdate(id, twentyMinUpdate){
 						})
 					} else {
 						profile.vine.followers = data.user.followerCount;
+						profile.save();
 						data.data.records.forEach(function(postData, i) {
 							Post.findOrCreate({postId: postData.postId}, {
 								description: postData.description,

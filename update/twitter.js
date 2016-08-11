@@ -80,6 +80,7 @@ function twitterUpdate(id, twentyMinUpdate){
 						});
 					} else {
 						profile.twitter.followers = data[0].user.followers_count;
+						profile.save();
 						data.forEach(function(postData, i){
 
 							// If post doesn't exist, create it

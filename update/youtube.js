@@ -160,6 +160,7 @@ function youtubeUpdate(id, twentyMinUpdate) {
 						});
 					} else {
 						profile.youtube.followers = data.channel.subscriberCount;
+						profile.save();
 						data.videos.forEach(function(video, i) {
 							Post.findOrCreate({postId: video.id}, {
 								postId: video.id,
