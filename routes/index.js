@@ -144,10 +144,10 @@ router.get('/update/vine', function(req, res, next){
 router.get('/update', (req, res, next) => {
 	var id = req.user._id;
 	instagramUpdate(id)
-	.then(() => youtubeUpdate(id))
-	.then(() => twitterUpdate(id))
-	.then(() => vineUpdate(id))
-	// .then(() => facebookUpdate(id))
+	// .then(() => youtubeUpdate(id))
+	// .then(() => twitterUpdate(id))
+	// .then(() => vineUpdate(id))
+	.then(() => facebookUpdate(id)) //fix pauses the update route
 	.then(() => res.redirect('/integrate'));
 })
 
@@ -162,6 +162,7 @@ router.get('/dashboard', function(req, res, next) {
 
 router.get('/dashboard/:id', function(req, res, next) {
 	var id = req.user._id;
+
 	User.findById(id, function(err, user) {
 		getGeneral(id)
 		.then((platformData) => {

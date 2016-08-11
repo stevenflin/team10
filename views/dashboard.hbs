@@ -525,10 +525,10 @@
                           <th>Post</th>
                           <th>Date</th>
                           <th>Likes</th>
-                          <th>Impressions</th>
+                          
                           <th>Comments</th>
                           <th>Shares</th>
-                          <th>Favorites</th>
+                         
                         </tr>
                       </thead>
 
@@ -536,13 +536,12 @@
                       <tbody>
                         {{#each postData.facebook.posts}}
                         <tr>
-                          <td>{{this.[0].title}}</td>
+                          <td>{{this.[0].description}}</td>
                           <td>{{this.[0].date}}</td>
                           <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].dislikes}}</td>
-                          <td>{{this.[1].views}}</td>
+                          
                           <td>{{this.[1].comments}}</td>
-                          <td>placeholder</td>
+                          <td>{{this.[1].shares}}</td>
                         </tr>
                         {{/each}}
                       </tbody>
