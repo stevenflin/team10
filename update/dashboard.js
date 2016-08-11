@@ -65,7 +65,7 @@ function getPosts(id) {
 					Post.find({profileId: profile._id, type: p})
 					.sort({'date': -1})
 					.populate('snapshots')
-					.lean()
+					.lean() //changes mongoose object into normal data
 					.exec(function(err, posts) {
 						if (err) reject(err);
 
@@ -73,10 +73,9 @@ function getPosts(id) {
 							type: p,
 							posts: posts.map((post) => {
 								var d = new Date(post.date)
-								console.log("First Date~~~~~~~~~~~", d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear())
-								console.log("POSTS",post.date)
-								post.date = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
-								console.log("POSTS",post.date)
+								console.log("Unix Date", post.description, post.date) //twitter and vine unix might be off
+								post.date = (d.getMonth()+1) + '/' + d.getDate() + '/'+d.getFullYear();
+								// console.log("POST Date after conversion",post.date)
 								return post
 							}),
 							lastSnapshots: posts.map((post) =>  post.snapshots[post.snapshots.length -1])

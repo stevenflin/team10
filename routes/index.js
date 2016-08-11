@@ -167,8 +167,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 		// data["platformData"] = platformData;
 		getPosts(id)
 		.then((postData) => {
-			console.log('titties~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ', postData.facebook.posts)
-			console.log('did i do this right?..........', postData.youtube);
+			// console.log('did i do this right?..........', postData.youtube);
 			// console.log('what does this look like?........', platformData.recent.twitter);
 			// console.log('what about this shit.............', postData.youtube[0].snapshots)
 			res.render('dashboard', {
