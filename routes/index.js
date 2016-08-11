@@ -153,7 +153,7 @@ router.get('/update', (req, res, next) => {
 
 // call this FUNction every 20 minutes
 
-router.get('/updateFrequent', (req, res, next) => {
+router.get('/update/frequent', (req, res, next) => {
 	var id = req.user._id;
 	var isTwenty = true;
 	instagramUpdate(id, isTwenty)
