@@ -3,7 +3,7 @@ var request = require('request');
 
 
 // the one that happens every 20 mins
-request.get(`http://localhost${process.env.PORT}/updateFrequent`, function(err, resp, body) {
+request.get(`http://localhost:${process.env.PORT}/updateFrequent`, function(err, resp, body) {
 	if (err) {
 		console.log("lmao");
 		throw new Error(err)
@@ -12,7 +12,7 @@ request.get(`http://localhost${process.env.PORT}/updateFrequent`, function(err, 
 })
 
 // this also happens every 20 but doesn't do anything when it gets to the server lol
-request.get(`http://localhost${process.env.PORT}/update`, function(err, resp, body) {
+request.get(`http://localhost:${process.env.PORT}/update`, function(err, resp, body) {
 	if (err) {
 		console.log("lmao")
 	}

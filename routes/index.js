@@ -160,7 +160,7 @@ router.get('/updateFrequent', (req, res, next) => {
 	.then(() => youtubeUpdate(id, isTwenty))
 	.then(() => twitterUpdate(id, isTwenty))
 	.then(() => vineUpdate(id, isTwenty))
-	// .then(() => facebookUpdate(id))
+	.then(() => facebookUpdate(id, isTwenty))
 	.then(() => res.redirect('/integrate'));
 })
 
