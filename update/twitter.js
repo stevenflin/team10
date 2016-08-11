@@ -33,12 +33,13 @@ function twitterUpdate(id){
 				// get twitter info
 				twitterInformation(user.twitter.twitterToken, user.twitter.twitterTokenSecret)
 				.then(function(data){
+					console.log("datadatatdatatdatadata", data[0])
 				
 					new ProfileSnapshot({
 						platformID: user.twitter.twitterProfile._json.id,
 						platform: 'twitter', 
 						followers: data[0].user.followers_count, 
-						posts: data[0].length,
+						posts: data[0].user.statuses_count,
 						date: new Date(),
 						profileId: profile._id
 					})
