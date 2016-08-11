@@ -147,13 +147,13 @@ router.get('/update', (req, res, next) => {
 	.then(() => youtubeUpdate(id))
 	.then(() => twitterUpdate(id))
 	.then(() => vineUpdate(id))
-	.then(() => facebookUpdate(id)) //fix pauses the update route
+	// .then(() => facebookUpdate(id)) //fix pauses the update route
 	.then(() => res.redirect('/integrate'));
 })
 
 // call this FUNction every 20 minutes
 
-router.get('/updateFrequent', (req, res, next) => {
+router.get('/update/frequent', (req, res, next) => {
 	var id = req.user._id;
 	var isTwenty = true;
 	instagramUpdate(id, isTwenty)
