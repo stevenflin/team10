@@ -68,6 +68,9 @@ var profile = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  }, 
+  postedRecently:{
+    type: Boolean
   }
 })
 var profileSnapshot = new mongoose.Schema({

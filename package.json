@@ -34,6 +34,7 @@
     "passport-youtube": "0.0.6",
     "passport-youtube-v3": "^2.0.0",
     "serve-favicon": "~2.3.0",
+    "twilio": "^2.9.2",
     "twitter": "^1.4.0",
     "vineapple": "^0.1.5",
     "vinelib": "0.0.4",

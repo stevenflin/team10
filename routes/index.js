@@ -3,6 +3,8 @@ var passport = require('passport');
 var FB = require('fb');
 var ig = require('instagram-node').instagram();
 
+var twilio = require('../test/trigger.js');
+var triggerMeTimbers = twilio.triggerMeTimbers;
 
 var dashboardFunctions = require('../update/dashboard');
 var getPosts = dashboardFunctions.getPosts;
@@ -212,7 +214,12 @@ router.get('/posts', function(req, res, next) {
 			data: arr[1]
 		});
 	});
-});	
+});
+
+router.get('/remind', function(req, res, next){
+	triggerMeTimbers()
+	.then(()=> res.redirect('/integrate'))
+})	
 
 module.exports = router;
 
