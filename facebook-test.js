@@ -56,9 +56,6 @@ function pagePosts(days, pageId){
 		FB.api(
 			  "/"+pageId+"/posts?since="+timeframe.since+"&until="+timeframe.until+"&fields=message,created_time,shares,likes.summary(true),comments.summary(true)",
 			   //handles pagination by time
-			  {
-			      "period": "days_28"
-			  },
 			  function (response) {
 			  	var arr = [];
 			  	var index= 0;
@@ -311,6 +308,7 @@ function facebookUpdate(id){
 								description: post.message,
 								postId: post.postId,
 								type: 'facebook',
+								date: post.date,
 								profileId: profile._id
 							}, function(err, postData){
 
