@@ -162,21 +162,24 @@ function youtubeUpdate(id, twentyMinUpdate) {
 						profile.youtube.followers = data.channel.subscriberCount;
 						data.videos.forEach(function(video, i) {
 							Post.findOrCreate({postId: video.id}, {
+								postId: video.id,
 								title: video.snippet.title,
 								description: video.snippet.description,
-								postId: video.id,
 								type: 'youtube',
 								profileId: profile._id,
-								date: new Date(video.snippet.publishedAt).getTime(),
-								comments: parseInt(video.stats.commentCount),
-								likes: parseInt(video.stats.likeCount),
-								favorites: parseInt(video.stats.favoriteCount),
-								views: parseInt(video.stats.viewCount),
-								dislikes: parseInt(video.stats.dislikeCount)
+								date: new Date(video.snippet.publishedAt).getTime()
 							}, function(err, post) {
 								if (err) return console.log(err);
+
+								post.comments = parseInt(video.stats.commentCount);
+								post.likes = parseInt(video.stats.likeCount);
+								post.favorites = parseInt(video.stats.favoriteCount);
+								post.views = parseInt(video.stats.viewCount);
+								post.dislikes = parseInt(video.stats.dislikeCount);
+
 								post.save(function(err, p) {
 									if (err) return console.log(err);
+									resolve();
 								})
 							})
 						})

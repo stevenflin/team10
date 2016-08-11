@@ -147,7 +147,7 @@ router.get('/update', (req, res, next) => {
 	.then(() => youtubeUpdate(id))
 	.then(() => twitterUpdate(id))
 	.then(() => vineUpdate(id))
-	.then(() => facebookUpdate(id)) //fix pauses the update route
+	// .then(() => facebookUpdate(id)) //fix pauses the update route
 	.then(() => res.redirect('/integrate'));
 })
 
