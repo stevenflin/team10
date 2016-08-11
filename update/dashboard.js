@@ -71,6 +71,7 @@ function getPosts(id) {
 
 						resolve({
 							type: p,
+
 							posts: posts.map((post) => {
 								var d = new Date(post.date)
 								console.log("Unix Date", post.description, post.date) //twitter and vine unix might be off
@@ -79,6 +80,7 @@ function getPosts(id) {
 								return post
 							}),
 							lastSnapshots: posts.map((post) =>  post.snapshots[post.snapshots.length -1])
+
 						});
 					});
 				});

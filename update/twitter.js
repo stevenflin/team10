@@ -33,12 +33,13 @@ function twitterUpdate(id){
 				// get twitter info
 				twitterInformation(user.twitter.twitterToken, user.twitter.twitterTokenSecret)
 				.then(function(data){
+					console.log("datadatatdatatdatadata", data[0])
 				
 					new ProfileSnapshot({
 						platformID: user.twitter.twitterProfile._json.id,
 						platform: 'twitter', 
 						followers: data[0].user.followers_count, 
-						posts: data[0].length,
+						posts: data[0].user.statuses_count,
 						date: new Date(),
 						profileId: profile._id
 					})
@@ -47,6 +48,7 @@ function twitterUpdate(id){
 
 						// iterate through posts
 						data.forEach(function(postData, i){
+							console.log('what does this look like.........', postData)
 
 							// If post doesn't exist, create it
 							Post.findOrCreate({postId: postData.id}, {
@@ -63,12 +65,12 @@ function twitterUpdate(id){
 									profileId: p._id, 
 									postId: post.postId,
 									shares: postData.retweet_count,
-									likes: postData.favourite_count,
+									likes: postData.favorite_count,
 									date: p.date
 								})
 								.save(function(err, psnap){
+									// console.log('what does this look like.........', psnap)
 									if(err) return next(err);
-
 									post.snapshots.push(psnap._id);
 									post.save(function(err){
 										if(err) return next(err);
