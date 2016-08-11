@@ -54,17 +54,14 @@ function pagePosts(days, pageId){
 	var timeframe = time(days);
 	return new Promise(function(resolve, reject){
 		FB.api(
-			  "/"+pageId+"/posts?since="+timeframe.since+"&until="+timeframe.until+"&fields=message,shares,likes.summary(true),comments.summary(true)",
+			  "/"+pageId+"/posts?since="+timeframe.since+"&until="+timeframe.until+"&fields=message,created_time,shares,likes.summary(true),comments.summary(true)",
 			   //handles pagination by time
-			  {
-			      "period": "days_28"
-			  },
 			  function (response) {
 			  	var arr = [];
 			  	var index= 0;
-			  	console.log(response.data);
+			  	console.log("COOL SHIT", response.data);
 			  	var data = response.data.map(function(post){
-			  		return {postId: post.id, message: post.message, shares: (post.shares) ? post.shares.count : 0, 
+			  		return {postId: post.id, message: post.message, shares: (post.shares) ? post.shares.count : 0, date: new Date(post.created_time).getTime(),
 			  				likes: (post.likes)? post.likes.data.length : 0, comments: (post.comments)? post.comments.data.length : 0}
 			  	})
 			  	// if(response && !response.error){
@@ -270,19 +267,20 @@ function facebookUpdate(id){
 	return new Promise(function(resolve, reject){
 	User.findById(id, function(err, user){
 			Profile.findOne({userId: user._id}, function(err, profile){
-			// console.log("hoesxx", profile)
+
 			if(err) return next(err)
 			var test = time(3);
 			var pageId = user.facebook.pages[0].pageId;
 			var functions= [ 
-					pageImpressions(28, pageId),
-					pageViewsTotal(28, pageId), //fix- currently only had last 3 days
-					pagePostImpressions(28, pageId), 
-					pagePosts(28, pageId), //
-					pageFans(28, pageId) //fix-undefiened
+					pageImpressions(92, pageId),
+					pageViewsTotal(92, pageId), //fix- currently only had last 3 days
+					pagePostImpressions(92, pageId), 
+					pagePosts(92, pageId), //
+					pageFans(92, pageId) //fix-undefiened
 				]
+
 			// console.log("FACEBOOK ID ", user.facebook.pages[0].pageId)
-			FB.setAccessToken(user.facebook.token);
+
 			Promise
 			.all([functions[0], functions[1], functions[2], functions[3], functions[4]])
 			.then((result)=>{ // create profile and profile snapshot here
@@ -310,6 +308,7 @@ function facebookUpdate(id){
 								description: post.message,
 								postId: post.postId,
 								type: 'facebook',
+								date: post.date,
 								profileId: profile._id
 							}, function(err, postData){
 
