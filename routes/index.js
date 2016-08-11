@@ -170,7 +170,8 @@ router.get('/dashboard/:id', function(req, res, next) {
 		.then((postData) => {
 			// data["postData"] = postData;
 			// console.log('did i do this right?..........', data);
-			console.log('what does this look like?........', platformData.recent.twitter)
+			console.log('what does this look like?........', platformData)
+			console.log('steven told me to do this.....', postData)
 			res.render('dashboard', {
 				platformData: platformData,
 				postData: postData
