@@ -313,7 +313,7 @@ function facebookUpdate(id, twentyMinUpdate) {
 									}, function(err, postData) {
 										if(err) return next(err);
 
-										// console.log("[creating post] for:", post.postId);
+										// console.log("asdf;sdfksdlfasdfsdfsdfsdfsdfsdfsdfsdfsdfsdf:", postData);
 
 										// snapshot it
 										new PostSnapshot({
@@ -340,6 +340,7 @@ function facebookUpdate(id, twentyMinUpdate) {
 							})
 						} else {
 							profile.facebook.followers = result[4];
+							profile.save();
 							result[3].forEach(function(post, i) {
 
 								Post.findOrCreate({postId: post.postId}, {

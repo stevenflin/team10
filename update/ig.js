@@ -90,6 +90,7 @@ function instagramUpdate(id, twentyMinUpdate) {
 						})
 					} else {
 						profile.instagram.followers = data.profile;
+						profile.save();
 						data.bigArr.forEach(function(post, i) {
 							var desc = null;
 							if (post.caption) {
