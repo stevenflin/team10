@@ -71,6 +71,7 @@ function getPosts(id) {
 							type: p,
 							posts: posts,
 							lastSnapshots: posts.map((post) => post.snapshots[post.snapshots.length -1])
+							// going to need to add a growth % for all stats
 						});
 					});
 				});

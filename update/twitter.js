@@ -47,6 +47,7 @@ function twitterUpdate(id){
 
 						// iterate through posts
 						data.forEach(function(postData, i){
+							console.log('what does this look like.........', postData)
 
 							// If post doesn't exist, create it
 							Post.findOrCreate({postId: postData.id}, {
@@ -63,12 +64,12 @@ function twitterUpdate(id){
 									profileId: p._id, 
 									postId: post.postId,
 									shares: postData.retweet_count,
-									likes: postData.favourite_count,
+									likes: postData.favorite_count,
 									date: p.date
 								})
 								.save(function(err, psnap){
+									// console.log('what does this look like.........', psnap)
 									if(err) return next(err);
-
 									post.snapshots.push(psnap._id);
 									post.save(function(err){
 										if(err) return next(err);
