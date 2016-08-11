@@ -133,7 +133,7 @@ function youtubeUpdate(id) {
 								postId: video.id,
 								type: 'youtube',
 								profileId: profile._id,
-								date: new Date(video.snippet.publishedAt).getTime() / 1000
+								date: new Date(video.snippet.publishedAt).getTime()
 							}, function(err, post) {
 								if (err) return next(err);
 

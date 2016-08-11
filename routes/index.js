@@ -147,7 +147,7 @@ router.get('/update', (req, res, next) => {
 	.then(() => youtubeUpdate(id))
 	.then(() => twitterUpdate(id))
 	.then(() => vineUpdate(id))
-	// .then(() => facebookUpdate(id))
+	.then(() => facebookUpdate(id)) //fix pauses the update route
 	.then(() => res.redirect('/integrate'));
 })
 
@@ -175,16 +175,15 @@ router.get('/dashboard', function(req, res, next) {
 
 router.get('/dashboard/:id', function(req, res, next) {
 	var id = req.user._id;
+
 	User.findById(id, function(err, user) {
 		getGeneral(id)
 		.then((platformData) => {
 			// data["platformData"] = platformData;
 			getPosts(id)
 			.then((postData) => {
-				// console.log('titties~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ',postData)
-				// console.log('did i do this right?..........', postData.youtube);
 				// console.log('what does this look like?........', platformData.recent.twitter);
-				// console.log('what about this shit.............', postData.youtube[0].snapshots)
+				// console.log('what about this shit.............', postData.youtube.posts[0][2])
 				res.render('dashboard', {
 					platformData: platformData,
 					postData: postData,
@@ -198,15 +197,21 @@ router.get('/dashboard/:id', function(req, res, next) {
 router.get('/posts', function(req, res, next) {
 	getPosts(req.user._id)
 	.then((data) => {
-		console.log(data.youtube.posts)
+		// console.log(data.youtube.posts)
 		var arr = [];
 		data.youtube.posts.forEach(function(d) {
 			console.log(d[0].snapshots.map((snap) => snap.likes));
+			arr.push(d[0].snapshots.map((snap) => snap.likes));
 		})
+		console.log('what does arr look like', arr)
 		res.render('posts', {
-			data
+			data: arr[1]
 		});
 	});
 });	
 
 module.exports = router;
+
+
+
+

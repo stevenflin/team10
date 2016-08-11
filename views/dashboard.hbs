@@ -353,12 +353,31 @@
                         {{#each postData.youtube.posts}}
                         <tr>
                           <td>{{this.[0].date}}</td>
-                          <td>{{this.[0].title}}</td>
-                          <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].dislikes}}</td>
-                          <td>{{this.[1].views}}</td>
-                          <td>{{this.[1].comments}}</td>
-                          <td>{{this.[1].favorites}}</td>
+                          <td class="mouse" data-toggle="modal" data-target="#myModal">{{this.[0].title}}</td>
+                          <div id="myModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+
+                              <!-- Modal content-->
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  <h4 class="modal-title">{{this.[0].title}}</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <p>Some text in the modal.</p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                          <td>{{this.[1].likes}} ({{this.[2].likes}}%)</td>
+                          <td>{{this.[1].dislikes}} ({{this.[2].dislikes}}%)</td>
+                          <td>{{this.[1].views}} ({{this.[2].views}}%)</td>
+                          <td>{{this.[1].comments}} ({{this.[2].comments}}%)</td>
+                          <td>{{this.[1].favorites}} ({{this.[2].favorites}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -409,8 +428,8 @@
                         <tr>
                           <td>{{this.[0].date}}</td>
                           <td>{{this.[0].description}}</td>
-                          <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].comments}}</td>
+                          <td>{{this.[1].likes}} ({{this.[2].likes}}%)</td>
+                          <td>{{this.[1].comments}} ({{this.[2].comments}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -463,10 +482,10 @@
                         <tr>
                           <td>{{this.[0].date}}</td>
                           <td>{{this.[0].description}}</td>
-                          <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].views}}</td>
-                          <td>{{this.[1].comments}}</td>
-                          <td>{{this.[1].shares}}</td>
+                          <td>{{this.[1].likes}} ({{this.[2].likes}}%)</td>
+                          <td>{{this.[1].views}} ({{this.[2].views}}%)</td>
+                          <td>{{this.[1].comments}} ({{this.[2].comments}}%)</td>
+                          <td>{{this.[1].shares}} ({{this.[2].shares}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -506,10 +525,10 @@
                           <th>Post</th>
                           <th>Date</th>
                           <th>Likes</th>
-                          <th>Impressions</th>
+                          
                           <th>Comments</th>
                           <th>Shares</th>
-                          <th>Favorites</th>
+                         
                         </tr>
                       </thead>
 
@@ -517,13 +536,12 @@
                       <tbody>
                         {{#each postData.facebook.posts}}
                         <tr>
-                          <td>{{this.[0].title}}</td>
+                          <td>{{this.[0].description}}</td>
                           <td>{{this.[0].date}}</td>
-                          <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].dislikes}}</td>
-                          <td>{{this.[1].views}}</td>
-                          <td>{{this.[1].comments}}</td>
-                          <td>placeholder</td>
+                          <td>{{this.[1].likes}} ({{this.[2].likes}}%)</td>
+                          
+                          <td>{{this.[1].comments}} ({{this.[2].comments}}%)</td>
+                          <td>{{this.[1].shares}} ({{this.[2].shares}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -573,8 +591,8 @@
                         <tr>
                           <td>{{this.[0].date}}</td>
                           <td>{{this.[0].description}}</td>
-                          <td>{{this.[1].shares}}</td>
-                          <td>{{this.[1].likes}}</td>
+                          <td>{{this.[1].shares}} ({{this.[2].shares}}%)</td>
+                          <td>{{this.[1].likes}} ({{this.[2].likes}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>

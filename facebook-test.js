@@ -268,7 +268,6 @@ function facebookUpdate(id){
 	User.findById(id, function(err, user){
 			Profile.findOne({userId: user._id}, function(err, profile){
 			FB.setAccessToken(user.facebook.token)
-
 			if(err) return next(err)
 			var test = time(3);
 			var pageId = user.facebook.pages[0].pageId;
@@ -313,7 +312,7 @@ function facebookUpdate(id){
 								profileId: profile._id
 							}, function(err, postData){
 
-								console.log('$$2')
+										console.log("FACEBOOK Post SUCCESSççççççççççççççççççççç", postData)
 								if(err) return next(err);
 
 								console.log("[creating post] for:", post.postId);
@@ -334,6 +333,7 @@ function facebookUpdate(id){
 
 									postData.snapshots.push(psnap._id);
 									postData.save(function(err){
+										console.log("FACEBOOK SAVE SUCCESSççççççççççççççççççççç")
 										if(err) return next(err);
 
 										resolve();
