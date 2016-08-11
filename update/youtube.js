@@ -107,57 +107,84 @@ function getYoutubeData(channelId) {
 	});
 }
 
-function youtubeUpdate(id) {
+function youtubeUpdate(id, twentyMinUpdate) {
 	return new Promise(function(resolve, reject) {
 		User.findById(id, function(err, user) {
 			getYoutubeData(user.youtube.profile.id)
 			.then(function(data) {
 				Profile.findOne({userId: user._id},function(err, profile) {
 					if (err) return next(err);
+					if (!twentyMinUpdate) {
+						new ProfileSnapshot({
+							platformID: user.youtube.profile.id,
+							platform: 'youtube',
+							followers: data.channel.subscriberCount,
+							posts: data.channel.videoCount,
+							views: data.channel.viewCount,
+							date: new Date(),
+							profileId: profile._id
+						}).save(function(err, p) {
+							if (err) return next(err);
 
-					new ProfileSnapshot({
-						platformID: user.youtube.profile.id,
-						platform: 'youtube',
-						followers: data.channel.subscriberCount,
-						posts: data.channel.videoCount,
-						views: data.channel.viewCount,
-						date: new Date(),
-						profileId: profile._id
-					}).save(function(err, p) {
-						if (err) return next(err);
-
-						data.videos.forEach(function(video, i) {
-							Post.findOrCreate({postId: video.id}, {
-								title: video.snippet.title,
-								description: video.snippet.description,
-								postId: video.id,
-								type: 'youtube',
-								profileId: profile._id,
-								date: new Date(video.snippet.publishedAt).getTime()
-							}, function(err, post) {
-								if (err) return next(err);
-
-								new PostSnapshot({
-									profileId: p._id,
-									postId: post.postId,
-									comments: parseInt(video.stats.commentCount),
-									likes: parseInt(video.stats.likeCount),
-									favorites: parseInt(video.stats.favoriteCount),
-									views: parseInt(video.stats.viewCount),
-									dislikes: parseInt(video.stats.dislikeCount),
-									date: p.date
-								}).save(function(err, psnap) {
+							data.videos.forEach(function(video, i) {
+								Post.findOrCreate({postId: video.id}, {
+									title: video.snippet.title,
+									description: video.snippet.description,
+									postId: video.id,
+									type: 'youtube',
+									profileId: profile._id,
+									date: new Date(video.snippet.publishedAt).getTime()
+								}, function(err, post) {
 									if (err) return next(err);
 
-									post.snapshots.push(psnap._id);
-									post.save(function(err) {
+									new PostSnapshot({
+										profileId: p._id,
+										postId: post.postId,
+										comments: parseInt(video.stats.commentCount),
+										likes: parseInt(video.stats.likeCount),
+										favorites: parseInt(video.stats.favoriteCount),
+										views: parseInt(video.stats.viewCount),
+										dislikes: parseInt(video.stats.dislikeCount),
+										date: p.date
+									}).save(function(err, psnap) {
 										if (err) return next(err);
-										resolve();
+
+										post.snapshots.push(psnap._id);
+										post.save(function(err) {
+											if (err) return next(err);
+											resolve();
+										});
 									});
 								});
 							});
 						});
-					});
+					} else {
+						profile.youtube.followers = data.channel.subscriberCount;
+						profile.save();
+						data.videos.forEach(function(video, i) {
+							Post.findOrCreate({postId: video.id}, {
+								postId: video.id,
+								title: video.snippet.title,
+								description: video.snippet.description,
+								type: 'youtube',
+								profileId: profile._id,
+								date: new Date(video.snippet.publishedAt).getTime()
+							}, function(err, post) {
+								if (err) return console.log(err);
+
+								post.comments = parseInt(video.stats.commentCount);
+								post.likes = parseInt(video.stats.likeCount);
+								post.favorites = parseInt(video.stats.favoriteCount);
+								post.views = parseInt(video.stats.viewCount);
+								post.dislikes = parseInt(video.stats.dislikeCount);
+
+								post.save(function(err, p) {
+									if (err) return console.log(err);
+									resolve();
+								})
+							})
+						})
+					}
 				});
 			}).catch((err) => next(err));
 		})

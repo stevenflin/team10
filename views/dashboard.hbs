@@ -382,11 +382,11 @@
 
                             </div>
                           </div>
-                          <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].dislikes}}</td>
-                          <td>{{this.[1].views}}</td>
-                          <td>{{this.[1].comments}}</td>
-                          <td>{{this.[1].favorites}}</td>
+                          <td>{{this.[0].likes}} ({{this.[1].likes}}%)</td>
+                          <td>{{this.[0].dislikes}} ({{this.[1].dislikes}}%)</td>
+                          <td>{{this.[0].views}} ({{this.[1].views}}%)</td>
+                          <td>{{this.[0].comments}} ({{this.[1].comments}}%)</td>
+                          <td>{{this.[0].favorites}} ({{this.[1].favorites}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -437,8 +437,8 @@
                         <tr>
                           <td>{{this.[0].date}}</td>
                           <td>{{this.[0].description}}</td>
-                          <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].comments}}</td>
+                          <td>{{this.[0].likes}} ({{this.[1].likes}}%)</td>
+                          <td>{{this.[0].comments}} ({{this.[1].comments}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -491,10 +491,10 @@
                         <tr>
                           <td>{{this.[0].date}}</td>
                           <td>{{this.[0].description}}</td>
-                          <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].views}}</td>
-                          <td>{{this.[1].comments}}</td>
-                          <td>{{this.[1].shares}}</td>
+                          <td>{{this.[0].likes}} ({{this.[1].likes}}%)</td>
+                          <td>{{this.[0].views}} ({{this.[1].views}}%)</td>
+                          <td>{{this.[0].comments}} ({{this.[1].comments}}%)</td>
+                          <td>{{this.[0].shares}} ({{this.[1].shares}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -547,10 +547,10 @@
                         <tr>
                           <td>{{this.[0].description}}</td>
                           <td>{{this.[0].date}}</td>
-                          <td>{{this.[1].likes}}</td>
+                          <td>{{this.[0].likes}} ({{this.[1].likes}}%)</td>
                           
-                          <td>{{this.[1].comments}}</td>
-                          <td>{{this.[1].shares}}</td>
+                          <td>{{this.[0].comments}} ({{this.[1].comments}}%)</td>
+                          <td>{{this.[0].shares}} ({{this.[1].shares}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -600,8 +600,8 @@
                         <tr>
                           <td>{{this.[0].date}}</td>
                           <td>{{this.[0].description}}</td>
-                          <td>{{this.[1].shares}}</td>
-                          <td>{{this.[1].likes}}</td>
+                          <td>{{this.[0].shares}} ({{this.[1].shares}}%)</td>
+                          <td>{{this.[0].likes}} ({{this.[1].likes}}%)</td>
                         </tr>
                         {{/each}}
                       </tbody>

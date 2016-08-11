@@ -23,6 +23,7 @@ function getGeneral(id) { //chanel info for each function
 						resolve({
 							type: p,
 							data: psnaps,
+							profile,
 							followers
 						});
 					});
@@ -34,16 +35,17 @@ function getGeneral(id) { //chanel info for each function
 			.then((results) => {
 				snaps = {};
 				followers = {};
-				recent = {};
 				change = {};
+				recent = results[0].profile
 				results.forEach(function(result, i) {
 					snaps[result.type] = result.data;
 					followers[result.type] = result.followers;
-					recent[result.type] = result.data[result.data.length - 1];
 					if (result.data.length > 1) {
+						// gotta fix this with more recent info
 						change[result.type] = parseInt(((result.data[result.data.length - 1].followers - result.data[result.data.length - 2].followers) / result.data[result.data.length - 2].followers) * 100);
 					}
 				})
+				
 				masterResolve({
 					snaps: snaps,
 					followers: followers,
@@ -73,20 +75,32 @@ function getPosts(id) {
 							type: p,
 							posts: posts.map((post) => {
 								var d = new Date(post.date)
-								console.log("Unix Date", post.description, post.date) //twitter and vine unix might be off
+								// console.log("Unix Date", post.description, post.date) //twitter and vine unix might be off
 								post.date = (d.getMonth()+1) + '/' + d.getDate() + '/'+d.getFullYear();
 								// console.log("POST Date after conversion",post.date)
 								return post
 							}),
-							lastSnapshots: posts.map((post) => post.snapshots[post.snapshots.length - 1]),
 							growth: posts.map((post) => {
 								var growth = {},
 								snaps = post.snapshots
+								console.log('what does this look like.........', post)
 								for (var key in snaps[0]) {
-									console.log('what the fuck does this look like............', key)
-									// if (!growth[key]) {
-									// 	growth[key] = (parseInt(snaps[snaps.length - 1][key]) - parseInt(snaps[snaps.length - 2][key])) / parseInt(snaps[snaps.length-2][key])
-									// }
+									// console.log('what the fuck does this look like............', key)
+									if (!growth[key]) {
+										// there are not enough snapshots
+										if (!(snaps.length > 1)) {
+											growth[key] = 0;
+										// 0 in the denominator and numerator
+										} else if (parseInt(snaps[snaps.length - 2][key]) === 0 && parseInt(post[key]) === 0) {
+											growth[key] = 0;
+										// 0 in the denominator
+										} else if (parseInt(snaps[snaps.length - 2][key]) === 0) {
+											growth[key] = 100
+										// most recent update minus second to last snapshot
+										} else {
+											growth[key] = (parseInt(post[key]) - parseInt(snaps[snaps.length - 2][key])) / parseInt(snaps[snaps.length-2][key]) * 100
+										}
+									}
 								}
 								return growth;
 							})
@@ -101,7 +115,7 @@ function getPosts(id) {
 				data.forEach(function(d) {
 					if (!stats[d.type]) {
 						stats[d.type] = {
-							posts: d.posts.map((item, i) => { return [item, d.lastSnapshots[i], d.growth]})
+							posts: d.posts.map((item, i) => { return [item, d.growth[i]]})
 						};
 					}
 				})

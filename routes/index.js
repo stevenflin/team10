@@ -3,6 +3,8 @@ var passport = require('passport');
 var FB = require('fb');
 var ig = require('instagram-node').instagram();
 
+var twilio = require('../test/trigger.js');
+var triggerMeTimbers = twilio.triggerMeTimbers;
 
 var dashboardFunctions = require('../update/dashboard');
 var getPosts = dashboardFunctions.getPosts;
@@ -71,7 +73,7 @@ router.get('/fbPageSelector', function(req, res, next) {
 	})
 	.then((result) => {
 		console.log('here2')
-		res.render('fbPageSelector', {result: result.data})
+		return res.render('fbPageSelector', {result: result.data})
 	})
 	.catch(console.log)
 });
@@ -88,24 +90,28 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 				console.log("ERROR ", err)
 			}
 			console.log("YO BITCH",success)
+
+			new Promise(function(resolve, reject){
+
+				FB.api(`/${req.query.pageId}/insights/page_views_total`, function (res) {
+					if(!res || res.error) {
+						console.log(!res ? 'error occurred' : res.error);
+						reject(res.error);
+					}
+
+				  console.log("RESPONSE   ", res.data[2].values); //get's 28 day values 
+				  resolve(res);
+				});
+			})
+			.then(function(result){
+				res.render('fbPageSelector')
+			})
+			.catch(console.log)
 		});
-		res.render('integrate')	
-		new Promise(function(resolve, reject){
-
-			FB.api(`/${req.query.pageId}/insights/page_views_total`, function (res) {
-				if(!res || res.error) {
-					console.log(!res ? 'error occurred' : res.error);
-					reject(res.error);
-				}
-
-			  console.log("RESPONSE   ", res.data[2].values); //get's 28 day values 
-			  resolve(res);
-			});
+	} else {
+		res.status(400).json({
+			message: "Kinda missing a pageId there bud"
 		})
-		.then(function(result){
-			res.render('fbPageSelector')
-		})
-		.catch(console.log)
 	}
 	
 })
@@ -150,7 +156,20 @@ router.get('/update', (req, res, next) => {
 	.then(() => youtubeUpdate(id))
 	.then(() => twitterUpdate(id))
 	.then(() => vineUpdate(id))
-	// .then(() => facebookUpdate(id)) //fix pauses the update route
+	.then(() => facebookUpdate(id)) //fix pauses the update route
+	.then(() => res.redirect('/integrate'));
+})
+
+// call this FUNction every 20 minutes
+
+router.get('/update/frequent', (req, res, next) => {
+	var id = req.user._id;
+	var isTwenty = true;
+	instagramUpdate(id, isTwenty)
+	.then(() => youtubeUpdate(id, isTwenty))
+	.then(() => twitterUpdate(id, isTwenty))
+	.then(() => vineUpdate(id, isTwenty))
+	.then(() => facebookUpdate(id, isTwenty))
 	.then(() => res.redirect('/integrate'));
 })
 
@@ -247,7 +266,12 @@ router.get('/posts', function(req, res, next) {
 			data: arr[1]
 		});
 	});
-});	
+});
+
+router.get('/remind', function(req, res, next){
+	triggerMeTimbers()
+	.then(()=> res.redirect('/integrate'))
+})	
 
 module.exports = router;
 

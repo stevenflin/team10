@@ -263,15 +263,15 @@ function pageFans(days, pageId){
 // }
 
 
-function facebookUpdate(id){
-	return new Promise(function(resolve, reject){
-	User.findById(id, function(err, user){
-			Profile.findOne({userId: user._id}, function(err, profile){
-			FB.setAccessToken(user.facebook.token)
-			if(err) return next(err)
-			var test = time(3);
-			var pageId = user.facebook.pages[0].pageId;
-			var functions= [ 
+function facebookUpdate(id, twentyMinUpdate) {
+	return new Promise(function(resolve, reject) {
+		User.findById(id, function(err, user) {
+			Profile.findOne({userId: user._id}, function(err, profile) {
+				FB.setAccessToken(user.facebook.token)
+				if(err) return next(err)
+				var test = time(3);
+				var pageId = user.facebook.pages[0].pageId;
+				var functions= [ 
 					pageImpressions(92, pageId),
 					pageViewsTotal(92, pageId), //fix- currently only had last 3 days
 					pagePostImpressions(92, pageId), 
@@ -279,83 +279,98 @@ function facebookUpdate(id){
 					pageFans(92, pageId) //fix-undefiened
 				]
 
-			// console.log("FACEBOOK ID ", user.facebook.pages[0].pageId)
+				// console.log("FACEBOOK ID ", user.facebook.pages[0].pageId)
 
-			Promise
-			.all([functions[0], functions[1], functions[2], functions[3], functions[4]])
-			.then((result)=>{ // create profile and profile snapshot here
-				// console.log("$$0")
+				Promise
+				.all([functions[0], functions[1], functions[2], functions[3], functions[4]])
+				.then((result) => { // create profile and profile snapshot here
+					// console.log("$$0")
 
-				try {
-
-					new ProfileSnapshot({
-						platformId: user.facebook.id,
-						platform: 'facebook',
-						followers: result[4],
-						views: result[0][result[0].length-1].value,
-						posts: result[3].length,
-						date: new Date(),
-						profileId: profile._id
-					})
-					.save(function(err, p){
-
-						console.log('$$1')
-						if(err) return next(err);
-
-						result[3].forEach(function(post, i){
-
-							Post.findOrCreate({postId: post.postId}, {
-								description: post.message,
-								postId: post.postId,
-								type: 'facebook',
-								date: post.date,
+					try {
+						if (!twentyMinUpdate) {
+							new ProfileSnapshot({
+								platformId: user.facebook.id,
+								platform: 'facebook',
+								followers: result[4],
+								views: result[0][result[0].length-1].value,
+								posts: result[3].length,
+								date: new Date(),
 								profileId: profile._id
-							}, function(err, postData){
+							})
+							.save(function(err, p) {
 
-										console.log("FACEBOOK Post SUCCESSççççççççççççççççççççç", postData)
+								console.log('$$1')
 								if(err) return next(err);
 
-								console.log("[creating post] for:", post.postId);
+								result[3].forEach(function(post, i) {
 
-								// snapshot it
-								new PostSnapshot({
-									profileId: p._id, 
-									postId: postData.postId,
-									comments: post.comments,
-									likes: post.likes,
-									shares: post.shares,
-									date: p.date
-								})
-								.save(function(err, psnap){
-
-									// console.log('$$3')
-									if(err) return next(err);
-
-									postData.snapshots.push(psnap._id);
-									postData.save(function(err){
-										console.log("FACEBOOK SAVE SUCCESSççççççççççççççççççççç")
+									Post.findOrCreate({postId: post.postId}, {
+										description: post.message,
+										postId: post.postId,
+										type: 'facebook',
+										date: post.date,
+										profileId: profile._id
+									}, function(err, postData) {
 										if(err) return next(err);
 
+										// console.log("asdf;sdfksdlfasdfsdfsdfsdfsdfsdfsdfsdfsdfsdf:", postData);
+
+										// snapshot it
+										new PostSnapshot({
+											profileId: p._id, 
+											postId: postData.postId,
+											comments: post.comments,
+											likes: post.likes,
+											shares: post.shares,
+											date: p.date
+										})
+										.save(function(err, psnap) {
+
+											// console.log('$$3')
+											if(err) return next(err);
+
+											postData.snapshots.push(psnap._id);
+											postData.save(function(err) {
+												if(err) return next(err);
+												resolve();		
+											})				
+										})
+									})
+								})	
+							})
+						} else {
+							profile.facebook.followers = result[4];
+							profile.save();
+							result[3].forEach(function(post, i) {
+
+								Post.findOrCreate({postId: post.postId}, {
+									description: post.message,
+									postId: post.postId,
+									type: 'facebook',
+									date: post.date,
+									profileId: profile._id
+								}, function(err, postData) {
+									if (err) return console.log(err);
+
+									postData.comments = post.comments;
+									postData.likes = post.likes;
+									postData.shares = post.shares;
+
+									postData.save(function(err, p) {
+										if (err) return console.log(err);
 										resolve();
-										
-									})				
+									})
 								})
-						})
-
-					})	
-				})
-				}
-				catch (error) {
-					console.log(error);
-				}
+							})
+						}
+					}
+					catch (error) {
+						console.log(error);
+					}
+				}).catch((err) => console.log(err))
 			})
-			.catch(console.log)
 		})
-
 	})
-
-})
-
 }
 
 module.exports = {
