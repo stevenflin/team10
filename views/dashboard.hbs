@@ -338,8 +338,8 @@
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Title</th>
                           <th>Date</th>
+                          <th>Title</th>
                           <th>Likes</th>
                           <th>Dislikes</th>
                           <th>Views</th>
@@ -352,8 +352,8 @@
                       <tbody>
                         {{#each postData.youtube.posts}}
                         <tr>
-                          <td>{{this.[0].title}}</td>
                           <td>{{this.[0].date}}</td>
+                          <td>{{this.[0].title}}</td>
                           <td>{{this.[1].likes}}</td>
                           <td>{{this.[1].dislikes}}</td>
                           <td>{{this.[1].views}}</td>
@@ -396,8 +396,8 @@
                     <table id="datatable2" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Caption</th>
                           <th>Date</th>
+                          <th>Caption</th>
                           <th>Likes</th>
                           <th>Comments</th>
                         </tr>
@@ -407,8 +407,8 @@
                       <tbody>
                         {{#each postData.instagram.posts}}
                         <tr>
-                          <td>{{this.[0].description}}</td>
                           <td>{{this.[0].date}}</td>
+                          <td>{{this.[0].description}}</td>
                           <td>{{this.[1].likes}}</td>
                           <td>{{this.[1].comments}}</td>
                         </tr>
@@ -448,27 +448,25 @@
                     <table id="datatable3" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Title</th>
                           <th>Date</th>
+                          <th>Caption</th>
                           <th>Likes</th>
-                          <th>Dislikes</th>
-                          <th>Views</th>
+                          <th>Loops</th>
                           <th>Comments</th>
-                          <th>Favorites</th>
+                          <th>Shares</th>
                         </tr>
                       </thead>
 
 
                       <tbody>
-                        {{#each postData.youtube.posts}}
+                        {{#each postData.vine.posts}}
                         <tr>
-                          <td>{{this.[0].title}}</td>
                           <td>{{this.[0].date}}</td>
+                          <td>{{this.[0].description}}</td>
                           <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].dislikes}}</td>
                           <td>{{this.[1].views}}</td>
                           <td>{{this.[1].comments}}</td>
-                          <td>{{this.[1].favorites}}</td>
+                          <td>{{this.[1].shares}}</td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -562,27 +560,19 @@
                     <table id="datatable5" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Title</th>
                           <th>Date</th>
-                          <th>Likes</th>
-                          <th>Dislikes</th>
-                          <th>Views</th>
-                          <th>Comments</th>
-                          <th>Favorites</th>
+                          <th>Tweet</th>
+                          <th>Retweets</th>
                         </tr>
                       </thead>
 
 
                       <tbody>
-                        {{#each postData.youtube.posts}}
+                        {{#each postData.twitter.posts}}
                         <tr>
-                          <td>{{this.[0].title}}</td>
                           <td>{{this.[0].date}}</td>
-                          <td>{{this.[1].likes}}</td>
-                          <td>{{this.[1].dislikes}}</td>
-                          <td>{{this.[1].views}}</td>
-                          <td>{{this.[1].comments}}</td>
-                          <td>{{this.[1].favorites}}</td>
+                          <td>{{this.[0].description}}</td>
+                          <td>{{this.[1].shares}}</td>
                         </tr>
                         {{/each}}
                       </tbody>
