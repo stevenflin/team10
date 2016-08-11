@@ -63,6 +63,15 @@
                       <li><a href="index3.html">Dashboard3</a></li>
                     </ul>
                   </li>
+                  {{#if userArray}}
+                  <li><a><i class="fa fa-edit"></i> Users <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      {{#each userArray}}
+                        <li><a href="/dashboard/{{this.id}}">{{this.username}}</a></li>
+                      {{/each}}
+                    </ul>
+                  </li>
+                  {{/if}}
                   <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="form.html">General Form</a></li>

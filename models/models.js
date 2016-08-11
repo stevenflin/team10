@@ -10,6 +10,10 @@ var user = new mongoose.Schema({
     type: String,
     required: true
   },
+  isAdmin:{
+    type: Boolean,
+    default: false
+  },
   facebook: {
     id: String,
     token: String,

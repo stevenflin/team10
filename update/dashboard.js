@@ -5,7 +5,7 @@ var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
-function getGeneral(id) {
+function getGeneral(id) { //chanel info for each function
 	return new Promise(function(masterResolve, masterReject) {
 		var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 		Profile.findOne({userId: id}, function(err, profile) {

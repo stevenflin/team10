@@ -45,7 +45,10 @@ router.get('/', function(req, res, next) {
 
 
 router.get('/integrate', function(req, res, next) {
-  res.render('integrate');
+  console.log("USER ID~~~~~~~~~~~~~~~~~~", req.user._id)
+  res.render('integrate', {
+  	userId:req.user._id
+  });
 });
 
 router.get('/fbPageSelector', function(req, res, next) {
@@ -154,33 +157,80 @@ router.get('/update', (req, res, next) => {
 // DASHBOARD ROUTES
 
 router.get('/dashboard', function(req, res, next) {
-	res.redirect('/dashboard/1');
+	res.redirect('/dashboard/'+req.user._id);
 })
 
 //dashboard and dashboard/id that takes id of each client user
 // update route that always pings 
 
-router.get('/dashboard/:id', function(req, res, next) {
-	var id = req.user._id;
 
-	User.findById(id, function(err, user) {
-		getGeneral(id)
-		.then((platformData) => {
-			// data["platformData"] = platformData;
-			getPosts(id)
-			.then((postData) => {
+router.use(function(req, res, next) {
+	console.log("User~~~~", req.user._id)
+	if (req.user._id || req.user.isAdmin) {
+
+		return next();
+	} else {
+		return res.redirect('/');
+	}
+})
+router.get('/dashboard/:id', function(req, res, next) {
+	console.log("1")
+	var id = req.params.id;
+		User.findById(id, function(err, user) {
+			console.log("2")
+			return new Promise(function(resolve, reject){
+				if(req.user.isAdmin){
+					User.find({})
+					.exec((err, users)=>{
+						if (err) return reject(err);
+						var userArray = users.map((users)=>{return {id: users._id, username: users.username}})
+						resolve(userArray)
+					})
+				}
+				else{resolve()}
+			})
+			.then((userArray)=>{
+
+				console.log("3")
+				getGeneral(id) //gets subscriber, follower/data
+				.then((platformData) => { 
+					console.log("4")
+
+					// data["platformData"] = platformData;
+					getPosts(id) //get posts for the person
+					.then((postData) => {
 				// console.log('did i do this right?...........', postData)
 				// console.log('did i do this right?..........', postData.youtube);
 				// console.log('what does this look like?........', platformData.recent.twitter);
 				// console.log('what about this shit.............', postData.youtube.posts[0][2])
-				res.render('dashboard', {
-					platformData: platformData,
-					postData: postData,
-					user: user
-				});
+				console.log("5")
+
+				if(req.user.isAdmin){
+					console.log("USER Dats", platformData)
+					console.log("USER ARRAY2", userArray)
+										
+
+					res.render('dashboard', {
+						platformData: platformData,
+						postData: postData,
+						user: user,
+						userArray: userArray
+					})
+				}
+				else{
+					console.log("7")
+
+					res.render('dashboard', {
+						platformData: platformData,
+						postData: postData,
+						user: user
+					})
+				};
 			});
+			}) //platform data
 		});
-	});
+	}).catch(console.log.bind(this, "[error]"));
+
 });
 
 router.get('/posts', function(req, res, next) {

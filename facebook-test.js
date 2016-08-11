@@ -340,7 +340,6 @@ function facebookUpdate(id){
 										
 									})				
 								})
-
 						})
 
 					})	
