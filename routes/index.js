@@ -162,16 +162,15 @@ router.get('/dashboard', function(req, res, next) {
 
 router.get('/dashboard/:id', function(req, res, next) {
 	var id = req.user._id;
-	var data = {};
 	getGeneral(id)
 	.then((platformData) => {
 		// data["platformData"] = platformData;
 		getPosts(id)
 		.then((postData) => {
 			// data["postData"] = postData;
-			// console.log('did i do this right?..........', data);
-			console.log('what does this look like?........', platformData)
-			console.log('steven told me to do this.....', postData)
+			console.log('did i do this right?..........', postData.youtube);
+			// console.log('what does this look like?........', platformData.recent.twitter);
+			// console.log('what about this shit.............', postData.youtube[0].snapshots)
 			res.render('dashboard', {
 				platformData: platformData,
 				postData: postData
