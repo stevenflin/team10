@@ -73,7 +73,7 @@ function getPosts(id) {
 							type: p,
 							posts: posts.map((post) => {
 								var d = new Date(post.date)
-								console.log("Unix Date", post.description, post.date) //twitter and vine unix might be off
+								// console.log("Unix Date", post.description, post.date) //twitter and vine unix might be off
 								post.date = (d.getMonth()+1) + '/' + d.getDate() + '/'+d.getFullYear();
 								// console.log("POST Date after conversion",post.date)
 								return post
@@ -83,11 +83,18 @@ function getPosts(id) {
 								var growth = {},
 								snaps = post.snapshots
 								for (var key in snaps[0]) {
-									console.log('what the fuck does this look like............', key)
-									// if (!growth[key]) {
-									// 	growth[key] = (parseInt(snaps[snaps.length - 1][key]) - parseInt(snaps[snaps.length - 2][key])) / parseInt(snaps[snaps.length-2][key])
-									// }
+									// console.log('what the fuck does this look like............', key)
+									if (!growth[key]) {
+										if (parseInt(snaps[snaps.length - 2][key]) === 0 && parseInt(snaps[snaps.length - 1][key]) === 0) {
+											growth[key] = 0;
+										} else if (parseInt(snaps[snaps.length - 2][key]) === 0) {
+											growth[key] = 100
+										} else {
+											growth[key] = (parseInt(snaps[snaps.length - 1][key]) - parseInt(snaps[snaps.length - 2][key])) / parseInt(snaps[snaps.length-2][key]) * 100
+										}
+									}
 								}
+								console.log('what does this look like.........', growth)
 								return growth;
 							})
 						});
@@ -101,7 +108,7 @@ function getPosts(id) {
 				data.forEach(function(d) {
 					if (!stats[d.type]) {
 						stats[d.type] = {
-							posts: d.posts.map((item, i) => { return [item, d.lastSnapshots[i], d.growth]})
+							posts: d.posts.map((item, i) => { return [item, d.lastSnapshots[i], d.growth[i]]})
 						};
 					}
 				})

@@ -147,7 +147,7 @@ router.get('/update', (req, res, next) => {
 	.then(() => youtubeUpdate(id))
 	.then(() => twitterUpdate(id))
 	.then(() => vineUpdate(id))
-	// .then(() => facebookUpdate(id)) //fix pauses the update route
+	.then(() => facebookUpdate(id)) //fix pauses the update route
 	.then(() => res.redirect('/integrate'));
 })
 
@@ -170,7 +170,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 			getPosts(id)
 			.then((postData) => {
 				// console.log('did i do this right?...........', postData)
-				// console.log('did i do this right?..........', postData.youtube);
+				// console.log('did i do this right?..........', postData.youtube.posts);
 				// console.log('what does this look like?........', platformData.recent.twitter);
 				// console.log('what about this shit.............', postData.youtube.posts[0][2])
 				res.render('dashboard', {
