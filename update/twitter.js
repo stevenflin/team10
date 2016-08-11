@@ -53,7 +53,8 @@ function twitterUpdate(id){
 								description: postData.text,
 								postId: postData.id,
 								type: 'twitter',
-								profileId: profile._id
+								profileId: profile._id,
+								date: new Date(postData.created_at).getTime()
 							}, function(err, post){
 								if(err) return next(err);
 

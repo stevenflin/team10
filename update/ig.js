@@ -51,11 +51,11 @@ function instagramUpdate(id) {
 
 						// Iterate through posts and create new snapshots
 						data.bigArr.forEach(function(post, i){
-							// console.log("fucking darwish bigarray data", post);
 							var desc = null;
 							if(post.caption){
 								desc = post.caption.text
 							}
+
 
 							// If post doesn't exist, create it
 							Post.findOrCreate({postId: post.id}, {
@@ -63,9 +63,10 @@ function instagramUpdate(id) {
 								postId: post.id,
 								type: 'instagram',
 								profileId: profile._id,
-								date:parseInt(post.created_time)
+								date: parseInt(post.created_time)
 							}, function(err, postData){
-								if(err) return next(err);
+								// if(err) return console.log(err);
+								if (err) return next(err);
 								console.log("[creating post] for:", post.id);
 
 								// snapshot it
