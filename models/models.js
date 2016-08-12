@@ -72,9 +72,6 @@ var profile = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }, 
-  postedRecently:{
-    type: Boolean
   }
 })
 var profileSnapshot = new mongoose.Schema({
@@ -179,6 +176,16 @@ var postSnapshot = new mongoose.Schema({
   date: {
     type: Date
   } 
+})
+var triggerFrequency = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['youtube', 'instagram', 'vine', 'twitter', 'facebook']
+  },
+  frequency:{
+    type: Number
+  }
+  
 })
 user.plugin(findOrCreate);
 post.plugin(findOrCreate);

@@ -9,11 +9,10 @@ function triggerMeTimbers(){
 		client.sms.messages.create({
 		    to:'+19703710485',
 		    from:process.env.TWILIO_NUMBER,
-		    body:'Jake Paul says fuck you'
+		    body:`Jake Paul: Update your shit or you're out of team10`
 		}, function(error, message) {
 		    if (!error) {
 		        console.log('Success!');
-		   
 		        console.log('Message sent on:');
 		        console.log(message.dateCreated);
 		        resolve()

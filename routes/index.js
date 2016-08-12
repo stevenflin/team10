@@ -143,7 +143,7 @@ router.get('/update/vine', function(req, res, next){
 	.then(() => res.redirect('/integrate'));
 })
 
-// call this function everyday
+// call this function everyday, does make snapshots
 
 router.get('/update', (req, res, next) => {
 	User.find(function(err, users) {
@@ -159,7 +159,7 @@ router.get('/update', (req, res, next) => {
 	});
 });
 
-// call this FUNction every 20 minutes
+// call this FUNction every 20 minutes, does not make snapshots
 
 router.get('/update/frequent', (req, res, next) => {
 	User.find(function(err, users) {
@@ -175,6 +175,43 @@ router.get('/update/frequent', (req, res, next) => {
 		});
 	});
 });
+
+
+router.get('/update/trigger', (req, res, next)=>{
+	var id = req.user.id;
+	var types = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
+	
+	Profile.findOne({userId: user._id}, function(err, profile) {
+		types.map(function(p){
+			return new Promise(function(resolve, reject){
+				resolve(Post.find({profileId:profile._id, type: p }))
+			})
+			.then((posts)=>{ //because its a promise, posts are accessible throughout the route function
+				types.map(function(platform){
+					triggerFrequency.findOne({type:platform})
+					//update models to only get triggerfrequency if the user is integrated with the platform
+				})
+				.then((triggerFrequencyPolicy)=>{
+					//if statements here to check posts vs the policy
+
+				})
+			})
+					
+
+				
+			})
+
+		})
+
+	})
+	
+	// Schedule once a day, sometime in the morning
+	// 1 find posts by id
+	// 2. find trigger frequency
+	// 3. compare for each channel if post date is longer than allowed frequency
+	// 4 send
+
+
 
 // DASHBOARD ROUTES
 
