@@ -1,23 +1,19 @@
 var twilio = require('twilio');
- 
 
-
- 
-function triggerMeTimbers(){
+function sendMessage(triggerMessage){
 	return new Promise(function(resolve, reject){
 	var client = new twilio.RestClient(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 		client.sms.messages.create({
 		    to:'+19703710485',
 		    from:process.env.TWILIO_NUMBER,
-		    body:`Jake Paul: Update your shit or you're out of team10`
+		    body:`triggerMessage`
 		}, function(error, message) {
 		    if (!error) {
 		        console.log('Success!');
-		        console.log('Message sent on:');
-		        console.log(message.dateCreated);
+		        console.log('Message sent on:' + message.dateCreated);
 		        resolve()
 		    } else {
-		        console.log('Oops! There was an error.');
+		        console.log('Oops! There was an error sending the message your highness.');
 		        reject(error);
 		    }
 		});
@@ -26,5 +22,5 @@ function triggerMeTimbers(){
 // triggerMeTimbers()
 
 module.exports = {
-	triggerMeTimbers: triggerMeTimbers
+	sendMessage: sendMessage
 }

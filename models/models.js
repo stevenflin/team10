@@ -44,26 +44,36 @@ var user = new mongoose.Schema({
     password: String, 
     profile: Object
   },
-  upToDate:{
-    facebook:{
-      type: String,
-      default: true
+  triggerFrequency:{
+    youtube: {
+      lastPost: Number,
+      turnedOn: Boolean,
+      upToDate: Boolean,   
+      frequency: Number
     },
-    instagram:{
-      type: String,
-      default: true
+    instagram: {
+      turnedOn: Boolean,
+      lastPost: Number,
+      upToDate: Boolean,
+      frequency: Number
     },
-    youtube:{
-      type: String,
-      default: true
+    vine: {
+      turnedOn: Boolean,
+      lastPost: Number,
+      upToDate: Boolean,
+      frequency: Number
     },
-    twitter:{
-      type: String,
-      default: true
+    twitter: {
+      turnedOn: Boolean,
+      upToDate: Boolean,
+      lastPost: Number,
+      frequency: Number
     },
-    vine:{
-      type: String,
-      default: true
+    facebook: {
+      turnedOn: Boolean,
+      upToDate: Boolean,
+      lastPost: Number,        
+      frequency: Number
     }
   }
 });
@@ -204,29 +214,29 @@ var postSnapshot = new mongoose.Schema({
     type: Date
   } 
 })
-var triggerFrequency = new mongoose.Schema({
-  youtube: {
-    type: Boolean,
-    frequency: Number
-  },
-  instagram: {
-    type: Boolean,
-    frequency: Number
-  },
-  vine: {
-    type: Boolean,
-    frequency: Number
-  },
-  twitter: {
-    type: Boolean,
-    frequency: Number
-  },
-  facebook: {
-    type: Boolean,
-    frequency: Number
-  }
+// var triggerFrequency = new mongoose.Schema({
+//   youtube: {
+//     type: Boolean, //checks if 
+//     frequency: Number
+//   },
+//   instagram: {
+//     type: Boolean,
+//     frequency: Number
+//   },
+//   vine: {
+//     type: Boolean,
+//     frequency: Number
+//   },
+//   twitter: {
+//     type: Boolean,
+//     frequency: Number
+//   },
+//   facebook: {
+//     type: Boolean,
+//     frequency: Number
+//   }
   
-})
+// })
 user.plugin(findOrCreate);
 post.plugin(findOrCreate);
 profile.plugin(findOrCreate);

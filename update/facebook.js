@@ -25,7 +25,7 @@ function pageViewsTotal(days, pageId){
 	//~~~~~~~~~~~~~~FUNCTION TO GET TIME IN UNIX BY NUMBER OF DAYS
 function time(days){
   var until = Math.floor(Date.now() / 1000); //datenow
-  var since = until - days*24*60*60;
+  var since = until - days;
   return {until: until, since: since}
 }
 
@@ -237,7 +237,6 @@ function facebookUpdate(user, twentyMinUpdate) {
 
 			FB.setAccessToken(user.facebook.token);
 
-			console.log("[user.facebook]", user.facebook);
 
 			if (user.facebook.pages.length === 0) {
 				return resolve();
@@ -250,9 +249,6 @@ function facebookUpdate(user, twentyMinUpdate) {
 				pagePosts(92, pageId), //
 				pageFans(92, pageId) //fix-undefiened
 			]
-
-			console.log("FACEBOOK ID ", user.facebook.pages);
-
 			Promise
 			.all(functions)
 			.then((result) => { // create profile and profile snapshot here
@@ -284,10 +280,13 @@ function facebookUpdate(user, twentyMinUpdate) {
 								date: post.date,
 								profileId: profile._id
 							}, function(err, postData) {
+								if(user.triggerFrequency.facebook && user.triggerFrequency.facebook.turnedOn){
+									var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook*24*60*60;
+									user.triggerFrequency.facebook.upToDate = postData[0].date < date ? false : true;
+									user.triggerFrequency.facebook.lastPost = Math.floor((postData[0].date - date)*60*60*24)
+									user.save();
+								}
 								if(err) return next(err);
-
-						
-
 								// snapshot it
 								new PostSnapshot({
 									profileId: p._id, 
@@ -299,7 +298,6 @@ function facebookUpdate(user, twentyMinUpdate) {
 								})
 								.save(function(err, psnap) {
 
-									// console.log('$$3')
 									if(err) return next(err);
 
 									postData.snapshots.push(psnap._id);
