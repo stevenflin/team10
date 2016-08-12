@@ -242,8 +242,6 @@ function facebookUpdate(user, twentyMinUpdate) {
 			if (user.facebook.pages.length === 0) {
 				return resolve();
 			}
-
-			var test = time(3);
 			var pageId = user.facebook.pages[0].pageId;
 			var functions= [ 
 				pageImpressions(92, pageId),
