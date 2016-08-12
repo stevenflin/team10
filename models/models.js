@@ -182,6 +182,9 @@ var triggerFrequency = new mongoose.Schema({
     type: String,
     enum: ['youtube', 'instagram', 'vine', 'twitter', 'facebook']
   },
+  frequency:{
+    type: Number
+  }
   
 })
 user.plugin(findOrCreate);
