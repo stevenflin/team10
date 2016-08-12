@@ -89,7 +89,7 @@ passport.use(new FacebookStrategy({
     clientSecret: process.env.FB_CLIENT_SECRET,
     callbackURL: "http://localhost:3000/auth/facebook/cb", //fix when callback URL is updated
     passReqToCallback: true,
-    profileFields: ['email']
+    profileFields: ['email', 'displayName']
   },
   // facebook will send back the token and profile
   function(req, token, refreshToken, profile, done) {
@@ -109,17 +109,15 @@ passport.use(new FacebookStrategy({
         // save the user
         user.save(function(err, p) {
           if (err) return console.log('big error...........', err);
-          Profile.findOne({userId: user._id}, function(err, p){ //Fix-  check if this works
+          Profile.findOne({userId: user._id}, function(err, p){
 
-            p.facebook = profile.displayName; //Fix-  check if this works
-
-            p.facebook.displayName = profile.displayName; //Fix-  check if this works
+            p.facebook.displayName = profile.displayName;
 
             p.save(function(err) {
               if (err) return next(err);
             })
           })
-          return done(null, user) //Fix-  check if this works
+          return done(null, user);
         });
       }
     });

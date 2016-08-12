@@ -160,7 +160,7 @@ router.get('/update', (req, res, next) => {
 			.then(() => youtubeUpdate(user))
 			.then(() => twitterUpdate(user))
 			.then(() => vineUpdate(user))
-			// .then(() => facebookUpdate(user)) //fix pauses the update route
+			.then(() => facebookUpdate(user)) //fix pauses the update route
 			.then(() => res.redirect('/integrate'));
 		});
 	});
@@ -176,7 +176,7 @@ router.get('/update/frequent', (req, res, next) => {
 			.then(() => youtubeUpdate(user, isTwenty))
 			.then(() => twitterUpdate(user, isTwenty))
 			.then(() => vineUpdate(user, isTwenty))
-			// .then(() => facebookUpdate(user, isTwenty))
+			.then(() => facebookUpdate(user, isTwenty))
 			.then(() => res.redirect('/integrate'));
 		});
 	});
