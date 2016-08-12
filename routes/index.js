@@ -186,6 +186,7 @@ router.get('/update/trigger', (req, res, next)=>{
 			.then((posts)=>{ //because its a promise, posts are accessible throughout the route function
 				types.map(function(platform){
 					triggerFrequency.findOne({type:platform})
+					//update models to only get triggerfrequency if the user is integrated with the platform
 				})
 				.then((triggerFrequencyPolicy)=>{
 					//if statements here to check posts vs the policy
