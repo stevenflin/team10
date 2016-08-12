@@ -76,17 +76,16 @@ function getPosts(id) {
 								// console.log('what the fuck does this look like............', key)
 								if (!growth[key]) {
 									// there are not enough snapshots
-									if (!(snaps.length > 1)) {
-										growth[key] = 0;
 									// 0 in the denominator and numerator
-									} else if (parseInt(snaps[snaps.length - 1][key]) === 0 && parseInt(post[key]) === 0) {
+									if (parseInt(snaps[snaps.length - 1][key]) === 0 && parseInt(post[key]) === 0) {
 										growth[key] = 0;
 									// 0 in the denominator
 									} else if (parseInt(snaps[snaps.length - 1][key]) === 0) {
 										growth[key] = 100
 									// most recent update minus second to last snapshot
 									} else {
-										growth[key] = parseInt((parseInt(post[key]) - parseInt(snaps[snaps.length - 1][key])) / parseInt(snaps[snaps.length-1][key]) * 100)
+										// console.log('did i get in here?............')
+										growth[key] = parseInt((parseInt(post[key]) - parseInt(snaps[snaps.length - 1][key])) / parseInt(snaps[snaps.length - 1][key]) * 100)
 									}
 								}
 							}

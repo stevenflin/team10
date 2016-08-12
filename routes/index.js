@@ -315,7 +315,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 				// console.log('and this.......................', direction.instagram.down)
 				getPosts(id) //get posts for the person
 				.then((postData) => {
-					console.log('what does this look like......', postData.youtube.posts)
+					// console.log('what does this look like......', postData.youtube.posts)
 					res.render('dashboard', {
 						platformData: platformData,
 						postData: postData,
