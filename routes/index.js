@@ -181,18 +181,25 @@ router.get('/update/frequent', (req, res, next) => {
 	});
 });
 
+// router.get('/trigger', (req, res, next)=>{
+// 	res.render('trigger')
+// })
 
 router.get('/update/trigger', (req, res, next)=>{
+	console.log('user', user);
 	var id = req.user.id;
 	var types = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 	
 	Profile.findOne({userId: user._id}, function(err, profile) {
+
 		types.map(function(p){
 			return new Promise(function(resolve, reject){
 				resolve(Post.find({profileId:profile._id, type: p }))
 			})
 			.then((posts)=>{ //because its a promise, posts are accessible throughout the route function
+				console.log("posts", posts)
 				types.map(function(platform){
+					console.log("platform", platform)
 					triggerFrequency.findOne({type:platform})
 					//update models to only get triggerfrequency if the user is integrated with the platform
 				})
