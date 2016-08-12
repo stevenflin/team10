@@ -38,15 +38,15 @@
             <div class="clearfix"></div>
 
             <!-- menu profile quick info -->
-            <div class="profile">
+            {{!-- <div class="profile">
               <div class="profile_pic">
-                {{!-- <img src="images/img.jpg" alt="..." class="img-circle profile_img"> --}}
+                <img src="images/img.jpg" alt="..." class="img-circle profile_img">
               </div>
               <div class="profile_info">
                 <span>Welcome,</span>
                 <h2>{{me.username}}</h2>
               </div>
-            </div>
+            </div> --}}
             <!-- /menu profile quick info -->
 
             <br />
@@ -165,7 +165,7 @@
             <!-- /sidebar menu -->
 
             <!-- /menu footer buttons -->
-            <div class="sidebar-footer hidden-small">
+            {{!-- <div class="sidebar-footer hidden-small">
               <a data-toggle="tooltip" data-placement="top" title="Settings">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
               </a>
@@ -178,7 +178,7 @@
               <a data-toggle="tooltip" data-placement="top" title="Logout">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
-            </div>
+            </div> --}}
             <!-- /menu footer buttons -->
           </div>
         </div>
@@ -194,7 +194,7 @@
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    {{user.username}}
+                    {{me.username}}
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -211,10 +211,6 @@
                 </li>
 
                 <li role="presentation" class="dropdown">
-                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-envelope-o"></i>
-                    <span class="badge bg-green">6</span>
-                  </a>
                   <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                     <li>
                       <a>
@@ -281,11 +277,11 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-        <div class="right_col" role="main">
+        <div class="right_col" role="main" style="background: white">
           <div class="">
-            <div class="row tile_count">
+            <div class="row tile_count" style="margin-bottom: 0">
 
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <div class="col-md-2 col-md-offset-1 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                 <span class="count_top"><i class="fa fa-user"></i> Youtube Subscribers</span>
                 <div class="count">{{platformData.recent.youtube.followers}}</div>
                 {{#if direction.youtube.up}}
@@ -297,7 +293,7 @@
                 {{/if}}
               </div>
 
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                 <span class="count_top"><i class="fa fa-user"></i> Instagram Followers</span>
                 <div class="count">{{platformData.recent.instagram.followers}}</div>
                 {{#if direction.instagram.up}}
@@ -309,7 +305,7 @@
                 {{/if}}
               </div>
 
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                 <span class="count_top"><i class="fa fa-user"></i> Twitter Followers</span>
                 <div class="count">{{platformData.recent.twitter.followers}}</div>
                 {{#if direction.twitter.up}}
@@ -321,7 +317,7 @@
                 {{/if}}
               </div>
 
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                 <span class="count_top"><i class="fa fa-user"></i> Facebook Page Fans</span>
                 <div class="count">{{platformData.recent.facebook.followers}}</div>
                 {{#if direction.facebook.up}}
@@ -333,7 +329,7 @@
                 {{/if}}
               </div>
 
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                 <span class="count_top"><i class="fa fa-user"></i> Vine Followers</span>
                 <div class="count">{{platformData.recent.vine.followers}}</div>
                 {{#if direction.vine.up}}
@@ -358,15 +354,12 @@
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                         <ul class="dropdown-menu" role="menu">
                           <li><a href="#">Settings 1</a>
                           </li>
                           <li><a href="#">Settings 2</a>
                           </li>
                         </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
@@ -435,15 +428,12 @@
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                         <ul class="dropdown-menu" role="menu">
                           <li><a href="#">Settings 1</a>
                           </li>
                           <li><a href="#">Settings 2</a>
                           </li>
                         </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
@@ -487,15 +477,12 @@
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                         <ul class="dropdown-menu" role="menu">
                           <li><a href="#">Settings 1</a>
                           </li>
                           <li><a href="#">Settings 2</a>
                           </li>
                         </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
@@ -542,15 +529,12 @@
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                         <ul class="dropdown-menu" role="menu">
                           <li><a href="#">Settings 1</a>
                           </li>
                           <li><a href="#">Settings 2</a>
                           </li>
                         </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
@@ -598,15 +582,12 @@
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                         <ul class="dropdown-menu" role="menu">
                           <li><a href="#">Settings 1</a>
                           </li>
                           <li><a href="#">Settings 2</a>
                           </li>
                         </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
