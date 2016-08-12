@@ -32,6 +32,7 @@ var Profile = models.Profile;
 var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
+var triggerFrequency = models.triggerFrequency;
 
 var time = facebook.time; //DO NOT COMMENT THIS SHIT OUT **** !!!
 
@@ -181,9 +182,25 @@ router.get('/update/frequent', (req, res, next) => {
 	});
 });
 
-// router.get('/trigger', (req, res, next)=>{
-// 	res.render('trigger')
-// })
+router.get('/trigger', (req, res, next)=>{
+	res.render('trigger')
+})
+router.post('/trigger',(req, res, next)=>{
+	User.findById(id, function(err, user){
+	    triggerFrequency.find({id:}, function(err, result){
+	          if(err || !result){
+	            console.log("cannot find view "+view);
+	            res.end();
+	          }
+	          else {
+	            //update value of x and y
+	            var type = req.user.platform.type;
+	            var frequency = req.user.platform.frequency;
+	            //...
+	         }
+	    })
+	})
+})
 
 router.get('/update/trigger', (req, res, next)=>{
 	console.log('user', user);
