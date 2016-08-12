@@ -31,12 +31,18 @@ function instagramUpdate(user, twentyMinUpdate) {
 	console.log("[instagram : user]", user);
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
-			if(err)return next( err)
+			if (err) return next(err);
+
+			if (!user.instagram.instagramProfile) {
+				return resolve();
+			}
 
 			// Get instagram data
 			instagramInformation(user.instagram.instagramProfile.id, user.instagram.AccessToken)
 			.then(function(data) {
 				if (!twentyMinUpdate) {
+					profile.instagram.last = data.profile;
+					profile.save();
 					// Create new profile snapshot
 					new ProfileSnapshot({
 						platformID: user.instagram.instagramProfile.id,

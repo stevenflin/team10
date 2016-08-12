@@ -45,12 +45,19 @@ function vineInformation(username, password){
 function vineUpdate(user, twentyMinUpdate){
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
-			if(err) return next(err);
+			if (err) return next(err);
+
+			if (!user.vine.username) {
+				return resolve();
+			}
+
 			vineInformation(user.vine.username, user.vine.password)
 			.then(function(data){
 				// console.log('what does this look like........', data)
 
 				if (!twentyMinUpdate) {
+					profile.vine.last = data.user.followerCount;
+					profile.save();
 					new ProfileSnapshot({
 						platformID: data.userId,
 						platform: 'vine', 
