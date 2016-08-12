@@ -88,7 +88,6 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 			if(err){
 				console.log("ERROR ", err)
 			}
-			console.log("YO BITCH",success)
 
 			new Promise(function(resolve, reject){
 
