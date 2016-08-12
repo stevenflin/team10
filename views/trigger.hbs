@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $(".facebook").click(function(){
+        $("p").hide();
+    });
+    $(".btn2").click(function(){
+        $("p").show();
+    });
+});
+</script>
+</head>
+<body>
+
+
+<form method="post" class="col-xs-6 col-xs-offset-3">
+
+	
+
+	<input class="facebook" type="checkbox" name="platform" value="Facebook"> Facebook Trigger<br>
+	<input id="vine" type="checkbox" name="platform" value="Vine"> Vine Trigger<br>
+	<input id="instagram" type="checkbox" name="platform" value="Instagram"> Instagram Trigger<br>
+	<input id="twitter" type="checkbox" name="platform" value="Twitter"> Twitter Trigger<br>
+	<input id="YouTube" type="checkbox" name="platform" value="YouTube"> YouTube Trigger<br>
+
+	
+	<input type="submit" value="Set Triggers">
+
+
+	<a href="/integrate">Back to Integrate</a>
+</form>
+
+
+
+
+</body>
+</html>
+
+<input id="platypus" type="checkbox" name="monotreme" value="platypus" />
+  <select name="answer" id="answer">
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+  </select>
+
+
+
+
+<!-- var c = document.getElementById('platypus')
+  c.onchange = function() {
+    if (c.checked == true) {document.getElementById('answer').style.display = 'inline';}
+    else {document.getElementById('answer').style.display = '';
+    }
+  } -->

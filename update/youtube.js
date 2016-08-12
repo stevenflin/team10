@@ -108,7 +108,14 @@ function youtubeUpdate(user, twentyMinUpdate) {
 		.then(function(data) {
 			Profile.findOne({userId: user._id},function(err, profile) {
 				if (err) return next(err);
+
+				if (data.videos.length === 0) {
+					return resolve();
+				}
+
 				if (!twentyMinUpdate) {
+					profile.youtube.last = data.channel.subscriberCount;
+					profile.save();
 					new ProfileSnapshot({
 						platformID: user.youtube.profile.id,
 						platform: 'youtube',

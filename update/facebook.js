@@ -259,6 +259,8 @@ function facebookUpdate(user, twentyMinUpdate) {
 				// console.log("$$0")
 
 				if (!twentyMinUpdate) {
+					profile.facebook.last = result[4];
+					profile.save();
 					new ProfileSnapshot({
 						platformId: user.facebook.id,
 						platform: 'facebook',

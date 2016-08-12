@@ -181,18 +181,25 @@ router.get('/update/frequent', (req, res, next) => {
 	});
 });
 
+// router.get('/trigger', (req, res, next)=>{
+// 	res.render('trigger')
+// })
 
 router.get('/update/trigger', (req, res, next)=>{
+	console.log('user', user);
 	var id = req.user.id;
 	var types = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 	
 	Profile.findOne({userId: user._id}, function(err, profile) {
+
 		types.map(function(p){
 			return new Promise(function(resolve, reject){
 				resolve(Post.find({profileId:profile._id, type: p }))
 			})
 			.then((posts)=>{ //because its a promise, posts are accessible throughout the route function
+				console.log("posts", posts)
 				types.map(function(platform){
+					console.log("platform", platform)
 					triggerFrequency.findOne({type:platform})
 					//update models to only get triggerfrequency if the user is integrated with the platform
 				})
@@ -254,14 +261,43 @@ router.get('/dashboard/:id', function(req, res, next) {
 
 			getGeneral(id) //gets subscriber, follower/data
 			.then((platformData) => { 
+				var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
+				var change = {};
+				var direction = {};
+				platforms.map((p) => {
+					if (platformData.recent[p]) {
+						change[p] = parseInt(((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100);
+						if (change[p] > 0) {
+							direction[p] = {
+								up: true,
+								down: false
+							}
+						} else if (change[p] < 0) {
+							direction[p] = {
+								up: false,
+								down: true
+							}
+						} else {
+							direction[p] = {
+								up: false,
+								down: false
+							}
+						}
+					}
+				})
+				// console.log('what does this look like.......', direction.instagram.up)
+				// console.log('and this.......................', direction.instagram.down)
 				getPosts(id) //get posts for the person
 				.then((postData) => {
+					console.log('what does this look like......', postData.youtube.posts)
 					res.render('dashboard', {
 						platformData: platformData,
 						postData: postData,
 						user: user,
 						userArray: userArray,
-						me: req.user
+						me: req.user,
+						change,
+						direction
 					});
 				});
 			}); //platform data

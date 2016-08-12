@@ -73,23 +73,28 @@ var profile = new mongoose.Schema({
   // array of posts
   youtube: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   instagram: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   vine: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   twitter: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   facebook: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -200,12 +205,25 @@ var postSnapshot = new mongoose.Schema({
   } 
 })
 var triggerFrequency = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ['youtube', 'instagram', 'vine', 'twitter', 'facebook']
+  youtube: {
+    type: Boolean,
+    frequency: Number
   },
-  frequency:{
-    type: Number
+  instagram: {
+    type: Boolean,
+    frequency: Number
+  },
+  vine: {
+    type: Boolean,
+    frequency: Number
+  },
+  twitter: {
+    type: Boolean,
+    frequency: Number
+  },
+  facebook: {
+    type: Boolean,
+    frequency: Number
   }
   
 })

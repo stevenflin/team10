@@ -27,12 +27,18 @@ function twitterInformation(accessToken, accessTokenSecret, id){
 function twitterUpdate(user, twentyMinUpdate){
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
-			if(err) return next(err);
+			if (err) return next(err);
+
+			if (!user.twitter.twitterToken) {
+				return resolve();
+			}
 
 			// get twitter info
 			twitterInformation(user.twitter.twitterToken, user.twitter.twitterTokenSecret)
 			.then(function(data) {
 				if (!twentyMinUpdate) {
+					profile.twitter.last = data[0].user.followers_count;
+					profile.save();
 					new ProfileSnapshot({
 						platformID: user.twitter.twitterProfile._json.id,
 						platform: 'twitter', 
