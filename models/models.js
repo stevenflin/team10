@@ -51,23 +51,28 @@ var profile = new mongoose.Schema({
   // array of posts
   youtube: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   instagram: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   vine: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   twitter: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   facebook: {
     displayName: String,
-    followers: Number
+    followers: Number,
+    last: Number
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,

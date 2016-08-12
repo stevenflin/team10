@@ -254,14 +254,43 @@ router.get('/dashboard/:id', function(req, res, next) {
 
 			getGeneral(id) //gets subscriber, follower/data
 			.then((platformData) => { 
+				var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
+				var change = {};
+				var direction = {};
+				platforms.map((p) => {
+					if (platformData.recent[p]) {
+						change[p] = parseInt(((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100);
+						if (change[p] > 0) {
+							direction[p] = {
+								up: true,
+								down: false
+							}
+						} else if (change[p] < 0) {
+							direction[p] = {
+								up: false,
+								down: true
+							}
+						} else {
+							direction[p] = {
+								up: false,
+								down: false
+							}
+						}
+					}
+				})
+				// console.log('what does this look like.......', direction.instagram.up)
+				// console.log('and this.......................', direction.instagram.down)
 				getPosts(id) //get posts for the person
 				.then((postData) => {
+					console.log('what does this look like......', postData.youtube.posts)
 					res.render('dashboard', {
 						platformData: platformData,
 						postData: postData,
 						user: user,
 						userArray: userArray,
-						me: req.user
+						me: req.user,
+						change,
+						direction
 					});
 				});
 			}); //platform data

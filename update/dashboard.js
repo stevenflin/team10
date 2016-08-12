@@ -40,11 +40,8 @@ function getGeneral(id) { //chanel info for each function
 				results.forEach(function(result, i) {
 					snaps[result.type] = result.data;
 					followers[result.type] = result.followers;
-					if (result.data.length > 1) {
-						// gotta fix this with more recent info
-						change[result.type] = parseInt(((result.data[result.data.length - 1].followers - result.data[result.data.length - 2].followers) / result.data[result.data.length - 2].followers) * 100);
-					}
-				})
+				});
+				// console.log('recent recent recent........', recent)
 				
 				masterResolve({
 					snaps: snaps,
@@ -71,6 +68,32 @@ function getPosts(id) {
 					.exec(function(err, posts) {
 						if (err) reject(err);
 
+						var growth = posts.map((post) => {
+							var growth = {};
+							snaps = post.snapshots;
+							// console.log('what does this look like.........', post)
+							for (var key in snaps[0]) {
+								// console.log('what the fuck does this look like............', key)
+								if (!growth[key]) {
+									// there are not enough snapshots
+									if (!(snaps.length > 1)) {
+										growth[key] = 0;
+									// 0 in the denominator and numerator
+									} else if (parseInt(snaps[snaps.length - 1][key]) === 0 && parseInt(post[key]) === 0) {
+										growth[key] = 0;
+									// 0 in the denominator
+									} else if (parseInt(snaps[snaps.length - 1][key]) === 0) {
+										growth[key] = 100
+									// most recent update minus second to last snapshot
+									} else {
+										growth[key] = parseInt((parseInt(post[key]) - parseInt(snaps[snaps.length - 1][key])) / parseInt(snaps[snaps.length-1][key]) * 100)
+									}
+								}
+							}
+							// console.log('growth growth growth...........', growth);
+							return growth;
+						})
+
 						resolve({
 							type: p,
 							posts: posts.map((post) => {
@@ -80,30 +103,7 @@ function getPosts(id) {
 								// console.log("POST Date after conversion",post.date)
 								return post
 							}),
-							growth: posts.map((post) => {
-								var growth = {},
-								snaps = post.snapshots
-								// console.log('what does this look like.........', post)
-								for (var key in snaps[0]) {
-									// console.log('what the fuck does this look like............', key)
-									if (!growth[key]) {
-										// there are not enough snapshots
-										if (!(snaps.length > 1)) {
-											growth[key] = 0;
-										// 0 in the denominator and numerator
-										} else if (parseInt(snaps[snaps.length - 2][key]) === 0 && parseInt(post[key]) === 0) {
-											growth[key] = 0;
-										// 0 in the denominator
-										} else if (parseInt(snaps[snaps.length - 2][key]) === 0) {
-											growth[key] = 100
-										// most recent update minus second to last snapshot
-										} else {
-											growth[key] = (parseInt(post[key]) - parseInt(snaps[snaps.length - 2][key])) / parseInt(snaps[snaps.length-2][key]) * 100
-										}
-									}
-								}
-								return growth;
-							})
+							growth: growth
 						});
 					});
 				});
