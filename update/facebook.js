@@ -5,7 +5,7 @@ var Profile = models.Profile;
 var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
-
+var request = require('request');
 
 function pageViewsTotal(days, pageId){
 	var timeframe = time(days);
@@ -14,9 +14,9 @@ function pageViewsTotal(days, pageId){
 			function (response) {
 			  if(!response || response.error) {
 			   // console.log(!response ? 'error occurred' : response.error);
-			   reject(error);
+			   reject(response.error);
 			  }
-			  // console.log("PAGE VIEWS TOTAL",response.data[2].values)
+			  console.log("PAGE VIEWS TOTAL",response.data[2].values)
 			  resolve (response.data[2].values); //get's 28 day values
 		})
 	})
@@ -72,7 +72,7 @@ function pagePosts(days, pageId){
 			  	// 		index++
 			  	// 	}) 
 			  	// }
-			  	console.log("123123123123", arr)
+			  	// console.log("123123123123", arr)
 			  	resolve(data)
 			  })
 		
@@ -123,7 +123,7 @@ function postImpressions(days, postId){
 	      function (response) {
 	        if (response && !response.error) {
 	          /* handle the result */
-	          console.log("post_impressions",response)
+	          // console.log("post_impressions",response)
 	        }
 	      }
 	);
@@ -229,11 +229,20 @@ function pageFans(days, pageId){
 // }
 
 
+
 function facebookUpdate(user, twentyMinUpdate) {
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
-			FB.setAccessToken(user.facebook.token)
-			if(err) return next(err)
+			if(err) return console.log(err)
+
+			FB.setAccessToken(user.facebook.token);
+
+			console.log("[user.facebook]", user.facebook);
+
+			if (user.facebook.pages.length === 0) {
+				return resolve();
+			}
+
 			var test = time(3);
 			var pageId = user.facebook.pages[0].pageId;
 			var functions= [ 
@@ -244,68 +253,28 @@ function facebookUpdate(user, twentyMinUpdate) {
 				pageFans(92, pageId) //fix-undefiened
 			]
 
-			// console.log("FACEBOOK ID ", user.facebook.pages[0].pageId)
+			console.log("FACEBOOK ID ", user.facebook.pages);
 
 			Promise
-			.all([functions[0], functions[1], functions[2], functions[3], functions[4]])
+			.all(functions)
 			.then((result) => { // create profile and profile snapshot here
 				// console.log("$$0")
 
-				try {
-					if (!twentyMinUpdate) {
-						new ProfileSnapshot({
-							platformId: user.facebook.id,
-							platform: 'facebook',
-							followers: result[4],
-							views: result[0][result[0].length-1].value,
-							posts: result[3].length,
-							date: new Date(),
-							profileId: profile._id
-						})
-						.save(function(err, p) {
+				if (!twentyMinUpdate) {
+					new ProfileSnapshot({
+						platformId: user.facebook.id,
+						platform: 'facebook',
+						followers: result[4],
+						views: result[0][result[0].length-1].value,
+						posts: result[3].length,
+						date: new Date(),
+						profileId: profile._id
+					})
+					.save(function(err, p) {
 
-							console.log('$$1')
-							if(err) return next(err);
+						// console.log('$$1')
+						if(err) return next(err);
 
-							result[3].forEach(function(post, i) {
-
-								Post.findOrCreate({postId: post.postId}, {
-									description: post.message,
-									postId: post.postId,
-									type: 'facebook',
-									date: post.date,
-									profileId: profile._id
-								}, function(err, postData) {
-									if(err) return next(err);
-
-									// console.log("asdf;sdfksdlfasdfsdfsdfsdfsdfsdfsdfsdfsdfsdf:", postData);
-
-									// snapshot it
-									new PostSnapshot({
-										profileId: p._id, 
-										postId: postData.postId,
-										comments: post.comments,
-										likes: post.likes,
-										shares: post.shares,
-										date: p.date
-									})
-									.save(function(err, psnap) {
-
-										// console.log('$$3')
-										if(err) return next(err);
-
-										postData.snapshots.push(psnap._id);
-										postData.save(function(err) {
-											if(err) return next(err);
-											resolve();		
-										})				
-									})
-								})
-							})	
-						})
-					} else {
-						profile.facebook.followers = result[4];
-						profile.save();
 						result[3].forEach(function(post, i) {
 
 							Post.findOrCreate({postId: post.postId}, {
@@ -315,29 +284,63 @@ function facebookUpdate(user, twentyMinUpdate) {
 								date: post.date,
 								profileId: profile._id
 							}, function(err, postData) {
-								if (err) return console.log(err);
+								if(err) return next(err);
 
-								postData.comments = post.comments;
-								postData.likes = post.likes;
-								postData.shares = post.shares;
+						
 
-								postData.save(function(err, p) {
-									if (err) return console.log(err);
-									resolve();
+								// snapshot it
+								new PostSnapshot({
+									profileId: p._id, 
+									postId: postData.postId,
+									comments: post.comments,
+									likes: post.likes,
+									shares: post.shares,
+									date: p.date
+								})
+								.save(function(err, psnap) {
+
+									// console.log('$$3')
+									if(err) return next(err);
+
+									postData.snapshots.push(psnap._id);
+									postData.save(function(err) {
+										if(err) return next(err);
+										resolve();		
+									})				
 								})
 							})
+						})	
+					})
+				} else {
+					profile.facebook.followers = result[4];
+					profile.save();
+					result[3].forEach(function(post, i) {
+
+						Post.findOrCreate({postId: post.postId}, {
+							description: post.message,
+							postId: post.postId,
+							type: 'facebook',
+							date: post.date,
+							profileId: profile._id
+						}, function(err, postData) {
+							if (err) return console.log(err);
+
+							postData.comments = post.comments;
+							postData.likes = post.likes;
+							postData.shares = post.shares;
+
+							postData.save(function(err, p) {
+								if (err) return console.log(err);
+								resolve();
+							})
 						})
-					}
-				}
-				catch (error) {
-					console.log(error);
+					})
 				}
 			}).catch((err) => console.log(err))
 		})
 	})
 }
 
-facebookUpdate();
 
 module.exports = {
   time: time,
