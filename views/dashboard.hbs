@@ -44,7 +44,7 @@
               </div>
               <div class="profile_info">
                 <span>Welcome,</span>
-                <h2>{{user.username}}</h2>
+                <h2>{{me.username}}</h2>
               </div>
             </div>
             <!-- /menu profile quick info -->
@@ -54,25 +54,25 @@
             <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
-                <h3>General</h3>
+                <h3>The Squad</h3>
                 <ul class="nav side-menu">
-                  <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
+                  {{!-- <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="index.html">Dashboard</a></li>
                       <li><a href="index2.html">Dashboard2</a></li>
                       <li><a href="index3.html">Dashboard3</a></li>
                     </ul>
-                  </li>
+                  </li> --}}
                   {{#if userArray}}
-                  <li><a><i class="fa fa-edit"></i> Users <span class="fa fa-chevron-down"></span></a>
+                  {{#each userArray}}
+                  <li><a><i class="fa fa-edit"></i> {{username}} <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      {{#each userArray}}
-                        <li><a href="/dashboard/{{this.id}}">{{this.username}}</a></li>
-                      {{/each}}
+                        <li><a href="/dashboard/{{id}}">{{username}}</a></li>
                     </ul>
                   </li>
+                  {{/each}}
                   {{/if}}
-                  <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
+                  {{!-- <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="form.html">General Form</a></li>
                       <li><a href="form_advanced.html">Advanced Components</a></li>
@@ -115,10 +115,10 @@
                       <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
                       <li><a href="fixed_footer.html">Fixed Footer</a></li>
                     </ul>
-                  </li>
+                  </li> --}}
                 </ul>
               </div>
-              <div class="menu_section">
+              {{!-- <div class="menu_section">
                 <h3>Live On</h3>
                 <ul class="nav side-menu">
                   <li><a><i class="fa fa-bug"></i> Additional Pages <span class="fa fa-chevron-down"></span></a>
@@ -159,7 +159,7 @@
                   </li>                  
                   <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li>
                 </ul>
-              </div>
+              </div> --}}
 
             </div>
             <!-- /sidebar menu -->
@@ -290,7 +290,7 @@
                 <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{platformData.change.youtube}}% </i> Since Yesterday</span>
               </div>
               <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-clock-o"></i> Instagram Followers</span>
+                <span class="count_top"><i class="fa fa-user"></i> Instagram Followers</span>
                 <div class="count">{{platformData.recent.instagram.followers}}</div>
                 <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{platformData.change.instagram}}% </i> Since Yesterday</span>
               </div>
@@ -308,11 +308,6 @@
                 <span class="count_top"><i class="fa fa-user"></i> Vine Followers</span>
                 <div class="count">{{platformData.recent.vine.followers}}</div>
                 <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{platformData.change.vine}}% </i> Since Yesterday</span>
-              </div>
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total Connections</span>
-                <div class="count">7,325</div>
-                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
               </div>
             </div>
 

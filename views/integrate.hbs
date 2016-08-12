@@ -1,13 +1,76 @@
 <form method="post" class="col-xs-6 col-xs-offset-3">
 	<h1>Integrations</h1>
-	<a href="/auth/facebook" class="form-control btn btn-default">Link your Facebook</a>
-	<a href="/auth/youtube" class="form-control btn btn-default">Link your Youtube</a>
-	<a href="/auth/instagram" class="form-control btn btn-default">Link your Instagram</a>
-	<a href="/auth/twitter"class="form-control btn btn-default">Link your Twitter</a>
-	<input class="form-control" type="text" name="username" placeholder="Vine Email">
-	<input class="form-control" type="password" name="password" placeholder="Vine Password">
-	<input class="form-control btn btn-default" type="submit" value="Link your Vine"/>
-	<a href="/dashboard/{{userId}}"class="form-control btn btn-default">Dashboard</a>
 
+	<div class="row">
+		<div class="col-xs-11">
+			<a href="/auth/facebook" class="form-control btn btn-default">Link your Facebook</a>
+		</div>
+		<div class="col-xs-1">
+			{{#if profile.facebook.displayName}}
+				<h2>O</h2>
+			{{else}}
+				<h2>X</h2>
+			{{/if}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-11">
+			<a href="/auth/youtube" class="form-control btn btn-default">Link your Youtube</a>
+		</div>
+		<div class="col-xs-1">
+			{{#if profile.youtube.displayName}}
+				<h2>O</h2>
+			{{else}}
+				<h2>X</h2>
+			{{/if}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-11">
+			<a href="/auth/instagram" class="form-control btn btn-default">Link your Instagram</a>
+		</div>
+		<div class="col-xs-1">
+			{{#if profile.instagram.displayName}}
+				<h2>O</h2>
+			{{else}}
+				<h2>X</h2>
+			{{/if}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-11">
+			<a href="/auth/twitter"class="form-control btn btn-default">Link your Twitter</a>
+		</div>
+		<div class="col-xs-1">
+			{{#if profile.twitter.displayName}}
+				<h2>O</h2>
+			{{else}}
+				<h2>X</h2>
+			{{/if}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-11">
+			<input class="form-control" type="text" name="username" placeholder="Vine Email">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-11">
+			<input class="form-control" type="password" name="password" placeholder="Vine Password">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-11">
+			<input class="form-control btn btn-default" type="submit" value="Link your Vine"/>
+		</div>
+		<div class="col-xs-1">
+			{{#if profile.vine.displayName}}
+				<h2>O</h2>
+			{{else}}
+				<h2>X</h2>
+			{{/if}}
+		</div>
+	</div>
+	<a href="/dashboard/{{userId}}"class="form-control btn btn-default">Dashboard</a>
 </form>
 

@@ -6,11 +6,6 @@ var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
-var minutes = 1000 * 60;
-var hours = minutes * 60;
-var days = hours * 24;
-var years = days * 365;
-
 Youtube.authenticate({
   type: "key"
 , key: process.env.API_KEY
@@ -282,10 +277,5 @@ function getYear(videos) {
 }
 
 module.exports = {
-  getYoutubeData: getYoutubeData,
   youtubeUpdate: youtubeUpdate,
-  getDay: getDay,
-  getWeek: getWeek,
-  getMonth: getMonth,
-  getYear: getYear
 }

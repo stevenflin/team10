@@ -10,25 +10,20 @@ var dashboardFunctions = require('../update/dashboard');
 var getPosts = dashboardFunctions.getPosts;
 var getGeneral = dashboardFunctions.getGeneral;
 
-var facebook = require('../facebook-test.js')
+var facebook = require('../update/facebook')
 var facebookUpdate = facebook.facebookUpdate;
 
-var vine = require('../update/vine.js');
+var vine = require('../update/vine');
 var vineUpdate = vine.vineUpdate;
 
-var instagram = require('../update/ig.js');
+var instagram = require('../update/ig');
 var instagramUpdate = instagram.instagramUpdate;
 
-var twitter = require('../update/twitter.js');
+var twitter = require('../update/twitter');
 var twitterUpdate = twitter.twitterUpdate;
 
 var youtubeFunctions = require('../update/youtube');
-var getYoutubeData = youtubeFunctions.getYoutubeData;
 var youtubeUpdate = youtubeFunctions.youtubeUpdate;
-var getDay = youtubeFunctions.getDay;
-var getWeek = youtubeFunctions.getWeek;
-var getMonth = youtubeFunctions.getMonth;
-var getYear = youtubeFunctions.getYear;
 
 // MODELS
 var models = require('../models/models');
@@ -42,15 +37,19 @@ var time = facebook.time; //DO NOT COMMENT THIS SHIT OUT **** !!!
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+	res.render('index', { title: 'Express' });
 });
 
 
 router.get('/integrate', function(req, res, next) {
-  console.log("USER ID~~~~~~~~~~~~~~~~~~", req.user._id)
-  res.render('integrate', {
-  	userId:req.user._id
-  });
+	Profile.findOne({userId: req.user._id}, function(err, profile) {
+		if (err) return next(err);
+		console.log('profile..........', profile)
+		res.render('integrate', {
+			userId: req.user._id,
+			profile
+		});
+	});
 });
 
 router.get('/fbPageSelector', function(req, res, next) {
@@ -115,10 +114,6 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 	}
 	
 })
-
-router.get('/tableTest', function(req, res, next){
-	res.render('tableTest')
-})
 	
 // DAILY SNAPSHOTS
 
@@ -151,27 +146,35 @@ router.get('/update/vine', function(req, res, next){
 // call this function everyday
 
 router.get('/update', (req, res, next) => {
-	var id = req.user._id;
-	instagramUpdate(id)
-	.then(() => youtubeUpdate(id))
-	.then(() => twitterUpdate(id))
-	.then(() => vineUpdate(id))
-	.then(() => facebookUpdate(id)) //fix pauses the update route
-	.then(() => res.redirect('/integrate'));
-})
+	User.find(function(err, users) {
+		users.forEach(function(user) {
+			var id = user._id;
+			instagramUpdate(id)
+			.then(() => youtubeUpdate(id))
+			.then(() => twitterUpdate(id))
+			.then(() => vineUpdate(id))
+			.then(() => facebookUpdate(id)) //fix pauses the update route
+			.then(() => res.redirect('/integrate'));
+		});
+	});
+});
 
 // call this FUNction every 20 minutes
 
 router.get('/update/frequent', (req, res, next) => {
-	var id = req.user._id;
-	var isTwenty = true;
-	instagramUpdate(id, isTwenty)
-	.then(() => youtubeUpdate(id, isTwenty))
-	.then(() => twitterUpdate(id, isTwenty))
-	.then(() => vineUpdate(id, isTwenty))
-	.then(() => facebookUpdate(id, isTwenty))
-	.then(() => res.redirect('/integrate'));
-})
+	User.find(function(err, users) {
+		users.forEach(function(user) {
+			var id = user._id;
+			var isTwenty = true;
+			instagramUpdate(id, isTwenty)
+			.then(() => youtubeUpdate(id, isTwenty))
+			.then(() => twitterUpdate(id, isTwenty))
+			.then(() => vineUpdate(id, isTwenty))
+			.then(() => facebookUpdate(id, isTwenty))
+			.then(() => res.redirect('/integrate'));
+		});
+	});
+});
 
 // DASHBOARD ROUTES
 
@@ -184,72 +187,44 @@ router.get('/dashboard', function(req, res, next) {
 
 
 router.use(function(req, res, next) {
-	console.log("User~~~~", req.user._id)
 	if (req.user._id || req.user.isAdmin) {
-
 		return next();
 	} else {
 		return res.redirect('/');
 	}
-})
+});
+
 router.get('/dashboard/:id', function(req, res, next) {
-	console.log("1")
 	var id = req.params.id;
-		User.findById(id, function(err, user) {
-			console.log("2")
-			return new Promise(function(resolve, reject){
-				if(req.user.isAdmin){
-					User.find({})
-					.exec((err, users)=>{
-						if (err) return reject(err);
-						var userArray = users.map((users)=>{return {id: users._id, username: users.username}})
-						resolve(userArray)
-					})
-				}
-				else{resolve()}
-			})
-			.then((userArray)=>{
+	User.findById(id, function(err, user) {
+		return new Promise(function(resolve, reject) {
+			if(req.user.isAdmin) {
+				User.find((err, users) => {
+					if (err) return reject(err);
+					var userArray = users.map((users) => {return {id: users._id, username: users.username}})
+					resolve(userArray)
+				});
+			} else {
+				resolve([])
+			}
+		})
+		.then((userArray) => {
 
-				console.log("3")
-				getGeneral(id) //gets subscriber, follower/data
-				.then((platformData) => { 
-					console.log("4")
-
-					// data["platformData"] = platformData;
-					getPosts(id) //get posts for the person
-					.then((postData) => {
-				// console.log('did i do this right?...........', postData)
-				// console.log('did i do this right?..........', postData.youtube);
-				// console.log('what does this look like?........', platformData.recent.twitter);
-				// console.log('what about this shit.............', postData.youtube.posts[0][2])
-				console.log("5")
-
-				if(req.user.isAdmin){
-					console.log("USER Dats", platformData)
-					console.log("USER ARRAY2", userArray)
-										
-
+			getGeneral(id) //gets subscriber, follower/data
+			.then((platformData) => { 
+				getPosts(id) //get posts for the person
+				.then((postData) => {
 					res.render('dashboard', {
 						platformData: platformData,
 						postData: postData,
 						user: user,
-						userArray: userArray
-					})
-				}
-				else{
-					console.log("7")
-
-					res.render('dashboard', {
-						platformData: platformData,
-						postData: postData,
-						user: user
-					})
-				};
-			});
-			}) //platform data
+						userArray: userArray,
+						me: req.user
+					});
+				});
+			}); //platform data
 		});
 	}).catch(console.log.bind(this, "[error]"));
-
 });
 
 router.get('/posts', function(req, res, next) {
@@ -260,8 +235,8 @@ router.get('/posts', function(req, res, next) {
 		data.youtube.posts.forEach(function(d) {
 			console.log(d[0].snapshots.map((snap) => snap.likes));
 			arr.push(d[0].snapshots.map((snap) => snap.likes));
-		})
-		console.log('what does arr look like', arr)
+		});
+		// console.log('what does arr look like', arr)
 		res.render('posts', {
 			data: arr[1]
 		});

@@ -1,5 +1,5 @@
 var FB = require('fb');
-var models = require('./models/models');
+var models = require('../models/models');
 var User = models.User;
 var Profile = models.Profile;
 var ProfileSnapshot = models.ProfileSnapshot;
@@ -97,41 +97,7 @@ function pagePostImpressions(days, pageId){
 	});
 };
 
-// // ~~~~~~~~~~~~~~USED TO TEST POST FUNCTIONS
-// var postArr = [{ time: '2016-07-27T22:04:31+0000',
-//     postId: '229300807402194_321307394868201' },
-//   { time: '2016-07-19T04:13:53+0000',
-//     postId: '229300807402194_317520615246879' },
-//   { time: '2016-07-19T03:38:52+0000',
-//     postId: '229300807402194_317507131914894' },
-//   { time: '2016-07-19T03:15:42+0000',
-//     postId: '229300807402194_317500351915572' },
-//   { time: '2016-07-19T00:58:23+0000',
-//     postId: '229300807402194_317462508586023' },
-//   { time: '2016-07-19T00:46:24+0000',
-//     postId: '229300807402194_317459641919643' },
-//   { time: '2016-07-19T00:31:11+0000',
-//     postId: '229300807402194_317451868587087' }];
-// // ~~~~~~~~~~~~~~FUNCTION TO GET POST FOR XX DAYS ** NOT NEEDED **
-// function pagePosts(days, pageId){
-// 	var timeframe = time(days);
-// 	console.log("&&&&&&&&&&&&&&&&&&&&", days, pageId)
-// 	return new Promise( function(resolve, reject){FB.api( //might have to use post id and not blog id
-// 	      "/"+pageId+"/feed?since="+timeframe.since+"&&until="+timeframe.until, 
 
-// 	      function (response) {
-// 	      	console.log("~~~~~~~~~~XXXX~~~~~~~~",response)
-// 	      	postArr = []
-// 	        if (response && !response.error) {
-// 	          response.data.forEach(function(day){
-// 	            postArr.push({time:day.created_time, postId: day.id})
-// 	          })
-// 	          resolve(postArr);
-// 	        }
-// 	      }
-// 	);
-// })
-// }
 
 // //~~~~~~~~~~~~~~FUNCTION TO GET LIKES/COMMENTS/SHARES PER DAY FOR PAST 28 DAYS
 

@@ -9,9 +9,9 @@ var MongoStore = require('connect-mongo')(session);
 var app = express();
 
 //** for passport auth **
-var passport = require('passport'); //not installed
-var LocalStrategy = require('passport-local').Strategy;//not installed
-var FacebookStrategy = require('passport-facebook'); //not installed
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook');
 var YoutubeStrategy = require('passport-youtube-v3').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
@@ -100,26 +100,23 @@ passport.use(new FacebookStrategy({
       if (!req.user) {
         throw new Error("Gotta be logged in maaaaaaan");
       } else {
-        console.log("Updating user with facebook creds:"+ profile+ " xx~~~~~~xx")
         // user already exists and is logged in, we have to link accounts
         var user = req.user; // pull the user out of the session
         // update the current users facebook credentials
-        console.log("Profile.id", profile.id)
         user.facebook.id = profile.id;
         user.facebook.token = token;
         user.facebook.email = profile.email;
         // save the user
         user.save(function(err, p) {
-          if (err) return console.log(err);
+          if (err) return console.log('big error...........', err);
           Profile.findOne({userId: user._id}, function(err, p){ //Fix-  check if this works
 
             p.facebook = profile.displayName; //Fix-  check if this works
 
             p.facebook.displayName = profile.displayName; //Fix-  check if this works
 
-            p.save(function(err){
-              if(err) return next(err);
-              console.log('pdiddy', p)
+            p.save(function(err) {
+              if (err) return next(err);
             })
           })
           return done(null, user) //Fix-  check if this works

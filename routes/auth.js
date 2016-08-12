@@ -93,10 +93,6 @@ module.exports = function(passport) {
 
   //VINE
 
-  router.get('/integrate', function(req, res, next){
-    res.render('integrate')
-  });
-
   router.post('/integrate', function(req, res, next){
 
     req.user.vine = {

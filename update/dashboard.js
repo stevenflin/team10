@@ -9,7 +9,7 @@ function getGeneral(id) { //chanel info for each function
 	return new Promise(function(masterResolve, masterReject) {
 		var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 		Profile.findOne({userId: id}, function(err, profile) {
-			if (err) return next(err);
+			if (err) return console.log(err);
 			platforms = platforms.map(function(p) {
 				return new Promise(function(resolve, reject) {
 					ProfileSnapshot.find({profileId: profile._id, platform: p})
@@ -83,7 +83,7 @@ function getPosts(id) {
 							growth: posts.map((post) => {
 								var growth = {},
 								snaps = post.snapshots
-								console.log('what does this look like.........', post)
+								// console.log('what does this look like.........', post)
 								for (var key in snaps[0]) {
 									// console.log('what the fuck does this look like............', key)
 									if (!growth[key]) {
