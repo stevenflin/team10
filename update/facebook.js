@@ -339,6 +339,8 @@ function facebookUpdate(id, twentyMinUpdate) {
 	})
 }
 
+facebookUpdate();
+
 module.exports = {
   time: time,
   pageImpressions: pageImpressions,
