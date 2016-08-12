@@ -118,14 +118,22 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 // DAILY SNAPSHOTS
 
 router.get('/update/facebook', function(req, res, next){  //should be /update/page
-	facebookUpdate(req.user._id)
-	.then(() => res.redirect('/integrate'));
+	User.find(function(err, users) {
+		users.forEach((user) => {
+			facebookUpdate(user)
+			.then(() => res.redirect('/integrate'));
+		})
+	})
 })
 
 router.get('/update/instagram', function(req, res, next){
 	// Find social media profile
-	instagramUpdate(req.user._id)
-	.then(() => res.redirect('/integrate'));
+	User.find(function(err, users) {
+		users.forEach((user) => {
+			instagramUpdate(user)
+			.then(() => res.redirect('/integrate'));
+		})
+	})
 })
 
 router.get('/update/youtube', function(req, res, next) {
@@ -148,12 +156,11 @@ router.get('/update/vine', function(req, res, next){
 router.get('/update', (req, res, next) => {
 	User.find(function(err, users) {
 		users.forEach(function(user) {
-			var id = user._id;
-			instagramUpdate(id)
-			.then(() => youtubeUpdate(id))
-			.then(() => twitterUpdate(id))
-			.then(() => vineUpdate(id))
-			.then(() => facebookUpdate(id)) //fix pauses the update route
+			instagramUpdate(user)
+			.then(() => youtubeUpdate(user))
+			.then(() => twitterUpdate(user))
+			.then(() => vineUpdate(user))
+			// .then(() => facebookUpdate(user)) //fix pauses the update route
 			.then(() => res.redirect('/integrate'));
 		});
 	});
@@ -164,13 +171,12 @@ router.get('/update', (req, res, next) => {
 router.get('/update/frequent', (req, res, next) => {
 	User.find(function(err, users) {
 		users.forEach(function(user) {
-			var id = user._id;
 			var isTwenty = true;
-			instagramUpdate(id, isTwenty)
-			.then(() => youtubeUpdate(id, isTwenty))
-			.then(() => twitterUpdate(id, isTwenty))
-			.then(() => vineUpdate(id, isTwenty))
-			.then(() => facebookUpdate(id, isTwenty))
+			instagramUpdate(user, isTwenty)
+			.then(() => youtubeUpdate(user, isTwenty))
+			.then(() => twitterUpdate(user, isTwenty))
+			.then(() => vineUpdate(user, isTwenty))
+			// .then(() => facebookUpdate(user, isTwenty))
 			.then(() => res.redirect('/integrate'));
 		});
 	});
@@ -198,12 +204,12 @@ router.get('/update/trigger', (req, res, next)=>{
 			})
 					
 
-				
-			})
-
+			
 		})
 
 	})
+
+})
 	
 	// Schedule once a day, sometime in the morning
 	// 1 find posts by id

@@ -42,87 +42,85 @@ function vineInformation(username, password){
 }
 
 
-function vineUpdate(id, twentyMinUpdate){
+function vineUpdate(user, twentyMinUpdate){
 	return new Promise(function(resolve, reject) {
-		User.findById(id, function(err, user){
-			Profile.findOne({userId: user._id}, function(err, profile){
-				if(err) return next(err);
-				vineInformation(user.vine.username, user.vine.password)
-				.then(function(data){
-					// console.log('what does this look like........', data)
+		Profile.findOne({userId: user._id}, function(err, profile){
+			if(err) return next(err);
+			vineInformation(user.vine.username, user.vine.password)
+			.then(function(data){
+				// console.log('what does this look like........', data)
 
-					if (!twentyMinUpdate) {
-						new ProfileSnapshot({
-							platformID: data.userId,
-							platform: 'vine', 
-							followers: data.user.followerCount, 
-							posts: data.user.postCount,
-							date: new Date(),
-							profileId: profile._id
-						}).save(function(err, p){
+				if (!twentyMinUpdate) {
+					new ProfileSnapshot({
+						platformID: data.userId,
+						platform: 'vine', 
+						followers: data.user.followerCount, 
+						posts: data.user.postCount,
+						date: new Date(),
+						profileId: profile._id
+					}).save(function(err, p){
+						if(err) return next(err);
+						// console.log('what does this look like.......', p);
+						// console.log('what about this................', p.followers);
+
+						data.data.records.forEach(function(postData, i){
+
+							Post.findOrCreate({postId: postData.postId}, {
+							description: postData.description,
+							postId: postData.postId,
+							type: 'vine',
+							profileId: profile._id,
+							date: new Date(postData.created).getTime()
+						}, function(err, post){
 							if(err) return next(err);
-							// console.log('what does this look like.......', p);
-							// console.log('what about this................', p.followers);
 
-							data.data.records.forEach(function(postData, i){
-
-								Post.findOrCreate({postId: postData.postId}, {
-								description: postData.description,
-								postId: postData.postId,
-								type: 'vine',
-								profileId: profile._id,
-								date: new Date(postData.created).getTime()
-							}, function(err, post){
+							new PostSnapshot({
+								profileId: p._id, 
+								postId: post.postId,
+								comments: postData.comments.count,
+								shares: postData.reposts.count,
+								likes: postData.likes.count,
+								views: postData.loops.count, 
+								date: p.date
+							})
+							.save(function(err, psnap){
 								if(err) return next(err);
 
-								new PostSnapshot({
-									profileId: p._id, 
-									postId: post.postId,
-									comments: postData.comments.count,
-									shares: postData.reposts.count,
-									likes: postData.likes.count,
-									views: postData.loops.count, 
-									date: p.date
-								})
-								.save(function(err, psnap){
+								post.snapshots.push(psnap._id);
+								post.save(function(err){
 									if(err) return next(err);
-
-									post.snapshots.push(psnap._id);
-									post.save(function(err){
-										if(err) return next(err);
-										resolve();
-										})	
-									})
-								})
-							})
-						})
-					} else {
-						profile.vine.followers = data.user.followerCount;
-						profile.save();
-						data.data.records.forEach(function(postData, i) {
-							Post.findOrCreate({postId: postData.postId}, {
-								description: postData.description,
-								postId: postData.postId,
-								type: 'vine',
-								profileId: profile._id,
-								date: new Date(postData.created).getTime()
-							}, function(err, post){
-								if (err) return console.log(err);
-
-								post.comments = postData.comments.count;
-								post.shares = postData.reposts.count;
-								post.likes = postData.likes.count;
-								post.views = postData.loops.count; 
-
-								post.save(function(err) {
-									if (err) return console.log(err);
 									resolve();
+									})	
 								})
 							})
 						})
-					}
-				}).catch((err) => next(err));
-			})
+					})
+				} else {
+					profile.vine.followers = data.user.followerCount;
+					profile.save();
+					data.data.records.forEach(function(postData, i) {
+						Post.findOrCreate({postId: postData.postId}, {
+							description: postData.description,
+							postId: postData.postId,
+							type: 'vine',
+							profileId: profile._id,
+							date: new Date(postData.created).getTime()
+						}, function(err, post){
+							if (err) return console.log(err);
+
+							post.comments = postData.comments.count;
+							post.shares = postData.reposts.count;
+							post.likes = postData.likes.count;
+							post.views = postData.loops.count; 
+
+							post.save(function(err) {
+								if (err) return console.log(err);
+								resolve();
+							})
+						})
+					})
+				}
+			}).catch((err) => next(err));
 		})
 	})
 }
