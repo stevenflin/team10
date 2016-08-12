@@ -43,6 +43,28 @@ var user = new mongoose.Schema({
     username: String,
     password: String, 
     profile: Object
+  },
+  upToDate:{
+    facebook:{
+      type: String,
+      default: true
+    },
+    instagram:{
+      type: String,
+      default: true
+    },
+    youtube:{
+      type: String,
+      default: true
+    },
+    twitter:{
+      type: String,
+      default: true
+    },
+    vine:{
+      type: String,
+      default: true
+    }
   }
 });
 var profile = new mongoose.Schema({
