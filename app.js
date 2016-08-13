@@ -218,7 +218,7 @@ app.use('/', routes);
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
-  console.log(err);
+  next(err);
 }); 
 // development error handler
 // will print stacktrace

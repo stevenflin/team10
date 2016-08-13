@@ -246,16 +246,6 @@ router.get('/update/frequent', (req, res, next) => {
 	// })
 
 
-// DASHBOARD ROUTES
-
-router.get('/dashboard', function(req, res, next) {
-	res.redirect('/dashboard/'+req.user._id);
-})
-
-//dashboard and dashboard/id that takes id of each client user
-// update route that always pings 
-
-
 router.use(function(req, res, next) {
 	if (req.user._id || req.user.isAdmin) {
 		return next();
@@ -264,9 +254,17 @@ router.use(function(req, res, next) {
 	}
 });
 
+// DASHBOARD ROUTES
+
+router.get('/dashboard', function(req, res, next) {
+	res.redirect('/dashboard/'+req.user._id);
+})
+
 router.get('/dashboard/:id', function(req, res, next) {
 	var id = req.params.id;
-	User.findById(id, function(err, user) {
+	User.findById(id)
+	.lean() 
+	.exec(function(err, user) {
 		return new Promise(function(resolve, reject) {
 			if(req.user.isAdmin) {
 				User.find((err, users) => {
@@ -279,7 +277,6 @@ router.get('/dashboard/:id', function(req, res, next) {
 			}
 		})
 		.then((userArray) => {
-
 			getGeneral(id) //gets subscriber, follower/data
 			.then((platformData) => { 
 				var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
@@ -310,7 +307,13 @@ router.get('/dashboard/:id', function(req, res, next) {
 				// console.log('and this.......................', direction.instagram.down)
 				getPosts(id) //get posts for the person
 				.then((postData) => {
-					// console.log('what does this look like......', postData.youtube.posts)
+					var on = {};
+					for (var key in user.triggerFrequency) {
+						if (user.triggerFrequency[key].turnedOn) {
+							on[key] = "true";
+						}
+					}
+					console.log('what does this look like......', on);
 					res.render('dashboard', {
 						platformData: platformData,
 						postData: postData,
@@ -318,53 +321,61 @@ router.get('/dashboard/:id', function(req, res, next) {
 						userArray: userArray,
 						me: req.user,
 						change,
-						direction
+						direction,
+						on
 					});
 				});
-			}); //platform data
-		});
-	}).catch(console.log.bind(this, "[error]"));
+			});
+		}).catch(console.log.bind(this, "[error]"));
+	});
 });
 
-router.get('/trigger/:id', (req, res, next)=>{
-	res.render('trigger')
-});
+// router.get('/trigger/:id', (req, res, next)=>{
+// 	res.render('trigger')
+// });
 
-router.post('/trigger/:id',(req, res, next)=>{
+router.post('/dashboard/:id',(req, res, next)=>{
 	// var id = req.params.id;
 	// console.log("this is the id", id)
-	console.log("[req.body]", req.body);
+	// console.log("[req.body]", req.body);
 	User.findById(req.params.id, function(err, user){
 		// console.log("this is trigger user", user)
 	    if (req.body.youtube) {
 	    	user.triggerFrequency.youtube.turnedOn = true;
 	    	user.triggerFrequency.youtube.frequency = req.body.youtubeDays;
+	    } else {
+	    	user.triggerFrequency.youtube.turnedOn = false;
 	    }
 	    if (req.body.vine) {
 	    	user.triggerFrequency.vine.turnedOn = true;
 	    	user.triggerFrequency.vine.frequency = req.body.vineDays;
+	    } else {
+	    	user.triggerFrequency.vine.turnedOn = false;
 	    }
 	    if (req.body.instagram) {
 	    	user.triggerFrequency.instagram.turnedOn = true;
 	    	user.triggerFrequency.instagram.frequency = req.body.instagramDays;
+	    } else {
+	    	user.triggerFrequency.instagram.turnedOn = false;
 	    }
 	    if (req.body.twitter) {
 	    	user.triggerFrequency.twitter.turnedOn = true;
 	    	user.triggerFrequency.twitter.frequency = req.body.twitterDays;
+	    } else {
+	    	user.triggerFrequency.twitter.turnedOn = false;
 	    }
 	    if (req.body.facebook) {
 	    	user.triggerFrequency.facebook.turnedOn = true;
 	    	user.triggerFrequency.facebook.frequency = req.body.facebookDays;
+	    } else {
+	    	user.triggerFrequency.facebook.turnedOn = false;
 	    }
-	   user.save(function(err, user) {
-	   	// console.log("indentation can suck a dick", user)
-	   	  if (err) return console.log('asshole....', err)
-
-	   	  // res.redirect('/dashboard')
-	   	res.redirect('/integrate')
-	   });
-	})
-})
+	    user.save(function(err, user) {
+	   	  	if (err) return console.log('asshole....', err);
+	   	  	res.redirect('/dashboard/'+req.params.id);
+	    });
+	});
+});
 
 router.get('/posts', function(req, res, next) {
 	getPosts(req.user._id)

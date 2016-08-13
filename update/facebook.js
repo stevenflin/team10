@@ -27,7 +27,7 @@ function time(days){
 	var days = days*24*60*60;
 	var until = Math.floor(Date.now() / 1000); //datenow
 	var since = until - days;
-	console.log("UNTIL AND SINCE ", until, since)
+	// console.log("UNTIL AND SINCE ", until, since)
 	return {until: until, since: since}
 }
 
@@ -61,7 +61,7 @@ function pagePosts(days, pageId){
 			  function (response) {
 			  	var arr = [];
 			  	var index= 0;
-			  	console.log("COOL SHIT", response.data);
+			  	// console.log("COOL SHIT", response.data);
 			  	var data = response.data.map(function(post){
 			  		return {postId: post.id, message: post.message, shares: (post.shares) ? post.shares.count : 0, date: new Date(post.created_time).getTime(),
 			  				likes: (post.likes)? post.likes.data.length : 0, comments: (post.comments)? post.comments.data.length : 0}
