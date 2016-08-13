@@ -45,7 +45,7 @@ router.get('/', function(req, res, next) {
 router.get('/integrate', function(req, res, next) {
 	Profile.findOne({userId: req.user._id}, function(err, profile) {
 		if (err) return next(err);
-		console.log('profile..........', profile)
+		// console.log('profile..........', profile)
 		res.render('integrate', {
 			userId: req.user._id,
 			profile
@@ -54,14 +54,13 @@ router.get('/integrate', function(req, res, next) {
 });
 
 router.get('/fbPageSelector', function(req, res, next) {
-	console.log("REQ ", req.user.facebook.token);
+	
 	
 	new Promise(function(resolve, reject){
 
 		FB.setAccessToken(req.user.facebook.token);
 
-		console.log("REQ ", req.user.facebook.id);
-
+		
 		FB.api('/'+req.user.facebook.id+'/accounts', function (res) { //takes facebook user id and gets pages that they administer
 			if(!res || res.error) {
 				console.log(!res ? 'error occurred' : res.error);
@@ -72,7 +71,7 @@ router.get('/fbPageSelector', function(req, res, next) {
 		});
 	})
 	.then((result) => {
-		console.log('here2')
+		
 		return res.render('fbPageSelector', {result: result.data})
 	})
 	.catch(console.log)
@@ -98,7 +97,7 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 						reject(res.error);
 					}
 
-				  console.log("RESPONSE   ", res.data[2].values); //get's 28 day values 
+				  // console.log("RESPONSE   ", res.data[2].values); //get's 28 day values 
 				  resolve(res);
 				});
 			})
@@ -157,11 +156,26 @@ router.get('/update', (req, res, next) => {
 	User.find(function(err, users) {
 		users.forEach(function(user) {
 			instagramUpdate(user)
-			.then(() => youtubeUpdate(user))
-			.then(() => twitterUpdate(user))
-			.then(() => vineUpdate(user))
-			.then(() => facebookUpdate(user)) //fix pauses the update route
-			.then(() => res.redirect('/integrate'));
+			.then(() => {
+				console.log('instagram......success');
+				youtubeUpdate(user)
+			})
+			.then(() => {
+				console.log('youtube........success');
+				twitterUpdate(user)
+			})
+			.then(() => {
+				console.log('twitter........success');
+				vineUpdate(user)
+			})
+			.then(() => {
+				console.log('vine...........success');
+				facebookUpdate(user)
+			}) //fix pauses the update route
+			.then(() => {
+				console.log('facebook.......success');
+				res.redirect('/integrate')
+			});
 		});
 	});
 });
@@ -173,52 +187,32 @@ router.get('/update/frequent', (req, res, next) => {
 		users.forEach(function(user) {
 			var isTwenty = true;
 			instagramUpdate(user, isTwenty)
-			.then(() => youtubeUpdate(user, isTwenty))
-			.then(() => twitterUpdate(user, isTwenty))
-			.then(() => vineUpdate(user, isTwenty))
-			.then(() => facebookUpdate(user, isTwenty))
-			.then(() => res.redirect('/integrate'));
+			.then(() => {
+				console.log('instagram......success');
+				youtubeUpdate(user, isTwenty)
+			})
+			.then(() => {
+				console.log('youtube........success');
+				twitterUpdate(user, isTwenty)
+			})
+			.then(() => {
+				console.log('twitter........success');
+				vineUpdate(user, isTwenty)
+			})
+			.then(() => {
+				console.log('vine...........success');
+				facebookUpdate(user, isTwenty)
+			}) //fix pauses the update route
+			.then(() => {
+				console.log('facebook.......success');
+				res.redirect('/integrate')
+			});
 		});
+		// console.log("what happens?", err)
 	});
 });
-//User{
-// triggerFrequency:{
-//     youtube: {
-//       lastPost: Number,
-//       turnedOn: Boolean,
-//       upToDate: Boolean,   
-//       frequency: Number
-//     },
-//     instagram: {
-//       turnedOn: Boolean,
-//       lastPost: Number,
-//       upToDate: Boolean,
-//       frequency: Number
-//     },
 
-router.get('/trigger', (req, res, next)=>{
-	res.render('trigger')
-})
-router.post('/trigger/:id',(req, res, next)=>{
-	User.findById(req.params.id, function(err, user){
-	    if (req.body.youtube) {
-	    	user.triggerFrequency.youtube.turnedOn = true;
-	    }
-	    if (req.body.vine) {
-	    	user.triggerFrequency.vine.turnedOn = true;
-	    }
-	    if (req.body.instagram) {
-	    	user.triggerFrequency.instagram.turnedOn = true;
-	    }
-	    if (req.body.twitter) {
-	    	user.triggerFrequency.twitter.turnedOn = true;
-	    }
-	    if (req.body.facebook) {
-	    	user.triggerFrequency.facebook.turnedOn = true;
-	    }
-	    res.send('we fucking did it')
-	})
-})
+
 	
 	// Schedule once a day, sometime in the morning
 	// 1 find posts by id
@@ -331,6 +325,39 @@ router.get('/dashboard/:id', function(req, res, next) {
 		});
 	}).catch(console.log.bind(this, "[error]"));
 });
+
+router.get('/trigger/:id', (req, res, next)=>{
+	res.render('trigger')
+})
+router.post('/trigger/:id',(req, res, next)=>{
+	// var id = req.params.id;
+	// console.log("this is the id", id)
+	User.findById(req.params.id, function(err, user){
+		console.log("this is trigger user", user)
+	    if (req.body.youtube) {
+	    	user.triggerFrequency.youtube.turnedOn = true;
+	    	user.triggerFrequency.youtube.frequency = req.body.youtubeDays;
+	    }
+	    if (req.body.vine) {
+	    	user.triggerFrequency.vine.turnedOn = true;
+	    	user.triggerFrequency.vine.frequency = req.body.vineDays;
+	    }
+	    if (req.body.instagram) {
+	    	user.triggerFrequency.instagram.turnedOn = true;
+	    	user.triggerFrequency.instagram.frequency = req.body.instagramDays;
+	    }
+	    if (req.body.twitter) {
+	    	user.triggerFrequency.twitter.turnedOn = true;
+	    	user.triggerFrequency.twitter.frequency = req.body.twitterDays;
+	    }
+	    if (req.body.facebook) {
+	    	user.triggerFrequency.facebook.turnedOn = true;
+	    	user.triggerFrequency.facebook.frequency = req.body.facebookDays;
+	    }
+	   user.save();
+	    res.redirect('/integrate')
+	})
+})
 
 router.get('/posts', function(req, res, next) {
 	getPosts(req.user._id)

@@ -65,35 +65,6 @@
 }
 
 </style>
-<script type="text/javascript">
-   $("input[type='checkbox']").change(function() {
-	  var textBox = $(this).closest('li').find(".day");
-	  
-	  textBox.attr('disabled', !textBox.attr('disabled'));
-	  if (textBox.attr('disabled')) {
-	    textBox.css("background-color", "#ccc");
-	  }
-	  else {
-	    textBox.css("background-color", "#fff");
-	  }
-	});
-   $("#submit").click(function(){
-    $.ajax({
-        type: "POST",
-        url: "http://localhost:3000/trigger",
-        data: {
-            type: $("input[type='checkbox']"),
-            frequent: $('.day')
-        },
-        success: function(d) {
-            //Position saved
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            //Something bad happened
-        }
-    });
-   });
-</script>
 </head>
 
 <body>
@@ -113,7 +84,7 @@
 		              <ul class="list-group">
 		                  <li class="list-group-item">
 		                     <p>Facebook</p>
-		                     <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                     <input type="text" name="facebookDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                    <div class="material-switch pull-right">
 		                      <input id="someSwitchOptionPrimary" name="facebook" type="checkbox" value="true"/>
 		                      <label for="someSwitchOptionPrimary" class="label-primary"></label>
@@ -121,7 +92,7 @@
 		                  </li>
 		                  <li class="list-group-item">
 		                    <p>Vine</p>
-		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                    <input type="text" name="vineDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                      <div class="material-switch pull-right">
 		                          <input id="someSwitchOptionSuccess" name="vine" type="checkbox" value="true"/>
 		                          <label for="someSwitchOptionSuccess" class="label-success"></label>
@@ -129,7 +100,7 @@
 		                  </li>
 		                  <li class="list-group-item">
 		                    <p>Twitter</p>
-		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                    <input type="text" name="twitterDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                      <div class="material-switch pull-right">
 		                          <input id="someSwitchOptionInfo" name="twitter" type="checkbox" value="true"/>
 		                          <label for="someSwitchOptionInfo" class="label-info"></label>
@@ -137,7 +108,7 @@
 		                  </li>
 		                  <li class="list-group-item">
 		                    <p>Instagram</p>
-		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                    <input type="text" name="instagramDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                      <div class="material-switch pull-right">
 		                          <input id="someSwitchOptionWarning" name="instagram" type="checkbox" value="true"/>
 		                          <label for="someSwitchOptionWarning" class="label-warning"></label>
@@ -145,7 +116,7 @@
 		                  </li>
 		                  <li class="list-group-item">
 		                    <p>YouTube</p>
-		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                    <input type="text" name="youtubeDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                      <div class="material-switch pull-right">
 		                          <input id="someSwitchOptionDanger" name="youtube" type="checkbox" value="true"/>
 		                          <label for="someSwitchOptionDanger" class="label-danger"></label>
@@ -158,6 +129,21 @@
 		  </div>
 		</div>
 	</form>
+	
+<script type="text/javascript">
+   $("input[type='checkbox']").change(function() {
+	  var textBox = $(this).closest('li').find(".day");
+	  
+	  textBox.attr('disabled', !textBox.attr('disabled'));
+	  if (textBox.attr('disabled')) {
+	    textBox.css("background-color", "#ccc");
+	  }
+	  else {
+	    textBox.css("background-color", "#fff");
+	  }
+	});
+
+</script>
 
 </body>
 
