@@ -328,12 +328,14 @@ router.get('/dashboard/:id', function(req, res, next) {
 
 router.get('/trigger/:id', (req, res, next)=>{
 	res.render('trigger')
-})
+});
+
 router.post('/trigger/:id',(req, res, next)=>{
 	// var id = req.params.id;
 	// console.log("this is the id", id)
+	console.log("[req.body]", req.body);
 	User.findById(req.params.id, function(err, user){
-		console.log("this is trigger user", user)
+		// console.log("this is trigger user", user)
 	    if (req.body.youtube) {
 	    	user.triggerFrequency.youtube.turnedOn = true;
 	    	user.triggerFrequency.youtube.frequency = req.body.youtubeDays;
@@ -354,8 +356,13 @@ router.post('/trigger/:id',(req, res, next)=>{
 	    	user.triggerFrequency.facebook.turnedOn = true;
 	    	user.triggerFrequency.facebook.frequency = req.body.facebookDays;
 	    }
-	   user.save();
-	    res.redirect('/integrate')
+	   user.save(function(err, user) {
+	   	// console.log("indentation can suck a dick", user)
+	   	  if (err) return console.log('asshole....', err)
+
+	   	  // res.redirect('/dashboard')
+	   	res.redirect('/integrate')
+	   });
 	})
 })
 
