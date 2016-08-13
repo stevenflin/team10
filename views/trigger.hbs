@@ -82,8 +82,8 @@
         type: "POST",
         url: "http://localhost:3000/trigger",
         data: {
-            type: ,
-            frequent: 
+            type: $("input[type='checkbox']"),
+            frequent: $('.day')
         },
         success: function(d) {
             //Position saved
@@ -101,7 +101,7 @@
 	  <h3 class="text-center">Notification Center</h3>
 	  <hr>
 	</div>
-	<form>
+	<form method="post">
 		<div class="container">
 		  <div class="row">
 		      <div class="col-xs-12 col-sm-9 col-md-7 col-sm-offset-3 col-md-offset-4">
@@ -115,7 +115,7 @@
 		                     <p>Facebook</p>
 		                     <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                    <div class="material-switch pull-right">
-		                      <input id="someSwitchOptionPrimary" name="someSwitchOption001" type="checkbox"/>
+		                      <input id="someSwitchOptionPrimary" name="facebook" type="checkbox" value="true"/>
 		                      <label for="someSwitchOptionPrimary" class="label-primary"></label>
 		                    </div>
 		                  </li>
@@ -123,7 +123,7 @@
 		                    <p>Vine</p>
 		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                      <div class="material-switch pull-right">
-		                          <input id="someSwitchOptionSuccess" name="someSwitchOption001" type="checkbox"/>
+		                          <input id="someSwitchOptionSuccess" name="vine" type="checkbox" value="true"/>
 		                          <label for="someSwitchOptionSuccess" class="label-success"></label>
 		                      </div>
 		                  </li>
@@ -131,7 +131,7 @@
 		                    <p>Twitter</p>
 		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                      <div class="material-switch pull-right">
-		                          <input id="someSwitchOptionInfo" name="someSwitchOption001" type="checkbox"/>
+		                          <input id="someSwitchOptionInfo" name="twitter" type="checkbox" value="true"/>
 		                          <label for="someSwitchOptionInfo" class="label-info"></label>
 		                      </div>
 		                  </li>
@@ -139,7 +139,7 @@
 		                    <p>Instagram</p>
 		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                      <div class="material-switch pull-right">
-		                          <input id="someSwitchOptionWarning" name="someSwitchOption001" type="checkbox"/>
+		                          <input id="someSwitchOptionWarning" name="instagram" type="checkbox" value="true"/>
 		                          <label for="someSwitchOptionWarning" class="label-warning"></label>
 		                      </div>
 		                  </li>
@@ -147,7 +147,7 @@
 		                    <p>YouTube</p>
 		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
 		                      <div class="material-switch pull-right">
-		                          <input id="someSwitchOptionDanger" name="someSwitchOption001" type="checkbox"/>
+		                          <input id="someSwitchOptionDanger" name="youtube" type="checkbox" value="true"/>
 		                          <label for="someSwitchOptionDanger" class="label-danger"></label>
 		                      </div>
 		                  </li>

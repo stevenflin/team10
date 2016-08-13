@@ -32,7 +32,7 @@ var Profile = models.Profile;
 var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
-var triggerFrequency = models.triggerFrequency;
+
 
 var time = facebook.time; //DO NOT COMMENT THIS SHIT OUT **** !!!
 
@@ -181,59 +181,43 @@ router.get('/update/frequent', (req, res, next) => {
 		});
 	});
 });
+//User{
+// triggerFrequency:{
+//     youtube: {
+//       lastPost: Number,
+//       turnedOn: Boolean,
+//       upToDate: Boolean,   
+//       frequency: Number
+//     },
+//     instagram: {
+//       turnedOn: Boolean,
+//       lastPost: Number,
+//       upToDate: Boolean,
+//       frequency: Number
+//     },
 
 router.get('/trigger', (req, res, next)=>{
 	res.render('trigger')
 })
-// router.post('/trigger',(req, res, next)=>{
-// 	User.findById(id, function(err, user){
-// 	    triggerFrequency.find({id:}, function(err, result){
-// 	          if(err || !result){
-// 	            console.log("cannot find view "+view);
-// 	            res.end();
-// 	          }
-// 	          else {
-// 	            //update value of x and y
-// 	            var type = req.user.platform.type;
-// 	            var frequency = req.user.platform.frequency;
-// 	            //...
-// 	         }
-// 	    })
-// 	})
-// })
-
-router.get('/update/trigger', (req, res, next)=>{
-	var daysMessage = "Here's when you last posted on your social media profiles:"
-	var userTrigger = req.user.triggerFrequency
-	var i 
-	var msg = "You're behind on posting to your  "
-	if(userTrigger.youtube.turnedOn){
-		userTrigger.youtube.upToDate ?  console.log("Nothing was sent") : msg = msg + "Youtube, "
-		daysMessage = daysMessage +" Youtube: "+userTrigger.youtube.lastPost+" days"
-		i++
-	}
-	if(userTrigger.instagram.turnedOn){
-		userTrigger.instagram.upToDate ?  console.log("Nothing was sent") : msg = msg + "Instagram", 
-		daysMessage = daysMessage +" Instagram: "+userTrigger.instagram.lastPost+" days"
-		i++
-	}
-	if(userTrigger.twitter.turnedOn){
-		userTrigger.twitter.upToDate ?  console.log("Nothing was sent") : msg = msg + "Twitter, "
-		daysMessage = daysMessage +" Twitter: "+userTrigger.twitter.lastPost+" days"
-		i++
-	}
-	if(userTrigger.facebook.turnedOn){
-		userTrigger.facebook.upToDate ?  console.log("Nothing was sent") : msg = msg + "Facebook, "
-		daysMessage= daysMessage+" Facebook: "+userTrigger.facebook.lastPost+" days"
-		i++
-	}
-	if(userTrigger.vine.turnedOn){
-		userTrigger.vine.upToDate ?  console.log("Nothing was sent") : msg = msg + "Vine, "
-		daysMessage= daysMessage+" Vine: "+userTrigger.vine.lastPost+" days"
-		i++
-	}
-	trigger(daysMessage)
-	i > 0 ? trigger(msg): trigger("You're up to date on all your profiles ~ Jake XOXO")
+router.post('/trigger/:id',(req, res, next)=>{
+	User.findById(req.params.id, function(err, user){
+	    if (req.body.youtube) {
+	    	user.triggerFrequency.youtube.turnedOn = true;
+	    }
+	    if (req.body.vine) {
+	    	user.triggerFrequency.vine.turnedOn = true;
+	    }
+	    if (req.body.instagram) {
+	    	user.triggerFrequency.instagram.turnedOn = true;
+	    }
+	    if (req.body.twitter) {
+	    	user.triggerFrequency.twitter.turnedOn = true;
+	    }
+	    if (req.body.facebook) {
+	    	user.triggerFrequency.facebook.turnedOn = true;
+	    }
+	    res.send('we fucking did it')
+	})
 })
 	
 	// Schedule once a day, sometime in the morning
