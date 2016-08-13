@@ -4,7 +4,7 @@ var FB = require('fb');
 var ig = require('instagram-node').instagram();
 
 var twilio = require('../test/trigger.js');
-var triggerMeTimbers = twilio.triggerMeTimbers;
+var trigger = twilio.sendMessage;
 
 var dashboardFunctions = require('../update/dashboard');
 var getPosts = dashboardFunctions.getPosts;
@@ -203,35 +203,37 @@ router.get('/trigger', (req, res, next)=>{
 // })
 
 router.get('/update/trigger', (req, res, next)=>{
-	console.log('user', user);
-	var id = req.user.id;
-	var types = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
-	
-	Profile.findOne({userId: user._id}, function(err, profile) {
-
-		types.map(function(p){
-			return new Promise(function(resolve, reject){
-				resolve(Post.find({profileId:profile._id, type: p }))
-			})
-			.then((posts)=>{ //because its a promise, posts are accessible throughout the route function
-				console.log("posts", posts)
-				types.map(function(platform){
-					console.log("platform", platform)
-					triggerFrequency.findOne({type:platform})
-					//update models to only get triggerfrequency if the user is integrated with the platform
-				})
-				.then((triggerFrequencyPolicy)=>{
-					//if statements here to check posts vs the policy
-
-				})
-			})
-					
-
-			
-		})
-
-	})
-
+	var daysMessage = "Here's when you last posted on your social media profiles:"
+	var userTrigger = req.user.triggerFrequency
+	var i 
+	var msg = "You're behind on posting to your  "
+	if(userTrigger.youtube.turnedOn){
+		userTrigger.youtube.upToDate ?  console.log("Nothing was sent") : msg = msg + "Youtube, "
+		daysMessage = daysMessage +" Youtube: "+userTrigger.youtube.lastPost+" days"
+		i++
+	}
+	if(userTrigger.instagram.turnedOn){
+		userTrigger.instagram.upToDate ?  console.log("Nothing was sent") : msg = msg + "Instagram", 
+		daysMessage = daysMessage +" Instagram: "+userTrigger.instagram.lastPost+" days"
+		i++
+	}
+	if(userTrigger.twitter.turnedOn){
+		userTrigger.twitter.upToDate ?  console.log("Nothing was sent") : msg = msg + "Twitter, "
+		daysMessage = daysMessage +" Twitter: "+userTrigger.twitter.lastPost+" days"
+		i++
+	}
+	if(userTrigger.facebook.turnedOn){
+		userTrigger.facebook.upToDate ?  console.log("Nothing was sent") : msg = msg + "Facebook, "
+		daysMessage= daysMessage+" Facebook: "+userTrigger.facebook.lastPost+" days"
+		i++
+	}
+	if(userTrigger.vine.turnedOn){
+		userTrigger.vine.upToDate ?  console.log("Nothing was sent") : msg = msg + "Vine, "
+		daysMessage= daysMessage+" Vine: "+userTrigger.vine.lastPost+" days"
+		i++
+	}
+	trigger(daysMessage)
+	i > 0 ? trigger(msg): trigger("You're up to date on all your profiles ~ Jake XOXO")
 })
 	
 	// Schedule once a day, sometime in the morning
@@ -240,6 +242,30 @@ router.get('/update/trigger', (req, res, next)=>{
 	// 3. compare for each channel if post date is longer than allowed frequency
 	// 4 send
 
+	// Profile.findOne({userId: user._id}, function(err, profile) {
+
+	// 	types.map(function(p){
+	// 		return new Promise(function(resolve, reject){
+	// 			resolve(Post.find({profileId:profile._id, type: p }))
+	// 		})
+	// 		.then((posts)=>{ //because its a promise, posts are accessible throughout the route function
+	// 			console.log("posts", posts)
+	// 			types.map(function(platform){
+	// 				console.log("platform", platform)
+	// 				triggerFrequency.findOne({type:platform})
+	// 				//update models to only get triggerfrequency if the user is integrated with the platform
+	// 			})
+	// 			.then((triggerFrequencyPolicy)=>{
+	// 				//if statements here to check posts vs the policy
+
+	// 			})
+	// 		})
+					
+
+			
+	// 	})
+
+	// })
 
 
 // DASHBOARD ROUTES
