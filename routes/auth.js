@@ -10,6 +10,12 @@ var facebook = require('fb');
 
 module.exports = function(passport) {
   
+
+  // router.post('/hack/lol/jk', function(req, res, next) {
+  //     console.log("is user authenticated?", (!!req.user) ? true: false);
+  //     console.log('look at me hacking you.......', req.body); 
+  // });
+  
   router.get('/register', function(req, res, next) {
       res.render('register');
   });

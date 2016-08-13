@@ -6,7 +6,6 @@ var user = new mongoose.Schema({
     required: true,
     unique: true
   },
-  phoneNumber: Number,
   password: {
     type: String,
     required: true
@@ -218,29 +217,7 @@ var postSnapshot = new mongoose.Schema({
     type: Date
   } 
 })
-// var triggerFrequency = new mongoose.Schema({
-//   youtube: {
-//     type: Boolean, //checks if 
-//     frequency: Number
-//   },
-//   instagram: {
-//     type: Boolean,
-//     frequency: Number
-//   },
-//   vine: {
-//     type: Boolean,
-//     frequency: Number
-//   },
-//   twitter: {
-//     type: Boolean,
-//     frequency: Number
-//   },
-//   facebook: {
-//     type: Boolean,
-//     frequency: Number
-//   }
-  
-// })
+
 user.plugin(findOrCreate);
 post.plugin(findOrCreate);
 profile.plugin(findOrCreate);
@@ -251,4 +228,5 @@ module.exports = {
   ProfileSnapshot: mongoose.model('ProfileSnapshot', profileSnapshot),
   Post: mongoose.model('Post', post),
   PostSnapshot: mongoose.model('PostSnapshot', postSnapshot)
+
 }
