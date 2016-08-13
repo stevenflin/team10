@@ -17,7 +17,8 @@ module.exports = function(passport) {
   router.post('/register', function(req, res, next) {
   	new User({
   	  username: req.body.username,
-  	  password: req.body.password
+  	  password: req.body.password, 
+      phoneNumber: req.body.phoneNumber
   	}).save(function(err, user) {
   	  console.log(err);
   	  if (err) return next(err);

@@ -10,6 +10,9 @@ var user = new mongoose.Schema({
     type: String,
     required: true
   },
+  phoneNumber: {
+    type: String
+  },
   isAdmin:{
     type: Boolean,
     default: false

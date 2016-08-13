@@ -185,22 +185,22 @@ router.get('/update/frequent', (req, res, next) => {
 router.get('/trigger', (req, res, next)=>{
 	res.render('trigger')
 })
-router.post('/trigger',(req, res, next)=>{
-	User.findById(id, function(err, user){
-	    triggerFrequency.find({id:}, function(err, result){
-	          if(err || !result){
-	            console.log("cannot find view "+view);
-	            res.end();
-	          }
-	          else {
-	            //update value of x and y
-	            var type = req.user.platform.type;
-	            var frequency = req.user.platform.frequency;
-	            //...
-	         }
-	    })
-	})
-})
+// router.post('/trigger',(req, res, next)=>{
+// 	User.findById(id, function(err, user){
+// 	    triggerFrequency.find({id:}, function(err, result){
+// 	          if(err || !result){
+// 	            console.log("cannot find view "+view);
+// 	            res.end();
+// 	          }
+// 	          else {
+// 	            //update value of x and y
+// 	            var type = req.user.platform.type;
+// 	            var frequency = req.user.platform.frequency;
+// 	            //...
+// 	         }
+// 	    })
+// 	})
+// })
 
 router.get('/update/trigger', (req, res, next)=>{
 	console.log('user', user);

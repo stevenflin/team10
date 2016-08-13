@@ -3,6 +3,13 @@
 <head>
 <style>
 
+.list-group-item{
+  display: flex;
+  justify-content: flex-end;
+  vertical-align: middle;
+  padding: 15px;
+}
+
 .material-switch > input[type="checkbox"] {
     display: none;   
 }
@@ -48,28 +55,35 @@
     left: 20px;
 }
 
+.day{
+    background-color: white;
+    width: 40%;
+    margin: 0 20%;
+/*     position: absolute;
+    left: 20%;
+    margin-top: -5px; */
+}
+
 </style>
 <script type="text/javascript">
-    $(document).ready(function(){
-        $('input[type="checkbox"]').click(function(){
-            if($(this).is(":checked")){
-                alert("Checkbox is checked.");
-            }
-            else if($(this).is(":not(:checked)")){
-                alert("Checkbox is unchecked.");
-            }
-        });
-    });
-
-
-
-
+   $("input[type='checkbox']").change(function() {
+	  var textBox = $(this).closest('li').find(".day");
+	  
+	  textBox.attr('disabled', !textBox.attr('disabled'));
+	  if (textBox.attr('disabled')) {
+	    textBox.css("background-color", "#ccc");
+	  }
+	  else {
+	    textBox.css("background-color", "#fff");
+	  }
+	});
+   $("#submit").click(function(){
     $.ajax({
         type: "POST",
         url: "http://localhost:3000/trigger",
         data: {
-            type: 200,
-            frequency: 150
+            type: ,
+            frequent: 
         },
         success: function(d) {
             //Position saved
@@ -78,66 +92,72 @@
             //Something bad happened
         }
     });
+   });
 </script>
 </head>
 
 <body>
-
 	<div class="container">
-	    <h3 class="text-center">Dashboard Reminders</h3>
-	    <hr>
+	  <h3 class="text-center">Notification Center</h3>
+	  <hr>
 	</div>
+	<form>
+		<div class="container">
+		  <div class="row">
+		      <div class="col-xs-12 col-sm-9 col-md-7 col-sm-offset-3 col-md-offset-4">
+		          <div class="panel panel-default">
+		              <!-- Default panel contents -->
+		              <div class="panel-heading">Social Media Platforms</div>
 
-	<div class="container">
-	    <div class="row">
-	        <div class="col-xs-12 col-sm-6 col-md-4 col-sm-offset-3 col-md-offset-4">
-	            <div class="panel panel-default">
-	                <!-- Default panel contents -->
-	                <div class="panel-heading">Set Trigger</div>
-	            
-	                <!-- List group -->
-	                <ul class="list-group">
-	                    <li class="list-group-item">
-	                        Facebook 
-	                        <div class="material-switch pull-right">
-	                            <!-- <input id="someSwitchOptionPrimary" name="someSwitchOption001" type="checkbox"/> -->
-	                            <input id="someSwitchOptionPrimary" name="someSwitchOption001" type="text" class="bfh-number"/>
-	                            <label for="someSwitchOptionPrimary" class="label-primary"></label>
-	                        </div>
-	                    </li>
-	                    <li class="list-group-item">
-	                        Vine
-	                        <div class="material-switch pull-right">
-	                            <input id="someSwitchOptionSuccess" name="someSwitchOption001" type="checkbox"/>
-	                            <label for="someSwitchOptionSuccess" class="label-success"></label>
-	                        </div>
-	                    </li>
-	                    <li class="list-group-item">
-	                        Twitter
-	                        <div class="material-switch pull-right">
-	                            <input id="someSwitchOptionInfo" name="someSwitchOption001" type="checkbox"/>
-	                            <label for="someSwitchOptionInfo" class="label-info"></label>
-	                        </div>
-	                    </li>
-	                    <li class="list-group-item">
-	                        Instagram
-	                        <div class="material-switch pull-right">
-	                            <input id="someSwitchOptionWarning" name="someSwitchOption001" type="checkbox"/>
-	                            <label for="someSwitchOptionWarning" class="label-warning"></label>
-	                        </div>
-	                    </li>
-	                    <li class="list-group-item">
-	                        YouTube
-	                        <div class="material-switch pull-right">
-	                            <input id="someSwitchOptionDanger" name="someSwitchOption001" type="checkbox"/>
-	                            <label for="someSwitchOptionDanger" class="label-danger"></label>
-	                        </div>
-	                    </li>
-	                </ul>
-	            </div>            
-	        </div>
-	    </div>
-	</div>
+		              <!-- List group -->
+		              <ul class="list-group">
+		                  <li class="list-group-item">
+		                     <p>Facebook</p>
+		                     <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                    <div class="material-switch pull-right">
+		                      <input id="someSwitchOptionPrimary" name="someSwitchOption001" type="checkbox"/>
+		                      <label for="someSwitchOptionPrimary" class="label-primary"></label>
+		                    </div>
+		                  </li>
+		                  <li class="list-group-item">
+		                    <p>Vine</p>
+		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                      <div class="material-switch pull-right">
+		                          <input id="someSwitchOptionSuccess" name="someSwitchOption001" type="checkbox"/>
+		                          <label for="someSwitchOptionSuccess" class="label-success"></label>
+		                      </div>
+		                  </li>
+		                  <li class="list-group-item">
+		                    <p>Twitter</p>
+		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                      <div class="material-switch pull-right">
+		                          <input id="someSwitchOptionInfo" name="someSwitchOption001" type="checkbox"/>
+		                          <label for="someSwitchOptionInfo" class="label-info"></label>
+		                      </div>
+		                  </li>
+		                  <li class="list-group-item">
+		                    <p>Instagram</p>
+		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                      <div class="material-switch pull-right">
+		                          <input id="someSwitchOptionWarning" name="someSwitchOption001" type="checkbox"/>
+		                          <label for="someSwitchOptionWarning" class="label-warning"></label>
+		                      </div>
+		                  </li>
+		                  <li class="list-group-item">
+		                    <p>YouTube</p>
+		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+		                      <div class="material-switch pull-right">
+		                          <input id="someSwitchOptionDanger" name="someSwitchOption001" type="checkbox"/>
+		                          <label for="someSwitchOptionDanger" class="label-danger"></label>
+		                      </div>
+		                  </li>
+		                <input class="form-control btn btn-default" type="submit" value="Set Triggers">
+		              </ul>
+		          </div>            
+		      </div>
+		  </div>
+		</div>
+	</form>
 
 </body>
 
