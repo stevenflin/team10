@@ -24,9 +24,11 @@ function pageViewsTotal(days, pageId){
 	//GETS PAGE IMPRESSIONS OVER 1 MONTH, PERIOD (**, week, day) 
 	//~~~~~~~~~~~~~~FUNCTION TO GET TIME IN UNIX BY NUMBER OF DAYS
 function time(days){
-  var until = Math.floor(Date.now() / 1000); //datenow
-  var since = until - days;
-  return {until: until, since: since}
+	var days = days*24*60*60;
+	var until = Math.floor(Date.now() / 1000); //datenow
+	var since = until - days;
+	console.log("UNTIL AND SINCE ", until, since)
+	return {until: until, since: since}
 }
 
 // ~~~~~~~~~~~~~~FUNCTION TO GET IMPRESSIONS PER DAY FOR XX DAYS
@@ -243,7 +245,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 				console.log("asdsdasdasdasd")
 				return resolve();
 			}
-			console.log("Yoyo", user.facebook.pages[0])
+			console.log("Yoyo", user.facebook.pages[0].pageId)
 			var pageId = user.facebook.pages[0].pageId;
 			var functions= [ 
 				pageImpressions(92, pageId),
@@ -270,10 +272,12 @@ console.log("YOYOYO")
 						profileId: profile._id
 					})
 					.save(function(err, p) {
+						console.log("ERR~~~~~~~~", err)
+						console.log("ERR~~~~~~~~", result)
 
 						// console.log('$$1')
 						if(err) return next(err);
-
+						console.log("YO YO YO",result[3])
 						result[3].forEach(function(post, i) {
 							console.log('REACHED')
 

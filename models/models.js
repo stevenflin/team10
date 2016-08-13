@@ -250,6 +250,5 @@ module.exports = {
   Profile: mongoose.model('Profile', profile),
   ProfileSnapshot: mongoose.model('ProfileSnapshot', profileSnapshot),
   Post: mongoose.model('Post', post),
-  PostSnapshot: mongoose.model('PostSnapshot', postSnapshot),
-  triggerFrequency: mongoose.model('triggerFrequency', triggerFrequency)
+  PostSnapshot: mongoose.model('PostSnapshot', postSnapshot)
 }
