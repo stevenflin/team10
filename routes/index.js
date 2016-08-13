@@ -111,7 +111,6 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 			message: "Kinda missing a pageId there bud"
 		})
 	}
-	
 })
 	
 // DAILY SNAPSHOTS
