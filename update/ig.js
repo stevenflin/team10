@@ -40,87 +40,101 @@ function instagramUpdate(user, twentyMinUpdate) {
 			// Get instagram data
 			instagramInformation(user.instagram.instagramProfile.id, user.instagram.AccessToken)
 			.then(function(data) {
-				if (!twentyMinUpdate) {
-					profile.instagram.last = data.profile;
-					profile.save();
-					// Create new profile snapshot
-					new ProfileSnapshot({
-						platformID: user.instagram.instagramProfile.id,
-						platform: 'instagram', 
-						followers: data.profile, 
-						posts: data.bigArr.length,
-						date: new Date(),
-						profileId: profile._id
-					})
-					.save(function(err, p){
-						if(err) return next(err);
+				return new Promise(function(interResolve, interReject){
+						if (!twentyMinUpdate) {
+						profile.instagram.last = data.profile;
+						profile.save();
+						// Create new profile snapshot
+						new ProfileSnapshot({
+							platformID: user.instagram.instagramProfile.id,
+							platform: 'instagram', 
+							followers: data.profile, 
+							posts: data.bigArr.length,
+							date: new Date(),
+							profileId: profile._id
+						})
+						.save(function(err, p){
+							if(err) return next(err);
 
-						// Iterate through posts and create new snapshots
-						data.bigArr.forEach(function(post, i){
+							// Iterate through posts and create new snapshots
+							var posts = [];
+							data.bigArr.forEach(function(post, i){
+								var desc = null;
+								if(post.caption){
+									desc = post.caption.text
+								}
+								// If post doesn't exist, create it
+								Post.findOrCreate({postId: post.id}, {
+									description: desc,
+									postId: post.id,
+									type: 'instagram',
+									profileId: profile._id,
+									date: parseInt(post.created_time)
+								}, function(err, postData){
+									// if(err) return console.log(err);
+									if (err) return next(err);
+									console.log("[creating post] for:", post.id);
+
+									// snapshot it
+									new PostSnapshot({
+										profileId: p._id, 
+										postId: postData.postId,
+										comments: post.comments.count,
+										likes: post.likes.count,
+										date: p.date
+									})
+									.save(function(err, psnap){
+										if(err) return next(err);
+										postData.snapshots.push(psnap._id);
+										postData.save(function(err){
+											if(err) return next(err);
+											resolve();
+											posts.push(postData);
+
+											if (posts.length === data.bigArr.length) {
+												interResolve(posts[0])
+											}
+										})				
+									})
+								})
+							})
+						})
+					} else {
+						profile.instagram.followers = data.profile;
+						profile.save();
+						data.bigArr.forEach(function(post, i) {
 							var desc = null;
-							if(post.caption){
-								desc = post.caption.text
+							if (post.caption) {
+								desc = post.caption.text;
 							}
-
-
-							// If post doesn't exist, create it
 							Post.findOrCreate({postId: post.id}, {
 								description: desc,
-								postId: post.id,
+								postId: post.id, //coming from february?
 								type: 'instagram',
 								profileId: profile._id,
 								date: parseInt(post.created_time)*1000
-							}, function(err, postData){
-								// if(err) return console.log(err);
-								if (err) return next(err);
-								console.log("[creating post] for:", post.id);
-
-								// snapshot it
-								new PostSnapshot({
-									profileId: p._id, 
-									postId: postData.postId,
-									comments: post.comments.count,
-									likes: post.likes.count,
-									date: p.date
-								})
-								.save(function(err, psnap){
-									if(err) return next(err);
-									postData.snapshots.push(psnap._id);
-									postData.save(function(err){
-										if(err) return next(err);
-										resolve();
-									})				
-								})
-							})
-						})
-					})
-				} else {
-					profile.instagram.followers = data.profile;
-					profile.save();
-					data.bigArr.forEach(function(post, i) {
-						var desc = null;
-						if (post.caption) {
-							desc = post.caption.text;
-						}
-						Post.findOrCreate({postId: post.id}, {
-							description: desc,
-							postId: post.id,
-							type: 'instagram',
-							profileId: profile._id,
-							date: parseInt(post.created_time)*1000
-						}, function(err, postData) {
-							if (err) return console.log(err);
-
-							postData.comments = post.comments.count;
-							postData.likes = post.likes.count;
-
-							postData.save(function(err) {
+							}, function(err, postData) {
 								if (err) return console.log(err);
-								resolve();
+
+								postData.comments = post.comments.count;
+								postData.likes = post.likes.count;
+
+								postData.save(function(err) {
+									if (err) return console.log(err);
+									resolve();
+								})
 							})
 						})
-					})
+					}
+				})
+				.then((latestPost)=>{
+				if(user.triggerFrequency.instagram && user.triggerFrequency.instagram.turnedOn){
+					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.instagram.frequency*24*60*60; //Current unix time - allowed number of days in unix
+					user.triggerFrequency.instagram.upToDate = latestPost.date > date ? false : true;
+					user.triggerFrequency.instagram.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
+					user.save();
 				}
+			})
 			}).catch(function(err){ next(err)})
 		})
 	})

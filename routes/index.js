@@ -145,7 +145,7 @@ router.get('/update/twitter', function(req, res, next){
 })
 
 router.get('/update/vine', function(req, res, next){
-	vineUpdate(req.user._id)
+	vineUpdate(req.user)
 	.then(() => res.redirect('/integrate'));
 })
 
@@ -182,33 +182,34 @@ router.get('/update', (req, res, next) => {
 // call this FUNction every 20 minutes, does not make snapshots
 
 router.get('/update/frequent', (req, res, next) => {
-	User.find(function(err, users) {
-		users.forEach(function(user) {
-			var isTwenty = true;
-			instagramUpdate(user, isTwenty)
-			.then(() => {
-				console.log('instagram......success');
-				youtubeUpdate(user, isTwenty)
-			})
-			.then(() => {
-				console.log('youtube........success');
-				twitterUpdate(user, isTwenty)
-			})
-			.then(() => {
-				console.log('twitter........success');
-				vineUpdate(user, isTwenty)
-			})
-			.then(() => {
-				console.log('vine...........success');
-				facebookUpdate(user, isTwenty)
-			}) //fix pauses the update route
-			.then(() => {
-				console.log('facebook.......success');
-				res.redirect('/integrate')
-			});
-		});
-		// console.log("what happens?", err)
-	});
+    User.find(function(err, users) {
+        users.forEach(function(user) {
+            var isTwenty = true;
+            instagramUpdate(user, isTwenty)
+            .then(() => {
+                console.log('instagram......success');
+                youtubeUpdate(user, isTwenty)
+            })
+            .then(() => {
+                console.log('youtube........success');
+                twitterUpdate(user, isTwenty)
+            })
+            .then(() => {
+                console.log('twitter........success');
+                vineUpdate(user, isTwenty)
+            })
+            .then(() => {
+                console.log('vine...........success');
+                facebookUpdate(user, isTwenty)
+            }) //fix pauses the update route
+            .then(() => {
+                console.log('facebook.......success');
+                res.redirect('/integrate')
+            });
+        });
+        // console.log("what happens?", err)
+    });
+
 });
 
 
@@ -252,6 +253,40 @@ router.use(function(req, res, next) {
 		return res.redirect('/');
 	}
 });
+router.get('/update/trigger', (req, res, next)=>{
+	var daysMessage = "Here's when you last posted on your social media profiles:"
+	var userTrigger = req.user.triggerFrequency
+	var i = 0;
+	var msg = "You're behind on posting to your  "
+	if(userTrigger.youtube.turnedOn){
+		userTrigger.youtube.upToDate ?  console.log("Nothing was sent") : msg = msg + "Youtube, "
+		daysMessage = daysMessage +" Youtube: "+userTrigger.youtube.lastPost+" days"
+		i++
+	}
+	if(userTrigger.instagram.turnedOn){
+		userTrigger.instagram.upToDate ?  console.log("Nothing was sent") : msg = msg + "Instagram", 
+		daysMessage = daysMessage +" Instagram: "+userTrigger.instagram.lastPost+" days"
+		i++
+	}
+	if(userTrigger.twitter.turnedOn){
+		userTrigger.twitter.upToDate ?  console.log("Nothing was sent") : msg = msg + "Twitter, "
+		daysMessage = daysMessage +" Twitter: "+userTrigger.twitter.lastPost+" days"
+		i++
+	}
+	if(userTrigger.facebook.turnedOn){
+		userTrigger.facebook.upToDate ?  console.log("Nothing was sent") : msg = msg + "Facebook, "
+		daysMessage= daysMessage+" Facebook: "+userTrigger.facebook.lastPost+" days"
+		i++
+	}
+	if(userTrigger.vine.turnedOn){
+		userTrigger.vine.upToDate ?  console.log("Nothing was sent") : msg = msg + "Vine, "
+		daysMessage= daysMessage+" Vine: "+userTrigger.vine.lastPost+" days"
+		i++
+	}
+	console.log("IIIIIIIIIII~~~ ", i)
+	trigger(daysMessage)
+	i > 0 ? trigger(msg): trigger("You're up to date on all your profiles ~ Jake XOXO")
+})
 
 // DASHBOARD ROUTES
 
