@@ -356,7 +356,7 @@ console.log("YOYOYO")
 					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60; //Current unix time - allowed number of days in unix
 					console.log("DATE YO ", date)
 					user.triggerFrequency.facebook.upToDate = latestPost.date > date ? false : true;
-					user.triggerFrequency.facebook.lastPost = Math.floor((Date.now()/1000-latestPost.date)/60/60/24);
+					user.triggerFrequency.facebook.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
 					user.save();
 				}
 			})	
