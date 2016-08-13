@@ -9,8 +9,6 @@
 
     <title>Dashboard</title>
 
-    <!-- Bootstrap -->
-    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- iCheck -->
@@ -24,9 +22,212 @@
 
     <!-- Custom Theme Style -->
     <link href="../build/css/custom.min.css" rel="stylesheet">
+
+    <style>
+
+    .triggerForm .list-group {
+      margin-bottom: 0;
+    }
+
+    .triggerForm .list-group .list-group-item {
+      border-radius: 0;
+    }
+
+    .triggerForm .list-group .list-group-item:first-child {
+      border-top-width: 0;
+    }
+
+    .triggerForm .list-group .list-group-item:last-child {
+      border-bottom-width: 0;
+    }
+
+    .list-group-item {
+      display: flex;
+      justify-content: flex-end;
+      vertical-align: middle;
+      padding: 15px;
+    }
+
+    .material-switch > input[type="checkbox"] {
+      display: none;   
+    }
+
+    .material-switch > label {
+      cursor: pointer;
+      height: 0px;
+      position: relative; 
+      width: 40px;  
+    }
+
+    .material-switch > label::before {
+      background: rgb(0, 0, 0);
+      box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      content: '';
+      height: 16px;
+      margin-top: -8px;
+      position:absolute;
+      opacity: 0.3;
+      transition: all 0.4s ease-in-out;
+      width: 40px;
+    }
+    .material-switch > label::after {
+      background: rgb(255, 255, 255);
+      border-radius: 16px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+      content: '';
+      height: 24px;
+      left: -4px;
+      margin-top: -8px;
+      position: absolute;
+      top: -4px;
+      transition: all 0.3s ease-in-out;
+      width: 24px;
+    }
+    .material-switch > input[type="checkbox"]:checked + label::before {
+      background: inherit;
+      opacity: 0.5;
+    }
+    .material-switch > input[type="checkbox"]:checked + label::after {
+      background: inherit;
+      left: 20px;
+    }
+
+    .day {
+      background-color: white;
+      width: 40%;
+      margin: 0 20%;
+    /*     position: absolute;
+    left: 20%;
+    margin-top: -5px; */
+    }
+
+    .modal-body {
+      padding: 0;
+    }
+
+    .fix {
+      margin-bottom: 0;
+      border-width: 0;
+    }
+
+    .pad {
+      padding: 15px;
+    }
+
+</style>
   </head>
 
   <body class="nav-md">
+    <div id="triggers" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Set Triggers for {{user.username}}</h4>
+          </div>
+          <div class="modal-body">
+            <form method="post" class="triggerForm">
+              <div class="container">
+                <div class="row">
+                  <div class="col-xs-12">
+
+                    <!-- List group -->
+                    <ul class="list-group">
+                      <li class="list-group-item">
+                        <p>Facebook</p>
+                        {{#if on.facebook}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.facebook.frequency}}" name="facebookDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionPrimary" name="facebook" type="checkbox" value="true" checked="checked"/>
+                            <label for="someSwitchOptionPrimary" class="label-primary"></label>
+                          </div>
+                        {{else}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.facebook.frequency}}" name="facebookDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionPrimary" name="facebook" type="checkbox" value="true"/>
+                            <label for="someSwitchOptionPrimary" class="label-primary"></label>
+                          </div>
+                        {{/if}}
+                      </li>
+                      <li class="list-group-item">
+                        <p>Vine</p>
+                        {{#if on.vine}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.vine.frequency}}" name="vineDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionSuccess" name="vine" type="checkbox" value="true" checked="checked"/>
+                            <label for="someSwitchOptionSuccess" class="label-success"></label>
+                          </div>
+                        {{else}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.vine.frequency}}" name="vineDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionSuccess" name="vine" type="checkbox" value="true"/>
+                            <label for="someSwitchOptionSuccess" class="label-success"></label>
+                          </div>
+                        {{/if}}
+                      </li>
+                      <li class="list-group-item">
+                        <p>Twitter</p>
+                        {{#if on.twitter}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.twitter.frequency}}" name="twitterDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionInfo" name="twitter" type="checkbox" value="true" checked="checked"/>
+                            <label for="someSwitchOptionInfo" class="label-info"></label>
+                          </div>
+                        {{else}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.twitter.frequency}}" name="twitterDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionInfo" name="twitter" type="checkbox" value="true"/>
+                            <label for="someSwitchOptionInfo" class="label-info"></label>
+                          </div>
+                        {{/if}}
+                      </li>
+                      <li class="list-group-item">
+                        <p>Instagram</p>
+                        {{#if on.instagram}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.instagram.frequency}}" name="instagramDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionWarning" name="instagram" type="checkbox" value="true" checked="checked"/>
+                            <label for="someSwitchOptionWarning" class="label-warning"></label>
+                          </div>
+                        {{else}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.instagram.frequency}}" name="instagramDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionWarning" name="instagram" type="checkbox" value="true"/>
+                            <label for="someSwitchOptionWarning" class="label-warning"></label>
+                          </div>
+                        {{/if}}
+                      </li>
+                      <li class="list-group-item">
+                        <p>YouTube</p>
+                        {{#if on.youtube}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.youtube.frequency}}" name="youtubeDays" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionDanger" name="youtube" type="checkbox" value="true" checked="checked"/>
+                            <label for="someSwitchOptionDanger" class="label-danger"></label>
+                          </div>
+                        {{else}}
+                          <input type="number" min="0" value="{{user.triggerFrequency.youtube.frequency}}" name="youtubeDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+                          <div class="material-switch pull-right">
+                            <input id="someSwitchOptionDanger" name="youtube" type="checkbox" value="true"/>
+                            <label for="someSwitchOptionDanger" class="label-danger"></label>
+                          </div>
+                        {{/if}}
+                      </li>
+                    </ul>
+                  </div>            
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary setTrigger">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col">
@@ -193,9 +394,10 @@
 
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
-                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <div class="mouse" data-toggle="modal" data-target="#triggers">Set Triggers</div>
+                  <a class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     {{me.username}}
-                    <span class=" fa fa-angle-down"></span>
+                    {{!-- <span class=" fa fa-angle-down"></span> --}}
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                     <li><a href="javascript:;"> Profile</a></li>
@@ -664,6 +866,25 @@
 
     <!-- Custom Theme Scripts -->
     <script src="../build/js/custom.min.js"></script>
+
+    {{!-- modal stuff --}}
+    <script type="text/javascript">
+      $("input[type='checkbox']").change(function() {
+        var textBox = $(this).closest('li').find(".day");
+
+        textBox.attr('disabled', !textBox.attr('disabled'));
+        if (textBox.attr('disabled')) {
+          textBox.css("background-color", "#ccc");
+        }
+        else {
+          textBox.css("background-color", "#fff");
+        }
+      });
+
+      $(".setTrigger").click(function() {
+        $(".triggerForm").submit();
+      })
+    </script>
 
     <!-- Datatables -->
     <script>

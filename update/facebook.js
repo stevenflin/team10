@@ -16,7 +16,7 @@ function pageViewsTotal(days, pageId){
 			   // console.log(!response ? 'error occurred' : response.error);
 			   reject(response.error);
 			  }
-			  console.log("PAGE VIEWS TOTAL",response.data[2].values)
+	
 			  resolve (response.data[2].values); //get's 28 day values
 		})
 	})
@@ -27,7 +27,7 @@ function time(days){
 	var days = days*24*60*60;
 	var until = Math.floor(Date.now() / 1000); //datenow
 	var since = until - days;
-	console.log("UNTIL AND SINCE ", until, since)
+	// console.log("UNTIL AND SINCE ", until, since)
 	return {until: until, since: since}
 }
 
@@ -61,7 +61,7 @@ function pagePosts(days, pageId){
 			  function (response) {
 			  	var arr = [];
 			  	var index= 0;
-			  	console.log("COOL SHIT", response.data);
+			  	// console.log("COOL SHIT", response.data);
 			  	var data = response.data.map(function(post){
 			  		return {postId: post.id, message: post.message, shares: (post.shares) ? post.shares.count : 0, date: new Date(post.created_time).getTime(),
 			  				likes: (post.likes)? post.likes.data.length : 0, comments: (post.comments)? post.comments.data.length : 0}
@@ -236,16 +236,15 @@ function facebookUpdate(user, twentyMinUpdate) {
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
 			if(err) return console.log(err)
-				console.log("718")
+	
 
 			FB.setAccessToken(user.facebook.token);
 
-			console.log("USER YO", user.facebook.pages)
 			if (user.facebook.pages.length === 0) {
-				console.log("asdsdasdasdasd")
+				
 				return resolve();
 			}
-			console.log("Yoyo", user.facebook.pages[0].pageId)
+			
 			var pageId = user.facebook.pages[0].pageId;
 			var functions= [ 
 				pageImpressions(92, pageId),
@@ -258,7 +257,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 			.all(functions)
 			.then((result) => { // create profile and profile snapshot here
 				// console.log("$$0")
-console.log("YOYOYO")
+
 				return new Promise(function(interResolve, interReject) {
 					if (!twentyMinUpdate) {
 						profile.facebook.last = result[4];
@@ -325,7 +324,7 @@ console.log("YOYOYO")
 							
 						})
 					} else {
-						console.log('123')
+					
 						profile.facebook.followers = result[4];
 						profile.save();
 						result[3].forEach(function(post, i) {
@@ -351,10 +350,10 @@ console.log("YOYOYO")
 					}
 			})
 			.then((latestPost)=>{
-				console.log("POST DATA in promise", latestPost)
+		
 				if(user.triggerFrequency.facebook && user.triggerFrequency.facebook.turnedOn){
 					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60; //Current unix time - allowed number of days in unix
-					console.log("DATE YO ", date)
+				
 					user.triggerFrequency.facebook.upToDate = latestPost.date > date ? false : true;
 					user.triggerFrequency.facebook.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
 					user.save();

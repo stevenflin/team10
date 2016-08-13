@@ -25,8 +25,7 @@ function vineInformation(username, password){
 		         function getVideos(page) {
 		         	client.user(userId, {page:page, size:20}, function(error, data){
 			         	if (error) return reject(error);
-			         		// console.log("actual fucking data", data)
-			         		// console.log("data", data.records[0].likes);
+			         	
 		         		resolve({user, data});
 
 			        })

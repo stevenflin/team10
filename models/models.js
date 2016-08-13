@@ -47,7 +47,7 @@ var user = new mongoose.Schema({
     password: String, 
     profile: Object
   },
-  triggerFrequency:{
+  triggerFrequency: {
     youtube: {
       lastPost: Number,
       turnedOn: Boolean,

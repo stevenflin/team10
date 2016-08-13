@@ -1,163 +1,149 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style>
+	<style>
 
-.list-group-item{
-  display: flex;
-  justify-content: flex-end;
-  vertical-align: middle;
-  padding: 15px;
-}
+		.list-group-item{
+			display: flex;
+			justify-content: flex-end;
+			vertical-align: middle;
+			padding: 15px;
+		}
 
-.material-switch > input[type="checkbox"] {
-    display: none;   
-}
+		.material-switch > input[type="checkbox"] {
+			display: none;   
+		}
 
-.material-switch > label {
-    cursor: pointer;
-    height: 0px;
-    position: relative; 
-    width: 40px;  
-}
+		.material-switch > label {
+			cursor: pointer;
+			height: 0px;
+			position: relative; 
+			width: 40px;  
+		}
 
-.material-switch > label::before {
-    background: rgb(0, 0, 0);
-    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    content: '';
-    height: 16px;
-    margin-top: -8px;
-    position:absolute;
-    opacity: 0.3;
-    transition: all 0.4s ease-in-out;
-    width: 40px;
-}
-.material-switch > label::after {
-    background: rgb(255, 255, 255);
-    border-radius: 16px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    content: '';
-    height: 24px;
-    left: -4px;
-    margin-top: -8px;
-    position: absolute;
-    top: -4px;
-    transition: all 0.3s ease-in-out;
-    width: 24px;
-}
-.material-switch > input[type="checkbox"]:checked + label::before {
-    background: inherit;
-    opacity: 0.5;
-}
-.material-switch > input[type="checkbox"]:checked + label::after {
-    background: inherit;
-    left: 20px;
-}
+		.material-switch > label::before {
+			background: rgb(0, 0, 0);
+			box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+			border-radius: 8px;
+			content: '';
+			height: 16px;
+			margin-top: -8px;
+			position:absolute;
+			opacity: 0.3;
+			transition: all 0.4s ease-in-out;
+			width: 40px;
+		}
+		.material-switch > label::after {
+			background: rgb(255, 255, 255);
+			border-radius: 16px;
+			box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+			content: '';
+			height: 24px;
+			left: -4px;
+			margin-top: -8px;
+			position: absolute;
+			top: -4px;
+			transition: all 0.3s ease-in-out;
+			width: 24px;
+		}
+		.material-switch > input[type="checkbox"]:checked + label::before {
+			background: inherit;
+			opacity: 0.5;
+		}
+		.material-switch > input[type="checkbox"]:checked + label::after {
+			background: inherit;
+			left: 20px;
+		}
 
-.day{
-    background-color: white;
-    width: 40%;
-    margin: 0 20%;
+		.day{
+			background-color: white;
+			width: 40%;
+			margin: 0 20%;
 /*     position: absolute;
     left: 20%;
     margin-top: -5px; */
 }
 
 </style>
-<script type="text/javascript">
-   $("input[type='checkbox']").change(function() {
-	  var textBox = $(this).closest('li').find(".day");
-	  
-	  textBox.attr('disabled', !textBox.attr('disabled'));
-	  if (textBox.attr('disabled')) {
-	    textBox.css("background-color", "#ccc");
-	  }
-	  else {
-	    textBox.css("background-color", "#fff");
-	  }
-	});
-   $("#submit").click(function(){
-    $.ajax({
-        type: "POST",
-        url: "http://localhost:3000/trigger",
-        data: {
-            type: $("input[type='checkbox']"),
-            frequent: $('.day')
-        },
-        success: function(d) {
-            //Position saved
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            //Something bad happened
-        }
-    });
-   });
-</script>
 </head>
 
 <body>
 	<div class="container">
-	  <h3 class="text-center">Notification Center</h3>
-	  <hr>
+		<h3 class="text-center">Notification Center</h3>
+		<hr>
 	</div>
 	<form method="post">
 		<div class="container">
-		  <div class="row">
-		      <div class="col-xs-12 col-sm-9 col-md-7 col-sm-offset-3 col-md-offset-4">
-		          <div class="panel panel-default">
-		              <!-- Default panel contents -->
-		              <div class="panel-heading">Social Media Platforms</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-9 col-md-7 col-sm-offset-3 col-md-offset-4">
+					<div class="panel panel-default">
+						<!-- Default panel contents -->
+						<div class="panel-heading">Social Media Platforms</div>
 
-		              <!-- List group -->
-		              <ul class="list-group">
-		                  <li class="list-group-item">
-		                     <p>Facebook</p>
-		                     <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
-		                    <div class="material-switch pull-right">
-		                      <input id="someSwitchOptionPrimary" name="facebook" type="checkbox" value="true"/>
-		                      <label for="someSwitchOptionPrimary" class="label-primary"></label>
-		                    </div>
-		                  </li>
-		                  <li class="list-group-item">
-		                    <p>Vine</p>
-		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
-		                      <div class="material-switch pull-right">
-		                          <input id="someSwitchOptionSuccess" name="vine" type="checkbox" value="true"/>
-		                          <label for="someSwitchOptionSuccess" class="label-success"></label>
-		                      </div>
-		                  </li>
-		                  <li class="list-group-item">
-		                    <p>Twitter</p>
-		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
-		                      <div class="material-switch pull-right">
-		                          <input id="someSwitchOptionInfo" name="twitter" type="checkbox" value="true"/>
-		                          <label for="someSwitchOptionInfo" class="label-info"></label>
-		                      </div>
-		                  </li>
-		                  <li class="list-group-item">
-		                    <p>Instagram</p>
-		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
-		                      <div class="material-switch pull-right">
-		                          <input id="someSwitchOptionWarning" name="instagram" type="checkbox" value="true"/>
-		                          <label for="someSwitchOptionWarning" class="label-warning"></label>
-		                      </div>
-		                  </li>
-		                  <li class="list-group-item">
-		                    <p>YouTube</p>
-		                    <input type="text" class="form-control day" aria-label="..." placeholder="Number of Days"/>
-		                      <div class="material-switch pull-right">
-		                          <input id="someSwitchOptionDanger" name="youtube" type="checkbox" value="true"/>
-		                          <label for="someSwitchOptionDanger" class="label-danger"></label>
-		                      </div>
-		                  </li>
-		                <input class="form-control btn btn-default" type="submit" value="Set Triggers">
-		              </ul>
-		          </div>            
-		      </div>
-		  </div>
+						<!-- List group -->
+						<ul class="list-group">
+							<li class="list-group-item">
+								<p>Facebook</p>
+								<input type="text" name="facebookDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+								<div class="material-switch pull-right">
+									<input id="someSwitchOptionPrimary" name="facebook" type="checkbox" value="true"/>
+									<label for="someSwitchOptionPrimary" class="label-primary"></label>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<p>Vine</p>
+								<input type="text" name="vineDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+								<div class="material-switch pull-right">
+									<input id="someSwitchOptionSuccess" name="vine" type="checkbox" value="true"/>
+									<label for="someSwitchOptionSuccess" class="label-success"></label>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<p>Twitter</p>
+								<input type="text" name="twitterDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+								<div class="material-switch pull-right">
+									<input id="someSwitchOptionInfo" name="twitter" type="checkbox" value="true"/>
+									<label for="someSwitchOptionInfo" class="label-info"></label>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<p>Instagram</p>
+								<input type="text" name="instagramDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+								<div class="material-switch pull-right">
+									<input id="someSwitchOptionWarning" name="instagram" type="checkbox" value="true"/>
+									<label for="someSwitchOptionWarning" class="label-warning"></label>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<p>YouTube</p>
+								<input type="text" name="youtubeDays" disabled="true" class="form-control day" aria-label="..." placeholder="Number of Days"/>
+								<div class="material-switch pull-right">
+									<input id="someSwitchOptionDanger" name="youtube" type="checkbox" value="true"/>
+									<label for="someSwitchOptionDanger" class="label-danger"></label>
+								</div>
+							</li>
+							<input class="form-control btn btn-default" type="submit" value="Set Triggers">
+						</ul>
+					</div>            
+				</div>
+			</div>
 		</div>
 	</form>
+
+	<script type="text/javascript">
+		$("input[type='checkbox']").change(function() {
+			var textBox = $(this).closest('li').find(".day");
+
+			textBox.attr('disabled', !textBox.attr('disabled'));
+			if (textBox.attr('disabled')) {
+				textBox.css("background-color", "#ccc");
+			}
+			else {
+				textBox.css("background-color", "#fff");
+			}
+		});
+
+	</script>
 
 </body>
 
