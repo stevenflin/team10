@@ -259,27 +259,76 @@ function facebookUpdate(user, twentyMinUpdate) {
 			.then((result) => { // create profile and profile snapshot here
 				// console.log("$$0")
 console.log("YOYOYO")
-				if (!twentyMinUpdate) {
-					profile.facebook.last = result[4];
-					profile.save();
-					new ProfileSnapshot({
-						platformId: user.facebook.id,
-						platform: 'facebook',
-						followers: result[4],
-						views: result[0][result[0].length-1].value,
-						posts: result[3].length,
-						date: new Date(),
-						profileId: profile._id
-					})
-					.save(function(err, p) {
-						console.log("ERR~~~~~~~~", err)
-						console.log("ERR~~~~~~~~", result)
+				return new Promise(function(interResolve, interReject) {
+					if (!twentyMinUpdate) {
+						profile.facebook.last = result[4];
+						profile.save();
+						new ProfileSnapshot({
+							platformId: user.facebook.id,
+							platform: 'facebook',
+							followers: result[4],
+							views: result[0][result[0].length-1].value,
+							posts: result[3].length,
+							date: new Date(),
+							profileId: profile._id
+						})
+						.save(function(err, p) {
+							console.log("ERR~~~~~~~~", err)
+							console.log("ERR~~~~~~~~", result)
 
-						// console.log('$$1')
-						if(err) return next(err);
-						console.log("YO YO YO",result[3])
+							// console.log('$$1')
+							if(err) return next(err);
+							console.log("YO YO YO",result[3])
+
+							var posts = [];
+							result[3].forEach(function(post, i) {
+								console.log('REACHED')
+
+								Post.findOrCreate({postId: post.postId}, {
+									description: post.message,
+									postId: post.postId,
+									type: 'facebook',
+									date: post.date,
+									profileId: profile._id
+								}, function(err, postData) {
+									console.log("HERE1")
+									
+									if(err) return next(err);
+									// snapshot it
+									new PostSnapshot({
+										profileId: p._id, 
+										postId: postData.postId,
+										comments: post.comments,
+										likes: post.likes,
+										shares: post.shares,
+										date: p.date
+									})
+									.save(function(err, psnap) {
+
+										if(err) return next(err);
+
+										postData.snapshots.push(psnap._id);
+										postData.save(function(err) {
+											if(err) return next(err);
+
+											posts.push(postData);
+											console.log("posts.length~~~~", posts.length,"result.length~~~~", result[3].length);
+
+											if (posts.length === result[3].length) {
+												console.log("laskmdlaskmdalskdm")
+												interResolve(posts[0])
+											}
+										})				
+									})
+								})
+							})
+							
+						})
+					} else {
+						console.log('123')
+						profile.facebook.followers = result[4];
+						profile.save();
 						result[3].forEach(function(post, i) {
-							console.log('REACHED')
 
 							Post.findOrCreate({postId: post.postId}, {
 								description: post.message,
@@ -288,71 +337,32 @@ console.log("YOYOYO")
 								date: post.date,
 								profileId: profile._id
 							}, function(err, postData) {
-								console.log("HERE1")
-								if(user.triggerFrequency.facebook && user.triggerFrequency.facebook.turnedOn){
-									var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60;
-									console.log("DATE YO ", date)
-									user.triggerFrequency.facebook.upToDate = postData[0].date < date ? false : true;
-									user.triggerFrequency.facebook.lastPost = Math.floor((postData[0].date - date)*60*60*24)
-									user.save();
-								}
-								if(err) return next(err);
-								// snapshot it
-								new PostSnapshot({
-									profileId: p._id, 
-									postId: postData.postId,
-									comments: post.comments,
-									likes: post.likes,
-									shares: post.shares,
-									date: p.date
-								})
-								.save(function(err, psnap) {
-
-									if(err) return next(err);
-
-									postData.snapshots.push(psnap._id);
-									postData.save(function(err) {
-										if(err) return next(err);
-										resolve();		
-									})				
-								})
-							})
-						})	
-					})
-				} else {
-					profile.facebook.followers = result[4];
-					profile.save();
-					result[3].forEach(function(post, i) {
-
-						Post.findOrCreate({postId: post.postId}, {
-							description: post.message,
-							postId: post.postId,
-							type: 'facebook',
-							date: post.date,
-							profileId: profile._id
-						}, function(err, postData) {
-							if (err) return console.log(err);
-															console.log("HERE2")
-
-								if(user.triggerFrequency.facebook && user.triggerFrequency.facebook.turnedOn){
-									var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60;
-									console.log("DATE YO ", date)
-									user.triggerFrequency.facebook.upToDate = postData[0].date < date ? false : true;
-									user.triggerFrequency.facebook.lastPost = Math.floor((postData[0].date - date)*60*60*24)
-									user.save();
-								}
-							postData.comments = post.comments;
-							postData.likes = post.likes;
-							postData.shares = post.shares;
-
-							postData.save(function(err, p) {
 								if (err) return console.log(err);
-								resolve();
+								postData.comments = post.comments;
+								postData.likes = post.likes;
+								postData.shares = post.shares;
+
+								postData.save(function(err, p) {
+									if (err) return console.log(err);
+									interResolve();
+								})
 							})
 						})
-					})
+					}
+			})
+			.then((latestPost)=>{
+				console.log("POST DATA in promise", latestPost)
+				if(user.triggerFrequency.facebook && user.triggerFrequency.facebook.turnedOn){
+					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60; //Current unix time - allowed number of days in unix
+					console.log("DATE YO ", date)
+					user.triggerFrequency.facebook.upToDate = latestPost.date > date ? false : true;
+					user.triggerFrequency.facebook.lastPost = Math.floor((Date.now()/1000-latestPost.date)/60/60/24);
+					user.save();
 				}
-			}).catch((err) => console.log(err))
+			})	
+			.catch((err) => console.log(err))
+
+		})
 		})
 	})
 }
