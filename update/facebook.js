@@ -234,13 +234,16 @@ function facebookUpdate(user, twentyMinUpdate) {
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
 			if(err) return console.log(err)
+				console.log("718")
 
 			FB.setAccessToken(user.facebook.token);
 
-
+			console.log("USER YO", user.facebook.pages)
 			if (user.facebook.pages.length === 0) {
+				console.log("asdsdasdasdasd")
 				return resolve();
 			}
+			console.log("Yoyo", user.facebook.pages[0])
 			var pageId = user.facebook.pages[0].pageId;
 			var functions= [ 
 				pageImpressions(92, pageId),
@@ -253,7 +256,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 			.all(functions)
 			.then((result) => { // create profile and profile snapshot here
 				// console.log("$$0")
-
+console.log("YOYOYO")
 				if (!twentyMinUpdate) {
 					profile.facebook.last = result[4];
 					profile.save();
@@ -272,6 +275,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 						if(err) return next(err);
 
 						result[3].forEach(function(post, i) {
+							console.log('REACHED')
 
 							Post.findOrCreate({postId: post.postId}, {
 								description: post.message,
@@ -280,8 +284,10 @@ function facebookUpdate(user, twentyMinUpdate) {
 								date: post.date,
 								profileId: profile._id
 							}, function(err, postData) {
+								console.log("HERE1")
 								if(user.triggerFrequency.facebook && user.triggerFrequency.facebook.turnedOn){
-									var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook*24*60*60;
+									var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60;
+									console.log("DATE YO ", date)
 									user.triggerFrequency.facebook.upToDate = postData[0].date < date ? false : true;
 									user.triggerFrequency.facebook.lastPost = Math.floor((postData[0].date - date)*60*60*24)
 									user.save();
@@ -322,7 +328,15 @@ function facebookUpdate(user, twentyMinUpdate) {
 							profileId: profile._id
 						}, function(err, postData) {
 							if (err) return console.log(err);
+															console.log("HERE2")
 
+								if(user.triggerFrequency.facebook && user.triggerFrequency.facebook.turnedOn){
+									var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60;
+									console.log("DATE YO ", date)
+									user.triggerFrequency.facebook.upToDate = postData[0].date < date ? false : true;
+									user.triggerFrequency.facebook.lastPost = Math.floor((postData[0].date - date)*60*60*24)
+									user.save();
+								}
 							postData.comments = post.comments;
 							postData.likes = post.likes;
 							postData.shares = post.shares;
