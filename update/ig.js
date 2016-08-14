@@ -73,7 +73,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 								}, function(err, postData){
 									// if(err) return console.log(err);
 									if (err) return next(err);
-									console.log("[creating post] for:", post.id);
+									// console.log("[creating post] for:", post.id);
 
 									// snapshot it
 									new PostSnapshot({

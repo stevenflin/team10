@@ -42,7 +42,7 @@ function vineInformation(username, password){
 
 
 function vineUpdate(user, twentyMinUpdate){
-	console.log("reached 9")
+	// console.log("reached 9")
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
 			if (err) return next(err);
@@ -53,7 +53,7 @@ function vineUpdate(user, twentyMinUpdate){
 
 			vineInformation(user.vine.username, user.vine.password)
 			.then(function(data){
-				console.log("REACHED")
+				// console.log("REACHED")
 				return new Promise(function(interResolve, interReject){
 
 					if (!twentyMinUpdate) {
@@ -95,17 +95,17 @@ function vineUpdate(user, twentyMinUpdate){
 									if(err) return next(err);
 									post.snapshots.push(psnap._id);
 									if(err) return next(err);
-									console.log("~~~~~~~~~~~~~~~~",postData)
+									// console.log("~~~~~~~~~~~~~~~~",postData)
 									post.save(function(err){
 										if(err) return next(err);
 										resolve();
-										console.log("VINE YAY", postData)
+										// console.log("VINE YAY", postData)
 										posts.push(postData);
-										console.log("VINE.length~~~~", posts.length,"VINE.length~~~~", data.data.records.length);
+										// console.log("VINE.length~~~~", posts.length,"VINE.length~~~~", data.data.records.length);
 
 										if (posts.length === data.data.records.length) {
-											console.log("vine")
-											console.log("VINE mane", posts)
+											// console.log("vine")
+											// console.log("VINE mane", posts)
 											interResolve(posts[0])
 										}
 									})

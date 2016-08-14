@@ -253,6 +253,7 @@ router.use(function(req, res, next) {
 		return res.redirect('/');
 	}
 });
+
 router.get('/update/trigger', (req, res, next)=>{
 	var daysMessage = "Here's when you last posted on your social media profiles:"
 	var userTrigger = req.user.triggerFrequency
@@ -283,7 +284,7 @@ router.get('/update/trigger', (req, res, next)=>{
 		daysMessage= daysMessage+" Vine: "+userTrigger.vine.lastPost+" days"
 		i++
 	}
-	console.log("IIIIIIIIIII~~~ ", i)
+	// console.log("IIIIIIIIIII~~~ ", i)
 	trigger(daysMessage)
 	i > 0 ? trigger(msg): trigger("You're up to date on all your profiles ~ Jake XOXO")
 })
@@ -347,7 +348,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 							on[key] = "true";
 						}
 					}
-					console.log('what does this look like......', on);
+					// console.log('what does this look like......', on);
 					res.render('dashboard', {
 						platformData: platformData,
 						postData: postData,
