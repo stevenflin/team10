@@ -11,3 +11,60 @@ a {
 	color: red;
 	cursor: pointer;
 }
+
+.grid {
+	display: flex; 
+	flex-direction: column; 
+	text-align: center; 
+	height: 100%;
+}
+
+.grid-row {
+	flex: 1; 
+	display: flex;
+}
+
+.grid-row:first-child {
+	border-bottom: 1px #737373 solid
+}
+
+.tile {
+	background-color: grey;
+	flex: 1;
+	border-right: 1px #737373 solid;
+	line-height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.tile > i {
+	font-size: 150px;
+}
+
+.tile:hover {
+	background-color: #737373;
+}
+
+.tile:hover > i {
+	font-size: 200px;
+}
+
+.color-tile {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.color-tile > i {
+	font-size: 150px;
+}
+
+.color-tile:hover {
+
+}
+
+.color-tile:hover > i {
+	font-size: 200px;
+}

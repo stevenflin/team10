@@ -1,76 +1,152 @@
-<form method="post" class="col-xs-6 col-xs-offset-3">
-	<h1>Integrations</h1>
+<style>
 
-	<div class="row">
-		<div class="col-xs-11">
-			<a href="/auth/facebook" class="form-control btn btn-default">Link your Facebook</a>
-		</div>
-		<div class="col-xs-1">
-			{{#if profile.facebook.displayName}}
-				<h2>O</h2>
-			{{else}}
-				<h2>X</h2>
-			{{/if}}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-11">
-			<a href="/auth/youtube" class="form-control btn btn-default">Link your Youtube</a>
-		</div>
-		<div class="col-xs-1">
-			{{#if profile.youtube.displayName}}
-				<h2>O</h2>
-			{{else}}
-				<h2>X</h2>
-			{{/if}}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-11">
-			<a href="/auth/instagram" class="form-control btn btn-default">Link your Instagram</a>
-		</div>
-		<div class="col-xs-1">
-			{{#if profile.instagram.displayName}}
-				<h2>O</h2>
-			{{else}}
-				<h2>X</h2>
-			{{/if}}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-11">
-			<a href="/auth/twitter"class="form-control btn btn-default">Link your Twitter</a>
-		</div>
-		<div class="col-xs-1">
-			{{#if profile.twitter.displayName}}
-				<h2>O</h2>
-			{{else}}
-				<h2>X</h2>
-			{{/if}}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-11">
-			<input class="form-control" type="text" name="username" placeholder="Vine Email">
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-11">
-			<input class="form-control" type="password" name="password" placeholder="Vine Password">
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-11">
-			<input class="form-control btn btn-default" type="submit" value="Link your Vine"/>
-		</div>
-		<div class="col-xs-1">
-			{{#if profile.vine.displayName}}
-				<h2>O</h2>
-			{{else}}
-				<h2>X</h2>
-			{{/if}}
-		</div>
-	</div>
-	<a href="/dashboard/{{userId}}"class="form-control btn btn-default">Dashboard</a>
-</form>
+	body {
+		background-color: white;
+	}
 
+	.vine:hover {
+		cursor: pointer;
+	}
+
+	.modal-body {
+      padding: 1;
+    }
+
+    .input {
+    	box-shadow: none;
+    	margin-bottom: 10px;
+    	border-color: #00a478;
+    	border-width: 0px;
+    	border-bottom-width: 1px;
+    }
+
+    .submit {
+    	border: none;
+    	border-radius: 0;
+    	background-color: #00a478;
+    	color: white;
+    }
+
+
+
+</style>
+<div id="vine" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+
+	  <!-- Modal content-->
+	  <div class="modal-content" {{!-- style="width: 300px" --}}>
+	    <div class="modal-header">
+	      <button type="button" class="close" data-dismiss="modal">&times;</button>
+	      <h4 class="modal-title">Integrate with Vine</h4>
+	    </div>
+	    <div class="modal-body">
+	    	<form method="post" style="width: 75%; margin: auto">
+			    <div class="row">
+					<input class="form-control input" type="text" name="username" placeholder="Vine Email">
+				</div>
+				<div class="row">
+					<input class="form-control input" type="password" name="password" placeholder="Vine Password">
+				</div> 
+				<div class="row">
+					<input class="form-control btn btn-default submit" type="submit" value="Submit"/>
+				</div>
+			</form>
+	    </div>
+	  </div>
+
+	</div>
+</div>
+
+<div class="grid">
+	<div class="grid-row">
+		{{#if profile.facebook.displayName}}
+		<a href="/auth/facebook" class="color-tile" style="background-color: #3B5998">
+			<i class="fa fa-facebook" style="color: white"></i>
+		</a>
+		{{else}}
+		<a href="/auth/facebook" class="tile">
+			<i class="fa fa-facebook" style="color: white"></i>
+		</a>
+		{{/if}}
+		{{#if profile.youtube.displayName}}
+		<a href="/auth/youtube" class="color-tile" style="background-color: #e52d27">
+			<i class="fa fa-youtube-square" style="color: white"></i>
+		</a>
+		{{else}}
+		<a href="/auth/youtube" class="tile">
+			<i class="fa fa-youtube-square" style="color: white"></i>
+		</a>
+		{{/if}}
+		{{#if profile.instagram.displayName}}
+		<a href="/auth/instagram" class="color-tile" style="background-color: #ffc838">
+			<i class="fa fa-instagram" style="color: white"></i>
+		</a>
+		{{else}}
+		<a href="/auth/instagram" class="tile">
+			<i class="fa fa-instagram" style="color: white"></i>
+		</a>
+		{{/if}}
+	</div>
+	<div class="grid-row">
+		{{#if profile.twitter.displayName}}
+		<a href="/auth/twitter" class="color-tile" style="background-color: #4099FF">
+			<i class="fa fa-twitter" style="color: white"></i>
+		</a>
+		{{else}}
+		<a href="/auth/twitter" class="tile">
+			<i class="fa fa-twitter" style="color: white"></i>
+		</a>
+		{{/if}}
+		{{#if profile.vine.displayName}}
+		<div class="vine color-tile" style="background-color: #00a478" data-toggle="modal" data-target="#vine">
+			<i class="fa fa-vine" style="color: white"></i>
+		</div>
+		{{else}}
+		<div class="vine tile" data-toggle="modal" data-target="#vine">
+			<i class="fa fa-vine" style="color: white"></i>
+		</div>
+		{{/if}}
+		<a href="/dashboard/{{userId}}" class="color-tile" style="background-color: black">
+			<i class="fa fa-bar-chart" style="color: white"></i>
+	    </a>
+	</div>
+</div>
+
+
+
+{{!-- <form method="post" style="text-align: center; height: 100%">
+	<div class="row" style="height: 100%">
+		<a href="/auth/facebook"><div class="col-xs-4" style="height: 100%">
+			<div style="height: 50%; background-color: #3B5998; margin: auto">
+				<i class="fa fa-facebook" style="font-size: 150px; color: white"></i>
+			</div>
+		</div></a>
+		<a href="/auth/youtube"><div class="col-xs-4">
+			<div style="padding: 30px; background-color: #e52d27; width: 210px; margin: auto">
+				<i class="fa fa-youtube-square" style="font-size: 150px; color: white"></i>
+			</div>
+		</div></a>
+		<a href="/auth/instagram"><div class="col-xs-4">
+			<div style="padding: 30px; background-color: #ffc838; width: 210px; margin: auto">
+				<i class="fa fa-instagram" style="font-size: 150px; color: white"></i>
+			</div>
+		</div></a>
+	</div>
+	<div class="row">
+		<a href="/auth/twitter"><div class="col-xs-4">
+			<div style="padding: 30px; background-color: #4099FF; width: 210px; margin: auto">
+				<i class="fa fa-twitter" style="font-size: 150px; color: white"></i>
+			</div>
+		</div></a>
+		<div class="col-xs-4 vine">
+			<div style="padding: 30px; background-color: #00a478; width: 210px; margin: auto" data-toggle="modal" data-target="#vine">
+				<i class="fa fa-vine" style="font-size: 150px; color: white"></i>
+			</div>
+		</div>
+		<a href="/dashboard/{{userId}}"><div class="col-xs-4">
+			<div style="padding-top: 70px; background-color: black; height: 210px; width: 210px; margin: auto">
+				<h1 style="color: white">Dashboard</h1>
+			</div>
+		</div></a>
+	</div>
+</form> --}}
