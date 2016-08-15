@@ -200,9 +200,9 @@ function youtubeUpdate(user, twentyMinUpdate) {
 				if(user.triggerFrequency.youtube && user.triggerFrequency.youtube){
 					console.log("User trigger frequency", user.triggerFrequency.youtube.frequency);
 					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.youtube.frequency*24*60*60; 
-					console.log(date)
+					console.log("youtube mane ",date)
 					console.log(latestPost.date/1000)//Current unix time - allowed number of days in unix
-					user.triggerFrequency.youtube.upToDate = latestPost.date/1000 > date ? false : true;
+					user.triggerFrequency.youtube.upToDate = latestPost.date/1000 < date ? false : true;
 					user.triggerFrequency.youtube.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
 					user.save();
 				}

@@ -13,7 +13,7 @@ function sendMessage(triggerMessage, number){
 		        console.log('Message sent on:' + message.dateCreated);
 		        resolve()
 		    } else {
-		        console.log('Oops! There was an error sending the message your highness.', error);
+		        console.log('Oops! There was an error sending the message.', error);
 		        reject(error);
 		    }
 		});
