@@ -27,7 +27,7 @@ function twitterInformation(accessToken, accessTokenSecret, id){
 function twitterUpdate(user, twentyMinUpdate){
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
-			if (err) return next(err);
+			if (err) return console.log(err);
 			if (!user.twitter.twitterToken) {
 				return resolve();
 			}
