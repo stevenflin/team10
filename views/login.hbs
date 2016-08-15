@@ -112,6 +112,18 @@ form button:hover {
 a {
   text-decoration: none;
   color: white;
+  appearance: none;
+  background-color: white;
+  border: 1px solid white;
+  width: 250px;
+  cursor: pointer;
+  transition-duration: 0.25s;
+  border-radius: 3px;
+  padding: 10px 15px;
+  margin: 0 auto 10px auto;
+  display: block;
+  text-align: center;
+  font-size: 18px;
 }
 #register-button {
   border: 1px solid #1F6BA0;
@@ -132,7 +144,7 @@ a {
 				<input type="text" name="username" placeholder="Username">
 				<input type="password" name="password" placeholder="Password">
 				<button type="submit" id="login-button">Login</button>
-				<button id="register-button"><a href="/register">Register</a></button>
+				<a href="/register" id="register-button">Register</a>
 			</form>
 		</div>
 	</div>
