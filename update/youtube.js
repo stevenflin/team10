@@ -106,8 +106,8 @@ function youtubeUpdate(user, twentyMinUpdate) {
 	return new Promise(function(resolve, reject) {
 		getYoutubeData(user.youtube.profile.id)
 		.then(function(data) {
-			return new Promise(function(interResolve, interReject){
-					Profile.findOne({userId: user._id},function(err, profile) {
+			return new Promise(function(interResolve, interReject) {
+				Profile.findOne({userId: user._id},function(err, profile) {
 					if (err) return next(err);
 
 					if (data.videos.length === 0) {
@@ -153,12 +153,11 @@ function youtubeUpdate(user, twentyMinUpdate) {
 										posts.push(post);
 										console.log("Youtube.length~~~~", posts.length,"Youtube.length~~~~", data.videos.length);
 
-											if (posts.length === data.videos.length) {
-												console.log("youtube")
-												console.log("youtube mane", posts)
-												interResolve(posts[0])
-											}
-
+										if (posts.length === data.videos.length) {
+											console.log("youtube")
+											console.log("youtube mane", posts)
+											interResolve(posts[0])
+										}
 										post.snapshots.push(psnap._id);
 										post.save(function(err) {
 											if (err) return next(err);
@@ -200,9 +199,9 @@ function youtubeUpdate(user, twentyMinUpdate) {
 				if(user.triggerFrequency.youtube && user.triggerFrequency.youtube){
 					console.log("User trigger frequency", user.triggerFrequency.youtube.frequency);
 					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.youtube.frequency*24*60*60; 
-					console.log(date)
+					console.log("youtube mane ",date)
 					console.log(latestPost.date/1000)//Current unix time - allowed number of days in unix
-					user.triggerFrequency.youtube.upToDate = latestPost.date/1000 > date ? false : true;
+					user.triggerFrequency.youtube.upToDate = latestPost.date/1000 < date ? false : true;
 					user.triggerFrequency.youtube.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
 					user.save();
 				}

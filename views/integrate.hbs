@@ -27,34 +27,41 @@
     	color: white;
     }
 
+    .mod {
+	    transform: translateY(calc(50vh + 20px) ) !important;
+    }
+
+    .inner-mod {
+    	width: 300px;
+    	margin: 0 auto;
+    }
 
 
 </style>
-<div id="vine" class="modal fade" role="dialog">
-	<div class="modal-dialog">
-
-	  <!-- Modal content-->
-	  <div class="modal-content" {{!-- style="width: 300px" --}}>
-	    <div class="modal-header">
-	      <button type="button" class="close" data-dismiss="modal">&times;</button>
-	      <h4 class="modal-title">Integrate with Vine</h4>
-	    </div>
-	    <div class="modal-body">
-	    	<form method="post" style="width: 75%; margin: auto">
-			    <div class="row">
-					<input class="form-control input" type="text" name="username" placeholder="Vine Email">
-				</div>
-				<div class="row">
-					<input class="form-control input" type="password" name="password" placeholder="Vine Password">
-				</div> 
-				<div class="row">
-					<input class="form-control btn btn-default submit" type="submit" value="Submit"/>
-				</div>
-			</form>
-	    </div>
-	  </div>
+	<div id="vine" class="modal fade" role="dialog">
+		<div class="modal-dialog mod">
+		  <!-- Modal content-->
+		  <div class="modal-content inner-mod" >
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Integrate with Vine</h4>
+		    </div>
+		    <div class="modal-body">
+		    	<form method="post" style="width: 75%; margin: auto">
+				    <div class="row">
+						<input class="form-control input" type="text" name="username" placeholder="Vine Email">
+					</div>
+					<div class="row">
+						<input class="form-control input" type="password" name="password" placeholder="Vine Password">
+					</div> 
+					<div class="row">
+						<input class="form-control btn btn-default submit" type="submit" value="Submit"/>
+					</div>
+				</form>
+		    </div>
+		  </div>
+		</div>
 	</div>
-</div>
 
 <div class="grid">
 	<div class="grid-row">
@@ -110,42 +117,3 @@
 	    </a>
 	</div>
 </div>
-
-
-
-{{!-- <form method="post" style="text-align: center; height: 100%">
-	<div class="row" style="height: 100%">
-		<a href="/auth/facebook"><div class="col-xs-4" style="height: 100%">
-			<div style="height: 50%; background-color: #3B5998; margin: auto">
-				<i class="fa fa-facebook" style="font-size: 150px; color: white"></i>
-			</div>
-		</div></a>
-		<a href="/auth/youtube"><div class="col-xs-4">
-			<div style="padding: 30px; background-color: #e52d27; width: 210px; margin: auto">
-				<i class="fa fa-youtube-square" style="font-size: 150px; color: white"></i>
-			</div>
-		</div></a>
-		<a href="/auth/instagram"><div class="col-xs-4">
-			<div style="padding: 30px; background-color: #ffc838; width: 210px; margin: auto">
-				<i class="fa fa-instagram" style="font-size: 150px; color: white"></i>
-			</div>
-		</div></a>
-	</div>
-	<div class="row">
-		<a href="/auth/twitter"><div class="col-xs-4">
-			<div style="padding: 30px; background-color: #4099FF; width: 210px; margin: auto">
-				<i class="fa fa-twitter" style="font-size: 150px; color: white"></i>
-			</div>
-		</div></a>
-		<div class="col-xs-4 vine">
-			<div style="padding: 30px; background-color: #00a478; width: 210px; margin: auto" data-toggle="modal" data-target="#vine">
-				<i class="fa fa-vine" style="font-size: 150px; color: white"></i>
-			</div>
-		</div>
-		<a href="/dashboard/{{userId}}"><div class="col-xs-4">
-			<div style="padding-top: 70px; background-color: black; height: 210px; width: 210px; margin: auto">
-				<h1 style="color: white">Dashboard</h1>
-			</div>
-		</div></a>
-	</div>
-</form> --}}
