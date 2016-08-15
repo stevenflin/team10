@@ -35,7 +35,7 @@ function twitterUpdate(user, twentyMinUpdate){
 			// get twitter info
 			twitterInformation(user.twitter.twitterToken, user.twitter.twitterTokenSecret)
 			.then(function(data) {
-			return new Promise(function(interResolve, interReject){
+				return new Promise(function(interResolve, interReject) {
 					if (!twentyMinUpdate) {
 						profile.twitter.last = data[0].user.followers_count;
 						profile.save();
@@ -47,8 +47,8 @@ function twitterUpdate(user, twentyMinUpdate){
 							date: new Date(),
 							profileId: profile._id
 						})
-						.save(function(err, p){
-							if(err) return next(err);
+						.save(function(err, p) {
+							if (err) return reject(err);
 
 							// iterate through posts
 							var posts =[];
@@ -77,12 +77,11 @@ function twitterUpdate(user, twentyMinUpdate){
 										post.snapshots.push(psnap._id);
 										post.save(function(err){
 											if(err) return next(err);
-										posts.push(postData);
-										console.log("posts.length~~~~", posts.length,"result.length~~~~", data.length);
-										if (posts.length === data.length) {
-											interResolve(posts[0])
-										}
-										resolve();
+											posts.push(postData);
+											if (posts.length === data.length) {
+												interResolve(posts[0])
+											}
+											resolve();
 										})				
 									})
 								})
@@ -91,7 +90,7 @@ function twitterUpdate(user, twentyMinUpdate){
 					} else {
 						profile.twitter.followers = data[0].user.followers_count;
 						profile.save();
-						data.forEach(function(postData, i){
+						data.forEach(function(postData, i) {
 
 							// If post doesn't exist, create it
 							Post.findOrCreate({postId: postData.id}, {
@@ -115,14 +114,14 @@ function twitterUpdate(user, twentyMinUpdate){
 					}
 				})
 				.then((latestPost)=>{
-				if(user.triggerFrequency.twitter && user.triggerFrequency.twitter.turnedOn){
-					var unixTime = new Date(latestPost.created_at).getTime();
-					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.twitter.frequency*24*60*60; //Current unix time - allowed number of days in unix
-					user.triggerFrequency.twitter.upToDate = unixTime > date ? false : true;
-					user.triggerFrequency.twitter.lastPost = Math.floor((Date.now()-unixTime)/1000/60/60/24);
-					user.save();
-				}
-			})	
+					if(user.triggerFrequency.twitter && user.triggerFrequency.twitter.turnedOn) {
+						var unixTime = new Date(latestPost.created_at).getTime();
+						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.twitter.frequency*24*60*60; //Current unix time - allowed number of days in unix
+						user.triggerFrequency.twitter.upToDate = unixTime > date ? false : true;
+						user.triggerFrequency.twitter.lastPost = Math.floor((Date.now()-unixTime)/1000/60/60/24);
+						user.save();
+					}
+				})	
 			}).catch((err) => console.log(err))
 		})
 	})
@@ -132,6 +131,5 @@ function twitterUpdate(user, twentyMinUpdate){
 
 
 module.exports = {
-	twitterInformation: twitterInformation,
 	twitterUpdate: twitterUpdate
 }

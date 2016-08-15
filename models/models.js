@@ -44,7 +44,9 @@ var user = new mongoose.Schema({
   },
   vine: {
     username: String,
-    password: String, 
+    password: String,
+    authToken: String,
+    userId: String,
     profile: Object
   },
   triggerFrequency: {

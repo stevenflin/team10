@@ -100,6 +100,17 @@ module.exports = function(passport) {
 
   //VINE
 
+  router.post('/auth/vine', function(req, res, next) {
+    req.user.vine = {
+      authToken: req.body.token,
+      userId: req.body.id
+    }
+    req.user.save();
+    // console.log('[BODY]', req.body);
+    // console.log('[USER]', req.user);
+    // res.sendStatus(200);
+  })
+
   router.post('/integrate', function(req, res, next){
 
     req.user.vine = {

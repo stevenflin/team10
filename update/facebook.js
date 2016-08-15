@@ -272,16 +272,16 @@ function facebookUpdate(user, twentyMinUpdate) {
 							profileId: profile._id
 						})
 						.save(function(err, p) {
-							console.log("ERR~~~~~~~~", err)
-							console.log("ERR~~~~~~~~", result)
+							// console.log("ERR~~~~~~~~", err)
+							// console.log("ERR~~~~~~~~", result)
 
 							// console.log('$$1')
 							if(err) return next(err);
-							console.log("YO YO YO",result[3])
+							// console.log("YO YO YO",result[3])
 
 							var posts = [];
 							result[3].forEach(function(post, i) {
-								console.log('REACHED')
+								// console.log('REACHED')
 
 								Post.findOrCreate({postId: post.postId}, {
 									description: post.message,
@@ -290,7 +290,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 									date: post.date,
 									profileId: profile._id
 								}, function(err, postData) {
-									console.log("HERE1")
+									// console.log("HERE1")
 									
 									if(err) return next(err);
 									// snapshot it
@@ -311,10 +311,10 @@ function facebookUpdate(user, twentyMinUpdate) {
 											if(err) return next(err);
 
 											posts.push(postData);
-											console.log("posts.length~~~~", posts.length,"result.length~~~~", result[3].length);
+											// console.log("posts.length~~~~", posts.length,"result.length~~~~", result[3].length);
 
 											if (posts.length === result[3].length) {
-												console.log("laskmdlaskmdalskdm")
+												// console.log("laskmdlaskmdalskdm")
 												interResolve(posts[0])
 											}
 										})				
