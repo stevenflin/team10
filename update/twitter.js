@@ -114,7 +114,7 @@ function twitterUpdate(user, twentyMinUpdate){
 					}
 				})
 				.then((latestPost)=>{
-					if(user.triggerFrequency.twitter && user.triggerFrequency.twitter.turnedOn) {
+					if(user.triggerFrequency.twitter.turnedOn) {
 						var unixTime = new Date(latestPost.created_at).getTime();
 						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.twitter.frequency*24*60*60; //Current unix time - allowed number of days in unix
 						user.triggerFrequency.twitter.upToDate = unixTime < date ? false : true;

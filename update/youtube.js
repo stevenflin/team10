@@ -106,8 +106,8 @@ function youtubeUpdate(user, twentyMinUpdate) {
 	return new Promise(function(resolve, reject) {
 		getYoutubeData(user.youtube.profile.id)
 		.then(function(data) {
-			return new Promise(function(interResolve, interReject){
-					Profile.findOne({userId: user._id},function(err, profile) {
+			return new Promise(function(interResolve, interReject) {
+				Profile.findOne({userId: user._id},function(err, profile) {
 					if (err) return next(err);
 
 					if (data.videos.length === 0) {
@@ -153,12 +153,11 @@ function youtubeUpdate(user, twentyMinUpdate) {
 										posts.push(post);
 										console.log("Youtube.length~~~~", posts.length,"Youtube.length~~~~", data.videos.length);
 
-											if (posts.length === data.videos.length) {
-												console.log("youtube")
-												console.log("youtube mane", posts)
-												interResolve(posts[0])
-											}
-
+										if (posts.length === data.videos.length) {
+											console.log("youtube")
+											console.log("youtube mane", posts)
+											interResolve(posts[0])
+										}
 										post.snapshots.push(psnap._id);
 										post.save(function(err) {
 											if (err) return next(err);
