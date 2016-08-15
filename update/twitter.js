@@ -27,7 +27,7 @@ function twitterInformation(accessToken, accessTokenSecret, id){
 function twitterUpdate(user, twentyMinUpdate){
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
-			if (err) return next(err);
+			if (err) return console.log(err);
 			if (!user.twitter.twitterToken) {
 				return resolve();
 			}
@@ -117,7 +117,7 @@ function twitterUpdate(user, twentyMinUpdate){
 					if(user.triggerFrequency.twitter.turnedOn) {
 						var unixTime = new Date(latestPost.created_at).getTime();
 						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.twitter.frequency*24*60*60; //Current unix time - allowed number of days in unix
-						user.triggerFrequency.twitter.upToDate = unixTime > date ? false : true;
+						user.triggerFrequency.twitter.upToDate = unixTime < date ? false : true;
 						user.triggerFrequency.twitter.lastPost = Math.floor((Date.now()-unixTime)/1000/60/60/24);
 						user.save();
 					}

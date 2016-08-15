@@ -255,38 +255,49 @@ router.use(function(req, res, next) {
 });
 
 router.get('/update/trigger', (req, res, next)=>{
-	var daysMessage = "Here's when you last posted on your social media profiles:"
-	var userTrigger = req.user.triggerFrequency
-	var i = 0;
-	var msg = "You're behind on posting to your  "
-	if(userTrigger.youtube.turnedOn){
-		userTrigger.youtube.upToDate ?  console.log("Nothing was sent") : msg = msg + "Youtube, "
-		daysMessage = daysMessage +" Youtube: "+userTrigger.youtube.lastPost+" days"
-		i++
-	}
-	if(userTrigger.instagram.turnedOn){
-		userTrigger.instagram.upToDate ?  console.log("Nothing was sent") : msg = msg + "Instagram", 
-		daysMessage = daysMessage +" Instagram: "+userTrigger.instagram.lastPost+" days"
-		i++
-	}
-	if(userTrigger.twitter.turnedOn){
-		userTrigger.twitter.upToDate ?  console.log("Nothing was sent") : msg = msg + "Twitter, "
-		daysMessage = daysMessage +" Twitter: "+userTrigger.twitter.lastPost+" days"
-		i++
-	}
-	if(userTrigger.facebook.turnedOn){
-		userTrigger.facebook.upToDate ?  console.log("Nothing was sent") : msg = msg + "Facebook, "
-		daysMessage= daysMessage+" Facebook: "+userTrigger.facebook.lastPost+" days"
-		i++
-	}
-	if(userTrigger.vine.turnedOn){
-		userTrigger.vine.upToDate ?  console.log("Nothing was sent") : msg = msg + "Vine, "
-		daysMessage= daysMessage+" Vine: "+userTrigger.vine.lastPost+" days"
-		i++
-	}
-	// console.log("IIIIIIIIIII~~~ ", i)
-	trigger(daysMessage)
-	i > 0 ? trigger(msg): trigger("You're up to date on all your profiles ~ Jake XOXO")
+	User.find(function(err, users){
+		if(err){
+			console.log("ERROR IN FINDING USERS", err)
+		}
+		else{
+			users.forEach((user)=> {
+				console.log(user);
+				var daysMessage = "Here's when you last posted on your social media profiles:"
+				var userTrigger = req.user.triggerFrequency
+				var i = 0;
+				var msg = "You're behind on posting to the folllowing profiles: "
+				if(userTrigger.youtube.turnedOn){
+					userTrigger.youtube.upToDate ?  console.log("Nothing was sent") : msg = msg + " Youtube"
+					daysMessage = daysMessage +" Youtube: "+userTrigger.youtube.lastPost+" days"
+					i++
+				}
+				if(userTrigger.instagram.turnedOn){
+					userTrigger.instagram.upToDate ?  console.log("Nothing was sent") : msg = msg + " Instagram", 
+					daysMessage = daysMessage +" Instagram: "+userTrigger.instagram.lastPost+" days"
+					i++
+				}
+				if(userTrigger.twitter.turnedOn){
+					userTrigger.twitter.upToDate ?  console.log("Nothing was sent") : msg = msg + " Twitter"
+					daysMessage = daysMessage +" Twitter: "+userTrigger.twitter.lastPost+" days"
+					i++
+				}
+				if(userTrigger.facebook.turnedOn){
+					userTrigger.facebook.upToDate ?  console.log("Nothing was sent") : msg = msg + " Facebook"
+					daysMessage= daysMessage+" Facebook: "+userTrigger.facebook.lastPost+" days"
+					i++
+				}
+				if(userTrigger.vine.turnedOn){
+					userTrigger.vine.upToDate ?  console.log("Nothing was sent") : msg = msg + " Vine"
+					daysMessage= daysMessage+" Vine: "+userTrigger.vine.lastPost+" days"
+					i++
+				}
+				// console.log("IIIIIIIIIII~~~ ", i)
+				trigger(daysMessage, user.phoneNumber)
+				i > 0 ? trigger(msg): trigger("You're up to date on all your profiles ~ Jake XOXO", user.phoneNumber)
+			})
+		}
+	})
+	
 })
 
 // DASHBOARD ROUTES

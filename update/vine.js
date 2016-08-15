@@ -155,7 +155,7 @@ function vineUpdate(user, twentyMinUpdate){
 					console.log("Vine Frequency", user.triggerFrequency.vine.frequency)
 					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.vine.frequency*24*60*60; //Current unix time - allowed number of days in unix
 					console.log(date, "DATE")
-					user.triggerFrequency.vine.upToDate = unixTime > date ? false : true;
+					user.triggerFrequency.vine.upToDate = unixTime < date ? false : true;
 					user.triggerFrequency.vine.lastPost = Math.floor((Date.now()-unixTime)/1000/60/60/24);
 					user.save();
 				}
