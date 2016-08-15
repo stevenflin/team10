@@ -364,6 +364,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 						platformData: platformData,
 						postData: postData,
 						user: user,
+						admin: req.user.isAdmin,
 						userArray: userArray,
 						me: req.user,
 						change,
