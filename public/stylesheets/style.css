@@ -3,8 +3,13 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.fa-bars {
+	color: #737373;
+}
+
+.nav-md, .nav-sm, .nav-lg, .nav_title, .left_col {
+	background-color: #333333;
+	color: #737373;
 }
 
 .mouse:hover {
