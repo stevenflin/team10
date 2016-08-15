@@ -40,11 +40,12 @@ body :-ms-input-placeholder {
   font-weight: 300;
 }
 .wrapper {
-  background: #2A3F54;
   position: relative;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  background: rgba(0,0,0,0.8) url(../images/team10.jpeg) no-repeat;
+  background-blend-mode: overlay;
+  background-size: cover; 
 }
 .wrapper.form-success .container h1 {
   transform: translateY(85px);
@@ -126,11 +127,12 @@ a {
   font-size: 18px;
 }
 #register-button {
-  border: 1px solid #1F6BA0;
+  border: 1px solid white;
   background: transparent;
 }
 #register-button:hover {
-  background-color: rgba(31,107,160,.5);
+  color: white;
+  background-color: rgba(0,0,0,.5);
 }
 
 </style>

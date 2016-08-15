@@ -330,7 +330,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 				var direction = {};
 				platforms.map((p) => {
 					if (platformData.recent[p]) {
-						change[p] = parseInt(((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100);
+						change[p] = (((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100).toFixed(2);
 						if (change[p] > 0) {
 							direction[p] = {
 								up: true,
@@ -359,7 +359,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 							on[key] = "true";
 						}
 					}
-					// console.log('what does this look like......', on);
+					console.log('what does this look like......', platformData.snaps.youtube[0]);
 					res.render('dashboard', {
 						platformData: platformData,
 						postData: postData,
