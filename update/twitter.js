@@ -120,11 +120,11 @@ function twitterUpdate(user, twentyMinUpdate){
 					}
 				})
 				.then((latestPost)=>{
-					console.log('what does this look like..........', latestPost)
+					// console.log('what does this look like..........', latestPost)
 					if(user.triggerFrequency.twitter.turnedOn) {
 						var daysSinceLastPost = Math.floor((new Date() - latestPost.date) / (1000 * 60 * 60 * 24)); // Current unix time - allowed number of days in unix
 						user.triggerFrequency.twitter.lastPost = daysSinceLastPost;
-						console.log("[apparently the days since last post]", daysSinceLastPost);
+						// console.log("[apparently the days since last post]", daysSinceLastPost);
 
 						// has this use updated within the last day?
 						user.triggerFrequency.twitter.upToDate = (daysSinceLastPost - user.triggerFrequency.twitter.frequency > 0) ? false : true;

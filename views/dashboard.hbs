@@ -117,8 +117,15 @@
   #logout {
     background-color: black;
     color: white;
+    width: 50%;
+    border-left: 1px white solid;
   }
 
+  #integrate {
+    background-color: black;
+    color: white;
+    width: 50%;
+  }
 </style>
 
 <body class="nav-md">
@@ -375,21 +382,23 @@
           <!-- /sidebar menu -->
 
           <!-- /menu footer buttons -->
-          <a href="/logout" id="logout"><div class="sidebar-footer hidden-small black" style="text-align: center">
-            <p>Logout</p>
-            {{!-- <a data-toggle="tooltip" data-placement="top" title="Settings">
+          {{!-- <a href="/logout" id="logout">
+            <p>Logout</p> --}}
+            <div class="sidebar-footer hidden-small black" style="text-align: center">
+            <a data-toggle="tooltip" data-placement="top" title="Back to integration" id="integrate" href="/integrate">
               <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-            </a> --}}
+            </a>
             {{!-- <a data-toggle="tooltip" data-placement="top" title="FullScreen">
               <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
             </a>
             <a data-toggle="tooltip" data-placement="top" title="Lock">
               <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="Logout">
-              <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
             </a> --}}
-          </div></a>
+            <a data-toggle="tooltip" data-placement="top" title="Logout" id="logout" href="/logout">
+              <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+            </a>
+          {{!-- </div></a> --}}
+          </div>
           <!-- /menu footer buttons -->
         </div>
       </div>

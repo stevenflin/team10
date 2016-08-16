@@ -7,6 +7,12 @@ var facebook = require('fb');
 var twilio = require('../test/trigger.js');
 var trigger = twilio.sendMessage;
 
+var update = require('../update/update');
+var updateDaily = update.updateDaily;
+var updateFrequent = update.updateFrequent;
+var clear1 = update.clearProfileSnaps;
+var clear2 = update.clearPostSnaps;
+
 var facebook = require('../update/facebook');
 var facebookUpdate = facebook.facebookUpdate;
 
@@ -62,6 +68,7 @@ module.exports = function(passport) {
   router.post('/login', 
     passport.authenticate('local', { failureRedirect: '/login' }),
     function(req, res, next) {
+
       Profile.findOne({userId: req.user._id}, function(err, profile) {
         if (err) return next(err);
         if(profile.youtube.displayName
@@ -124,62 +131,26 @@ module.exports = function(passport) {
   });
 
   router.get('/update', (req, res, next) => {
-    User.find(function(err, users) {
-      users.forEach(function(user) {
-        instagramUpdate(user)
-        .then(() => {
-          console.log('instagram......success');
-          youtubeUpdate(user)
-        })
-        .then(() => {
-          console.log('youtube........success');
-          twitterUpdate(user)
-        })
-        .then(() => {
-          console.log('twitter........success');
-          vineUpdate(user)
-        })
-        .then(() => {
-          console.log('vine...........success');
-          facebookUpdate(user)
-        }) //fix pauses the update route
-        .then(() => {
-          console.log('facebook.......success');
-          res.sendStatus(200);
-        });
-      });
+    clear1()
+    .then(() => {
+      console.log('clearing profile snaps................');
+      clear2()
+    })
+    .then(() => {
+      console.log('clearing post snaps....................');
+      updateDaily()
+    })
+    .then(() => {
+      console.log('updating all posts and snaps..............');
+      res.sendStatus(200);
     });
   });
 
   // call this FUNction every 20 minutes, does not make snapshots
 
   router.get('/update/frequent', (req, res, next) => {
-      User.find(function(err, users) {
-          users.forEach(function(user) {
-              var isTwenty = true;
-              instagramUpdate(user, isTwenty)
-              .then(() => {
-                  console.log('instagram......success');
-                  youtubeUpdate(user, isTwenty)
-              })
-              .then(() => {
-                  console.log('youtube........success');
-                  twitterUpdate(user, isTwenty)
-              })
-              .then(() => {
-                  console.log('twitter........success');
-                  vineUpdate(user, isTwenty)
-              })
-              .then(() => {
-                  console.log('vine...........success');
-                  facebookUpdate(user, isTwenty)
-              })
-              .then(() => {
-                  console.log('facebook.......success');
-                  res.sendStatus(200);
-              });
-          });
-      });
+    updateFrequent()
+    .then(() => res.sendStatus(200));
   });
 
   router.get('/update/trigger', (req, res, next) => {
