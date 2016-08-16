@@ -53,6 +53,7 @@ function twitterUpdate(user, twentyMinUpdate){
 							// iterate through posts
 							var posts =[];
 							data.forEach(function(postData, i){
+								// console.log('what does this look like.........', postData.created_at)
 
 								// If post doesn't exist, create it
 								Post.findOrCreate({postId: postData.id}, {
@@ -60,9 +61,10 @@ function twitterUpdate(user, twentyMinUpdate){
 									postId: postData.id,
 									type: 'twitter',
 									profileId: profile._id,
-									date: new Date(postData.created_at).getTime()
+									date: new Date(postData.created_at)
 								}, function(err, post){
 									if(err) return next(err);
+									// console.log('is this the same............', post.date);
 
 									// snapshot it
 									new PostSnapshot({
@@ -77,9 +79,13 @@ function twitterUpdate(user, twentyMinUpdate){
 										post.snapshots.push(psnap._id);
 										post.save(function(err){
 											if(err) return next(err);
-											posts.push(postData);
+											posts.push(post);
 											if (posts.length === data.length) {
-												interResolve(posts[0])
+												posts = posts.sort(function(a, b) {
+													return b.date - a.date;
+												});
+												// console.log('post post post..........', posts)
+												interResolve(posts[0]);
 											}
 											resolve();
 										});			
@@ -98,7 +104,7 @@ function twitterUpdate(user, twentyMinUpdate){
 								postId: postData.id,
 								type: 'twitter',
 								profileId: profile._id,
-								date: new Date(postData.created_at).getTime()
+								date: new Date(postData.created_at)
 							}, function(err, post) {
 								if(err) return next(err);
 
@@ -114,11 +120,14 @@ function twitterUpdate(user, twentyMinUpdate){
 					}
 				})
 				.then((latestPost)=>{
+					console.log('what does this look like..........', latestPost)
 					if(user.triggerFrequency.twitter.turnedOn) {
-						var unixTime = new Date(latestPost.created_at).getTime();
-						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.twitter.frequency*24*60*60; //Current unix time - allowed number of days in unix
-						user.triggerFrequency.twitter.upToDate = unixTime < date ? false : true;
-						user.triggerFrequency.twitter.lastPost = Math.floor((Date.now()-unixTime)/1000/60/60/24);
+						var daysSinceLastPost = Math.floor((new Date() - latestPost.date) / (1000 * 60 * 60 * 24)); // Current unix time - allowed number of days in unix
+						user.triggerFrequency.twitter.lastPost = daysSinceLastPost;
+						console.log("[apparently the days since last post]", daysSinceLastPost);
+
+						// has this use updated within the last day?
+						user.triggerFrequency.twitter.upToDate = (daysSinceLastPost - user.triggerFrequency.twitter.frequency > 0) ? false : true;
 						user.save();
 					}
 				})	

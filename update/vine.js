@@ -140,15 +140,16 @@ function vineUpdate(user, twentyMinUpdate) {
 					}
 				})
 				.then((latestPost) => {
-					console.log("latest post   ", latestPost)
-					if(user.triggerFrequency.vine.turnedOn){
-						var unixTime = new Date(latestPost.created).getTime()/1000;
+					console.log("latest post fuck fuck fuck fuck fuck  ", latestPost.created)
+					if(user.triggerFrequency.vine.turnedOn){ 
+						var unixTime = new Date(latestPost.created).getTime()/1000;//seconds of last post since epoch
 						console.log("UNIX TIME", unixTime)
 						console.log("Vine Frequency", user.triggerFrequency.vine.frequency)
 						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.vine.frequency*24*60*60; //Current unix time - allowed number of days in unix
 						console.log(date, "DATE")
 						user.triggerFrequency.vine.upToDate = unixTime < date ? false : true;
 						user.triggerFrequency.vine.lastPost = Math.floor((Date.now()-unixTime)/1000/60/60/24);
+						console.log("fuck fuck fuck fuck fuck ", user.triggerFrequency.vine.lastPost)
 						user.save();
 					}
 				})	

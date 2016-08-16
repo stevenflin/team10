@@ -176,7 +176,7 @@ var post = new mongoose.Schema({
     type: Number
   }, 
   date: {
-    type: Number,
+    type: Date,
     index: true
   },
   profileId: {
