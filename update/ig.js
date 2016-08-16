@@ -130,8 +130,12 @@ function instagramUpdate(user, twentyMinUpdate) {
 				.then((latestPost) => {
 					if (user.triggerFrequency.instagram.turnedOn) {
 						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.instagram.frequency*24*60*60; // Current unix time - allowed number of days in unix
+						console.log('what does this look like...................', date);
+						console.log('date date date date........................', latestPost.date);
+						console.log('as;dlfjas;dg;gheoeawhaweigoaiweg...........', Math.floor((date - latestPost.date)/1000/60/60/24))
+						console.log('as;dfas;ldgha;siegha;oiwehg;aeh.............', Math.floor((Date.now() - latestPost.date)/1000/60/60/24))
 						user.triggerFrequency.instagram.upToDate = latestPost.date < date ? false : true;
-						user.triggerFrequency.instagram.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
+						user.triggerFrequency.instagram.lastPost = Math.floor((Date.now() - latestPost.date)/1000/60/60/24);
 						user.save();
 					}
 				})

@@ -326,7 +326,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 							on[key] = "true";
 						}
 					}
-					console.log('what does this look like......', platformData.snaps.youtube[0]);
+					// console.log('what does this look like......', platformData.snaps.youtube[0]);
 					res.render('dashboard', {
 						platformData: platformData,
 						postData: postData,
