@@ -6,6 +6,5 @@ request.get(`http://localhost:${process.env.PORT}/update/trigger`, function(err,
 	if (err) {
 		console.log("lmao you suck")
 	}
-
 	console.log("nice job")
 })

@@ -7,6 +7,9 @@ var dashboardFunctions = require('../update/dashboard');
 var getPosts = dashboardFunctions.getPosts;
 var getGeneral = dashboardFunctions.getGeneral;
 
+var update = require('../update/update');
+var updateUser = update.updateUser;
+
 // MODELS
 var models = require('../models/models');
 var User = models.User;
@@ -89,8 +92,9 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 // DASHBOARD ROUTES
 
 router.get('/dashboard', function(req, res, next) {
-	res.redirect('/dashboard/'+req.user._id);
-})
+	updateUser(req.user)
+	.then(() => res.redirect('/dashboard/'+req.user._id));
+});
 
 router.get('/dashboard/:id', function(req, res, next) {
 	var id = req.params.id;

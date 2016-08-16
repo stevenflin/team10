@@ -134,7 +134,8 @@ var profileSnapshot = new mongoose.Schema({
     type: Number
   },
   date: {
-    type: Date
+    type: Date,
+    index: true
   }, 
   profileId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -216,7 +217,8 @@ var postSnapshot = new mongoose.Schema({
     type: Number
   }, 
   date: {
-    type: Date
+    type: Date,
+    index: true
   } 
 })
 

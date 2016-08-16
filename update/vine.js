@@ -145,7 +145,7 @@ function vineUpdate(user, twentyMinUpdate) {
 					if(user.triggerFrequency.vine.turnedOn){ 
 						var daysSinceLastPost = Math.floor((new Date() - latestPost.date) / (1000 * 60 * 60 * 24)); // Current unix time - allowed number of days in unix
 						user.triggerFrequency.vine.lastPost = daysSinceLastPost;
-						console.log("[apparently the days since last post]", daysSinceLastPost);
+						// console.log("[apparently the days since last post]", daysSinceLastPost);
 
 						// has this use updated within the last day?
 						user.triggerFrequency.vine.upToDate = (daysSinceLastPost - user.triggerFrequency.vine.frequency > 0) ? false : true;
