@@ -41,7 +41,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 			instagramInformation(user.instagram.instagramProfile.id, user.instagram.AccessToken)
 			.then(function(data) {
 				return new Promise(function(interResolve, interReject) {
-						if (!twentyMinUpdate) {
+					if (!twentyMinUpdate) {
 						profile.instagram.last = data.profile;
 						profile.save();
 						// Create new profile snapshot
@@ -63,13 +63,16 @@ function instagramUpdate(user, twentyMinUpdate) {
 								if(post.caption) {
 									desc = post.caption.text
 								}
+
+								console.log("[post.created_time]", post.created_time);
+								// console.log("[post.created_time as Date]", new Date(post.created_time * 1000));
 								// If post doesn't exist, create it
 								Post.findOrCreate({postId: post.id}, {
 									description: desc,
 									postId: post.id,
 									type: 'instagram',
 									profileId: profile._id,
-									date: parseInt(post.created_time)
+									date: post.created_time * 1000 // it's in s
 								}, function(err, postData){
 									// if(err) return console.log(err);
 									if (err) return next(err);
@@ -92,7 +95,15 @@ function instagramUpdate(user, twentyMinUpdate) {
 											posts.push(postData);
 
 											if (posts.length === data.bigArr.length) {
-												interResolve(posts[0])
+												posts = posts.sort(function(a, b) {
+													return b.date - a.date;
+												})
+												// mapping to see posts better
+												// cPosts = posts.map(function(p, i) {
+												// 	return `#${i} - ${p.date}`;
+												// })
+												// console.log("[see these posts]", cPosts);
+												interResolve(posts[0]);
 											}
 										});			
 									});
@@ -129,9 +140,15 @@ function instagramUpdate(user, twentyMinUpdate) {
 				})
 				.then((latestPost) => {
 					if (user.triggerFrequency.instagram.turnedOn) {
-						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.instagram.frequency*24*60*60; // Current unix time - allowed number of days in unix
-						user.triggerFrequency.instagram.upToDate = latestPost.date < date ? false : true;
-						user.triggerFrequency.instagram.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
+						// console.log("fuck fuck fuck date", (latestPost.date))
+
+						// how many days ago did the user post?
+						var daysSinceLastPost = Math.floor((new Date() - latestPost.date) / (1000 * 60 * 60 * 24)); // Current unix time - allowed number of days in unix
+						user.triggerFrequency.instagram.lastPost = daysSinceLastPost;
+						console.log("[apparently the days since last post]", daysSinceLastPost);
+
+						// has this use updated within the last day?
+						user.triggerFrequency.instagram.upToDate = (daysSinceLastPost - user.triggerFrequency.instagram.frequency > 0) ? false : true;
 						user.save();
 					}
 				})
