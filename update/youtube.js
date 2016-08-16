@@ -187,115 +187,23 @@ function youtubeUpdate(user, twentyMinUpdate) {
 								post.save(function(err, p) {
 									if (err) return console.log(err);
 									resolve();
-								})
-							})
-						})
+								});
+							});
+						});
 					}
 				});
-			}).then((latestPost)=>{
-				if(user.triggerFrequency.youtube && user.triggerFrequency.youtube){
-					console.log("User trigger frequency", user.triggerFrequency.youtube.frequency);
+			}).then((latestPost) => {
+				if (user.triggerFrequency.youtube.turnedOn){
 					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.youtube.frequency*24*60*60; 
-					console.log("youtube mane ",date)
+					console.log("youtube mane ",date);
 					console.log(latestPost.date/1000)//Current unix time - allowed number of days in unix
 					user.triggerFrequency.youtube.upToDate = latestPost.date/1000 < date ? false : true;
 					user.triggerFrequency.youtube.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
 					user.save();
 				}
 			})
-			
 		}).catch((err) => next(err));
-	})
-}
-
-function getDay(videos) {
-  var todayVids = [];
-  for (var i = videos.length - 1; i >= 0; i--) {
-
-	// video upload time
-	var video = videos[i]
-	var time = new Date(videos[i].snippet.publishedAt).getTime();
-
-	// one day ago time
-	var dayAgo = Date.now() - (days);
-	// console.log('IS THIS THE TIME FROM ONE WEEK AGO?', new Date(weekAgo))
-	// console.log('IS THIS THE TIME FROM ONE DAY AGO?', new Date(dayAgo))
-	// console.log('TODAY\'S DATE', new Date())
-	if (time > dayAgo) {
-	  todayVids.push(video);
-	  // console.log('[DAY VIDEOS]', video);
-	}
-  }
-  console.log('[DAY VIDEOS]', todayVids);
-  return todayVids;
-}
-
-function getWeek(videos) {
-  // console.log('AM I HERE')
-  var weekVids = [];
-  for (var i = videos.length - 1; i >= 0; i--) {
-	// console.log('AM I HERE')
-	// video upload time
-	var video = videos[i]
-	var time = new Date(videos[i].snippet.publishedAt).getTime();
-
-	// one week ago time
-	var weekAgo = Date.now() - (days * 7);
-	// console.log('VIDEO PUBLISHED AT', time)
-	// console.log('ONE WEEK AGO WAS', weekAgo)
-	if (time > weekAgo) {
-	  // console.log('AM I HERE')
-	  weekVids.push(video);
-	  // console.log('[WEEK VIDEOS]', video);
-	} else {
-	  // console.log('AM I HERE')
-	  // break;
-	}
-  }
-  // console.log('[WEEK VIDEOS]', weekVids);
-  return weekVids;
-}
-
-function getMonth(videos) {
-  var monthVids = [];
-  for (var i = videos.length - 1; i >= 0; i--) {
-
-	// video upload time
-	var video = videos[i]
-	var time = new Date(videos[i].snippet.publishedAt).getTime();
-
-	// one month ago time
-	var monthAgo = Date.now() - (days * 30);
-	if (time > monthAgo) {
-	  monthVids.push(video);
-	  // console.log('[MONTH VIDEOS]', video);
-	} else {
-	  break;
-	}
-  }
-  // console.log('[MONTH VIDEOS]', monthVids);
-  return monthVids;
-}
-
-function getYear(videos) {
-  var yearVids = [];
-  for (var i = videos.length - 1; i >= 0; i--) {
-
-	// video upload time
-	var video = videos[i]
-	var time = new Date(videos[i].snippet.publishedAt).getTime();
-
-	// one year ago time
-	var yearAgo = Date.now() - (years);
-	if (time > yearAgo) {
-	  yearVids.push(video);
-	  // console.log('[YEAR VIDEOS]', video);
-	} else {
-	  break;
-	}
-  }
-  // console.log('[YEAR VIDEOS]', yearVids);
-  return yearVids;
+	});
 }
 
 module.exports = {

@@ -115,41 +115,50 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 	
 // DAILY SNAPSHOTS
 
-router.get('/update/facebook', function(req, res, next){  //should be /update/page
+router.get('/update/facebook', function(req, res, next) {  //should be /update/page
 	User.find(function(err, users) {
 		users.forEach((user) => {
 			facebookUpdate(user)
 			.then(() => res.redirect('/integrate'));
-		})
-	})
-})
+		});
+	});
+});
 
-router.get('/update/instagram', function(req, res, next){
-	// Find social media profile
+router.get('/update/instagram', function(req, res, next) {
 	User.find(function(err, users) {
 		users.forEach((user) => {
 			instagramUpdate(user)
 			.then(() => res.redirect('/integrate'));
-		})
-	})
-})
-
-router.get('/update/youtube', function(req, res, next) {
-	youtubeUpdate(req.user._id)
-	.then(() => res.redirect('/integrate'));
+		});
+	});
 });
 
-router.get('/update/twitter', function(req, res, next){
-	twitterUpdate(req.user._id)
-	.then(() => res.redirect('/integrate'));	
-})
+router.get('/update/youtube', function(req, res, next) {
+	User.find(function(err, users) {
+		users.forEach((user) => {
+			youtubeUpdate(user)
+			.then(() => res.redirect('/integrate'));
+		});
+	});
+});
 
-router.get('/update/vine', function(req, res, next){
-	vineUpdate(req.user)
-	.then(() => res.redirect('/integrate'));
-})
+router.get('/update/twitter', function(req, res, next) {
+	User.find(function(err, users) {
+		users.forEach((user) => {
+			twitterUpdate(user)
+			.then(() => res.redirect('/integrate'));
+		});
+	});
+});
 
-// call this function everyday, does make snapshots
+router.get('/update/vine', function(req, res, next) {
+	User.find(function(err, users) {
+		users.forEach((user) => {
+			vineUpdate(user)
+			.then(() => res.redirect('/integrate'));
+		});
+	});
+});
 
 router.get('/update', (req, res, next) => {
 	User.find(function(err, users) {
@@ -173,7 +182,7 @@ router.get('/update', (req, res, next) => {
 			}) //fix pauses the update route
 			.then(() => {
 				console.log('facebook.......success');
-				res.redirect('/integrate')
+				res.sendStatus(200);
 			});
 		});
 	});
@@ -201,104 +210,64 @@ router.get('/update/frequent', (req, res, next) => {
             .then(() => {
                 console.log('vine...........success');
                 facebookUpdate(user, isTwenty)
-            }) //fix pauses the update route
+            })
             .then(() => {
                 console.log('facebook.......success');
-                res.redirect('/integrate')
+                res.sendStatus(200);
             });
         });
-        // console.log("what happens?", err)
     });
-
 });
-
-
-	
-	// Schedule once a day, sometime in the morning
-	// 1 find posts by id
-	// 2. find trigger frequency
-	// 3. compare for each channel if post date is longer than allowed frequency
-	// 4 send
-
-	// Profile.findOne({userId: user._id}, function(err, profile) {
-
-	// 	types.map(function(p){
-	// 		return new Promise(function(resolve, reject){
-	// 			resolve(Post.find({profileId:profile._id, type: p }))
-	// 		})
-	// 		.then((posts)=>{ //because its a promise, posts are accessible throughout the route function
-	// 			console.log("posts", posts)
-	// 			types.map(function(platform){
-	// 				console.log("platform", platform)
-	// 				triggerFrequency.findOne({type:platform})
-	// 				//update models to only get triggerfrequency if the user is integrated with the platform
-	// 			})
-	// 			.then((triggerFrequencyPolicy)=>{
-	// 				//if statements here to check posts vs the policy
-
-	// 			})
-	// 		})
-					
-
-			
-	// 	})
-
-	// })
-
 
 router.use(function(req, res, next) {
 	if (req.user._id || req.user.isAdmin) {
 		return next();
 	} else {
-		return res.redirect('/');
+		return res.redirect('/login');
 	}
 });
 
-router.get('/update/trigger', (req, res, next)=>{
-	User.find(function(err, users){
-		if(err){
-			console.log("ERROR IN FINDING USERS", err)
-		}
-		else{
+router.get('/update/trigger', (req, res, next) => {
+	User.find(function(err, users) {
+		if (err) {
+			return next(err);
+		} else {
 			users.forEach((user)=> {
-				console.log(user);
-				var daysMessage = "Here's when you last posted on your social media profiles:"
-				var userTrigger = req.user.triggerFrequency
+				var daysMessage = "Here's when you last posted on your social media profiles:";
+				var userTrigger = req.user.triggerFrequency;
 				var i = 0;
-				var msg = "You're behind on posting to the folllowing profiles: "
-				if(userTrigger.youtube.turnedOn){
-					userTrigger.youtube.upToDate ?  console.log("Nothing was sent") : msg = msg + " Youtube"
-					daysMessage = daysMessage +" Youtube: "+userTrigger.youtube.lastPost+" days"
-					i++
+				var msg = "You're behind on posting to the folllowing profiles: ";
+				if(userTrigger.youtube.turnedOn) {
+					userTrigger.youtube.upToDate ?  console.log("Nothing was sent") : msg = msg + " Youtube";
+					daysMessage = daysMessage +" Youtube: "+userTrigger.youtube.lastPost+" days";
+					i++;
 				}
-				if(userTrigger.instagram.turnedOn){
-					userTrigger.instagram.upToDate ?  console.log("Nothing was sent") : msg = msg + " Instagram", 
-					daysMessage = daysMessage +" Instagram: "+userTrigger.instagram.lastPost+" days"
-					i++
+				if(userTrigger.instagram.turnedOn) {
+					userTrigger.instagram.upToDate ?  console.log("Nothing was sent") : msg = msg + " Instagram";
+					daysMessage = daysMessage +" Instagram: "+userTrigger.instagram.lastPost+" days";
+					i++;
 				}
-				if(userTrigger.twitter.turnedOn){
-					userTrigger.twitter.upToDate ?  console.log("Nothing was sent") : msg = msg + " Twitter"
-					daysMessage = daysMessage +" Twitter: "+userTrigger.twitter.lastPost+" days"
-					i++
+				if(userTrigger.twitter.turnedOn) {
+					userTrigger.twitter.upToDate ?  console.log("Nothing was sent") : msg = msg + " Twitter";
+					daysMessage = daysMessage +" Twitter: "+userTrigger.twitter.lastPost+" days";
+					i++;
 				}
-				if(userTrigger.facebook.turnedOn){
-					userTrigger.facebook.upToDate ?  console.log("Nothing was sent") : msg = msg + " Facebook"
-					daysMessage= daysMessage+" Facebook: "+userTrigger.facebook.lastPost+" days"
-					i++
+				if(userTrigger.facebook.turnedOn) {
+					userTrigger.facebook.upToDate ?  console.log("Nothing was sent") : msg = msg + " Facebook";
+					daysMessage= daysMessage+" Facebook: "+userTrigger.facebook.lastPost+" days";
+					i++;
 				}
-				if(userTrigger.vine.turnedOn){
-					userTrigger.vine.upToDate ?  console.log("Nothing was sent") : msg = msg + " Vine"
-					daysMessage= daysMessage+" Vine: "+userTrigger.vine.lastPost+" days"
-					i++
+				if(userTrigger.vine.turnedOn) {
+					userTrigger.vine.upToDate ?  console.log("Nothing was sent") : msg = msg + " Vine";
+					daysMessage= daysMessage+" Vine: "+userTrigger.vine.lastPost+" days";
+					i++;
 				}
-				// console.log("IIIIIIIIIII~~~ ", i)
-				trigger(daysMessage, user.phoneNumber)
+				trigger(daysMessage, user.phoneNumber);
 				i > 0 ? trigger(msg): trigger("You're up to date on all your profiles ~ Jake XOXO", user.phoneNumber)
-			})
+			});
 		}
-	})
-	
-})
+	});
+});
 
 // DASHBOARD ROUTES
 
@@ -319,11 +288,11 @@ router.get('/dashboard/:id', function(req, res, next) {
 					resolve(userArray)
 				});
 			} else {
-				resolve([])
+				resolve([]);
 			}
 		})
 		.then((userArray) => {
-			getGeneral(id) //gets subscriber, follower/data
+			getGeneral(id) // gets subscriber, follower/data
 			.then((platformData) => { 
 				var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 				var change = {};
@@ -348,10 +317,8 @@ router.get('/dashboard/:id', function(req, res, next) {
 							}
 						}
 					}
-				})
-				// console.log('what does this look like.......', direction.instagram.up)
-				// console.log('and this.......................', direction.instagram.down)
-				getPosts(id) //get posts for the person
+				});
+				getPosts(id) // get posts for the person
 				.then((postData) => {
 					var on = {};
 					for (var key in user.triggerFrequency) {
@@ -377,16 +344,9 @@ router.get('/dashboard/:id', function(req, res, next) {
 	});
 });
 
-// router.get('/trigger/:id', (req, res, next)=>{
-// 	res.render('trigger')
-// });
-
 router.post('/dashboard/:id',(req, res, next)=>{
-	// var id = req.params.id;
-	// console.log("this is the id", id)
-	// console.log("[req.body]", req.body);
 	User.findById(req.params.id, function(err, user){
-		// console.log("this is trigger user", user)
+
 	    if (req.body.youtube) {
 	    	user.triggerFrequency.youtube.turnedOn = true;
 	    	user.triggerFrequency.youtube.frequency = req.body.youtubeDays;
@@ -424,29 +384,65 @@ router.post('/dashboard/:id',(req, res, next)=>{
 	});
 });
 
-router.get('/posts', function(req, res, next) {
-	getPosts(req.user._id)
-	.then((data) => {
-		// console.log(data.youtube.posts)
-		var arr = [];
-		data.youtube.posts.forEach(function(d) {
-			console.log(d[0].snapshots.map((snap) => snap.likes));
-			arr.push(d[0].snapshots.map((snap) => snap.likes));
-		});
-		// console.log('what does arr look like', arr)
-		res.render('posts', {
-			data: arr[1]
-		});
-	});
-});
-
-router.get('/remind', function(req, res, next){
+router.get('/remind', function(req, res, next) {
 	triggerMeTimbers()
-	.then(()=> res.redirect('/integrate'))
-})	
+	.then(() => res.redirect('/integrate'));
+});
 
 module.exports = router;
 
+
+
+
+
+
+// Schedule once a day, sometime in the morning
+// 1 find posts by id
+// 2. find trigger frequency
+// 3. compare for each channel if post date is longer than allowed frequency
+// 4 send
+
+// Profile.findOne({userId: user._id}, function(err, profile) {
+
+// 	types.map(function(p){
+// 		return new Promise(function(resolve, reject){
+// 			resolve(Post.find({profileId:profile._id, type: p }))
+// 		})
+// 		.then((posts)=>{ //because its a promise, posts are accessible throughout the route function
+// 			console.log("posts", posts)
+// 			types.map(function(platform){
+// 				console.log("platform", platform)
+// 				triggerFrequency.findOne({type:platform})
+// 				//update models to only get triggerfrequency if the user is integrated with the platform
+// 			})
+// 			.then((triggerFrequencyPolicy)=>{
+// 				//if statements here to check posts vs the policy
+
+// 			})
+// 		})
+				
+
+		
+// 	})
+
+// })
+
+
+// router.get('/posts', function(req, res, next) {
+// 	getPosts(req.user._id)
+// 	.then((data) => {
+// 		// console.log(data.youtube.posts)
+// 		var arr = [];
+// 		data.youtube.posts.forEach(function(d) {
+// 			console.log(d[0].snapshots.map((snap) => snap.likes));
+// 			arr.push(d[0].snapshots.map((snap) => snap.likes));
+// 		});
+// 		// console.log('what does arr look like', arr)
+// 		res.render('posts', {
+// 			data: arr[1]
+// 		});
+// 	});
+// });
 
 
 

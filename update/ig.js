@@ -40,7 +40,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 			// Get instagram data
 			instagramInformation(user.instagram.instagramProfile.id, user.instagram.AccessToken)
 			.then(function(data) {
-				return new Promise(function(interResolve, interReject){
+				return new Promise(function(interResolve, interReject) {
 						if (!twentyMinUpdate) {
 						profile.instagram.last = data.profile;
 						profile.save();
@@ -53,14 +53,14 @@ function instagramUpdate(user, twentyMinUpdate) {
 							date: new Date(),
 							profileId: profile._id
 						})
-						.save(function(err, p){
+						.save(function(err, p) {
 							if(err) return next(err);
 
 							// Iterate through posts and create new snapshots
 							var posts = [];
-							data.bigArr.forEach(function(post, i){
+							data.bigArr.forEach(function(post, i) {
 								var desc = null;
-								if(post.caption){
+								if(post.caption) {
 									desc = post.caption.text
 								}
 								// If post doesn't exist, create it
@@ -94,11 +94,11 @@ function instagramUpdate(user, twentyMinUpdate) {
 											if (posts.length === data.bigArr.length) {
 												interResolve(posts[0])
 											}
-										})				
-									})
-								})
-							})
-						})
+										});			
+									});
+								});
+							});
+						});
 					} else {
 						profile.instagram.followers = data.profile;
 						profile.save();
@@ -122,22 +122,22 @@ function instagramUpdate(user, twentyMinUpdate) {
 								postData.save(function(err) {
 									if (err) return console.log(err);
 									resolve();
-								})
-							})
-						})
+								});
+							});
+						});
 					}
 				})
-				.then((latestPost)=>{
-				if(user.triggerFrequency.instagram && user.triggerFrequency.instagram.turnedOn){
-					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.instagram.frequency*24*60*60; //Current unix time - allowed number of days in unix
-					user.triggerFrequency.instagram.upToDate = latestPost.date < date ? false : true;
-					user.triggerFrequency.instagram.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
-					user.save();
-				}
-			})
-			}).catch(function(err){ next(err)})
-		})
-	})
+				.then((latestPost) => {
+					if (user.triggerFrequency.instagram.turnedOn) {
+						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.instagram.frequency*24*60*60; // Current unix time - allowed number of days in unix
+						user.triggerFrequency.instagram.upToDate = latestPost.date < date ? false : true;
+						user.triggerFrequency.instagram.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
+						user.save();
+					}
+				})
+			}).catch(function(err){ next(err)});
+		});
+	});
 }
 
 module.exports = {

@@ -82,10 +82,10 @@ function twitterUpdate(user, twentyMinUpdate){
 												interResolve(posts[0])
 											}
 											resolve();
-										})				
-									})
-								})
-							})
+										});			
+									});
+								});
+							});
 						});
 					} else {
 						profile.twitter.followers = data[0].user.followers_count;
@@ -108,9 +108,9 @@ function twitterUpdate(user, twentyMinUpdate){
 								post.save(function(err, p) {
 									if (err) return console.log(err);
 									resolve();
-								})
-							})
-						})
+								});
+							});
+						});
 					}
 				})
 				.then((latestPost)=>{
@@ -122,9 +122,9 @@ function twitterUpdate(user, twentyMinUpdate){
 						user.save();
 					}
 				})	
-			}).catch((err) => console.log(err))
-		})
-	})
+			}).catch((err) => console.log(err));
+		});
+	});
 }
 
 

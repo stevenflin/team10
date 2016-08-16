@@ -235,13 +235,12 @@ function pageFans(days, pageId){
 function facebookUpdate(user, twentyMinUpdate) {
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
-			if(err) return console.log(err)
+			if(err) return console.log(err);
 	
 
 			FB.setAccessToken(user.facebook.token);
 
 			if (user.facebook.pages.length === 0) {
-				
 				return resolve();
 			}
 			
@@ -252,7 +251,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 				pagePostImpressions(92, pageId), 
 				pagePosts(92, pageId), //
 				pageFans(92, pageId) //fix-undefiened
-			]
+			];
 			Promise
 			.all(functions)
 			.then((result) => { // create profile and profile snapshot here
@@ -272,16 +271,10 @@ function facebookUpdate(user, twentyMinUpdate) {
 							profileId: profile._id
 						})
 						.save(function(err, p) {
-							// console.log("ERR~~~~~~~~", err)
-							// console.log("ERR~~~~~~~~", result)
-
-							// console.log('$$1')
 							if(err) return next(err);
-							// console.log("YO YO YO",result[3])
 
 							var posts = [];
 							result[3].forEach(function(post, i) {
-								// console.log('REACHED')
 
 								Post.findOrCreate({postId: post.postId}, {
 									description: post.message,
@@ -315,14 +308,13 @@ function facebookUpdate(user, twentyMinUpdate) {
 
 											if (posts.length === result[3].length) {
 												// console.log("laskmdlaskmdalskdm")
-												interResolve(posts[0])
+												interResolve(posts[0]);
 											}
-										})				
-									})
-								})
-							})
-							
-						})
+										});			
+									});
+								});
+							});
+						});
 					} else {
 					
 						profile.facebook.followers = result[4];
@@ -344,26 +336,25 @@ function facebookUpdate(user, twentyMinUpdate) {
 								postData.save(function(err, p) {
 									if (err) return console.log(err);
 									interResolve();
-								})
-							})
-						})
+								});
+							});
+						});
 					}
-			})
-			.then((latestPost)=>{
-		
-				if(user.triggerFrequency.facebook && user.triggerFrequency.facebook.turnedOn){
-					var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60; //Current unix time - allowed number of days in unix
-				
-					user.triggerFrequency.facebook.upToDate = latestPost.date < date ? false : true;
-					user.triggerFrequency.facebook.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
-					user.save();
-				}
-			})	
-			.catch((err) => console.log(err))
-
-		})
-		})
-	})
+				})
+				.then((latestPost)=>{
+			
+					if(user.triggerFrequency.facebook.turnedOn){
+						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60; //Current unix time - allowed number of days in unix
+					
+						user.triggerFrequency.facebook.upToDate = latestPost.date < date ? false : true;
+						user.triggerFrequency.facebook.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
+						user.save();
+					}
+				})	
+				.catch((err) => console.log(err));
+			});
+		});
+	});
 }
 
 
