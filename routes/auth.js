@@ -61,8 +61,19 @@ module.exports = function(passport) {
 
   router.post('/login', 
     passport.authenticate('local', { failureRedirect: '/login' }),
-    function(req, res) {
-      res.redirect('/integrate');
+    function(req, res, next) {
+      Profile.findOne({userId: req.user._id}, function(err, profile) {
+        if (err) return next(err);
+        if(profile.youtube.displayName
+        && profile.instagram.displayName
+        && profile.vine.displayName
+        && profile.facebook.displayName
+        && profile.twitter.displayName) {
+          res.redirect('/dashboard');
+        } else {
+          res.redirect('/integrate');
+        }
+      })
   });
 
   // DAILY SNAPSHOTS
