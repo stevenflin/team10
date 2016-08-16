@@ -77,7 +77,7 @@ function vineUpdate(user, twentyMinUpdate) {
 									postId: postData.postId,
 									type: 'vine',
 									profileId: profile._id,
-									date: new Date(postData.created).getTime()
+									date: new Date(postData.created)
 								}, function(err, post) {
 									if(err) return next(err);
 
@@ -97,12 +97,13 @@ function vineUpdate(user, twentyMinUpdate) {
 											if(err) return next(err);
 											resolve();
 
-											posts.push(postData);
+											posts.push(post);
 											if (posts.length === data.data.records.length) {
-
-												// console.log("vine")
-												// console.log("VINE mane", posts)
-												interResolve(posts[0])
+												posts = posts.sort(function(a, b) {
+													return b.date - a.date;
+												});
+												// console.log('post post post..........', posts)
+												interResolve(posts[0]);
 											}
 										});
 										post.save(function(err) {
@@ -122,7 +123,7 @@ function vineUpdate(user, twentyMinUpdate) {
 								postId: postData.postId,
 								type: 'vine',
 								profileId: profile._id,
-								date: new Date(postData.created).getTime()
+								date: new Date(postData.created)
 							}, function(err, post){
 								if (err) return console.log(err);
 
@@ -140,16 +141,14 @@ function vineUpdate(user, twentyMinUpdate) {
 					}
 				})
 				.then((latestPost) => {
-					console.log("latest post fuck fuck fuck fuck fuck  ", latestPost.created)
+
 					if(user.triggerFrequency.vine.turnedOn){ 
-						var unixTime = new Date(latestPost.created).getTime()/1000;//seconds of last post since epoch
-						console.log("UNIX TIME", unixTime)
-						console.log("Vine Frequency", user.triggerFrequency.vine.frequency)
-						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.vine.frequency*24*60*60; //Current unix time - allowed number of days in unix
-						console.log(date, "DATE")
-						user.triggerFrequency.vine.upToDate = unixTime < date ? false : true;
-						user.triggerFrequency.vine.lastPost = Math.floor((Date.now()-unixTime)/1000/60/60/24);
-						console.log("fuck fuck fuck fuck fuck ", user.triggerFrequency.vine.lastPost)
+						var daysSinceLastPost = Math.floor((new Date() - latestPost.date) / (1000 * 60 * 60 * 24)); // Current unix time - allowed number of days in unix
+						user.triggerFrequency.vine.lastPost = daysSinceLastPost;
+						console.log("[apparently the days since last post]", daysSinceLastPost);
+
+						// has this use updated within the last day?
+						user.triggerFrequency.vine.upToDate = (daysSinceLastPost - user.triggerFrequency.vine.frequency > 0) ? false : true;
 						user.save();
 					}
 				})	

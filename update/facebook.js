@@ -303,11 +303,14 @@ function facebookUpdate(user, twentyMinUpdate) {
 										postData.save(function(err) {
 											if(err) return next(err);
 
-											posts.push(postData);
+											posts.push(post);
 											// console.log("posts.length~~~~", posts.length,"result.length~~~~", result[3].length);
 
 											if (posts.length === result[3].length) {
-												// console.log("laskmdlaskmdalskdm")
+												posts = posts.sort(function(a, b) {
+													return b.date - a.date;
+												});
+												// console.log('post post post..........', posts)
 												interResolve(posts[0]);
 											}
 										});			
@@ -344,10 +347,11 @@ function facebookUpdate(user, twentyMinUpdate) {
 				.then((latestPost)=>{
 			
 					if(user.triggerFrequency.facebook.turnedOn){
-						var date = Math.floor(Date.now() / 1000) - user.triggerFrequency.facebook.frequency*24*60*60; //Current unix time - allowed number of days in unix
-					
-						user.triggerFrequency.facebook.upToDate = latestPost.date < date ? false : true;
-						user.triggerFrequency.facebook.lastPost = Math.floor((Date.now()-latestPost.date)/1000/60/60/24);
+						var daysSinceLastPost = Math.floor((new Date() - latestPost.date) / (1000 * 60 * 60 * 24)); // Current unix time - allowed number of days in unix
+						user.triggerFrequency.facebook.lastPost = daysSinceLastPost;
+
+						// has this use updated within the last day?
+						user.triggerFrequency.facebook.upToDate = (daysSinceLastPost - user.triggerFrequency.facebook.frequency > 0) ? false : true;
 						user.save();
 					}
 				})	
