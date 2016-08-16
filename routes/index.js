@@ -3,27 +3,9 @@ var passport = require('passport');
 var FB = require('fb');
 var ig = require('instagram-node').instagram();
 
-var twilio = require('../test/trigger.js');
-var trigger = twilio.sendMessage;
-
 var dashboardFunctions = require('../update/dashboard');
 var getPosts = dashboardFunctions.getPosts;
 var getGeneral = dashboardFunctions.getGeneral;
-
-var facebook = require('../update/facebook')
-var facebookUpdate = facebook.facebookUpdate;
-
-var vine = require('../update/vine');
-var vineUpdate = vine.vineUpdate;
-
-var instagram = require('../update/ig');
-var instagramUpdate = instagram.instagramUpdate;
-
-var twitter = require('../update/twitter');
-var twitterUpdate = twitter.twitterUpdate;
-
-var youtubeFunctions = require('../update/youtube');
-var youtubeUpdate = youtubeFunctions.youtubeUpdate;
 
 // MODELS
 var models = require('../models/models');
@@ -33,6 +15,7 @@ var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
+var facebook = require('../update/facebook');
 
 var time = facebook.time; //DO NOT COMMENT THIS SHIT OUT **** !!!
 
@@ -54,27 +37,22 @@ router.get('/integrate', function(req, res, next) {
 });
 
 router.get('/fbPageSelector', function(req, res, next) {
-	
-	
-	new Promise(function(resolve, reject){
+	new Promise(function(resolve, reject) {
 
 		FB.setAccessToken(req.user.facebook.token);
 
-		
 		FB.api('/'+req.user.facebook.id+'/accounts', function (res) { //takes facebook user id and gets pages that they administer
 			if(!res || res.error) {
 				console.log(!res ? 'error occurred' : res.error);
 				reject(res.error);
 			}
-			console.log("here3")
 			resolve(res);
 		});
 	})
 	.then((result) => {
-		
 		return res.render('fbPageSelector', {result: result.data})
 	})
-	.catch(console.log)
+	.catch((err) => console.log(err));
 });
 
 //GETS PAGE DATA FROM INDIVIDUAL FACEBOOK PAGE
@@ -83,175 +61,29 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 		FB.setAccessToken(req.user.facebook.token);
 
 		req.user.facebook.pages.push({pageId: req.query.pageId, pageName: req.query.name})
-		req.user.save(function(err, success){
-			console.log("Running")
-			if(err){
-				console.log("ERROR ", err)
+		req.user.save(function(err, success) {
+			if(err) {
+				console.log("ERROR ", err);
 			}
-
-			new Promise(function(resolve, reject){
+			new Promise(function(resolve, reject) {
 
 				FB.api(`/${req.query.pageId}/insights/page_views_total`, function (res) {
 					if(!res || res.error) {
 						console.log(!res ? 'error occurred' : res.error);
 						reject(res.error);
 					}
-
-				  // console.log("RESPONSE   ", res.data[2].values); //get's 28 day values 
-				  resolve(res);
+				    resolve(res);
 				});
 			})
 			.then(function(result){
 				res.render('fbPageSelector')
-			})
-			.catch(console.log)
+			}).catch((err) => console.log(err))
 		});
 	} else {
 		res.status(400).json({
 			message: "Kinda missing a pageId there bud"
-		})
+		});
 	}
-})
-	
-// DAILY SNAPSHOTS
-
-router.get('/update/facebook', function(req, res, next) {  //should be /update/page
-	User.find(function(err, users) {
-		users.forEach((user) => {
-			facebookUpdate(user)
-			.then(() => res.redirect('/integrate'));
-		});
-	});
-});
-
-router.get('/update/instagram', function(req, res, next) {
-	User.find(function(err, users) {
-		users.forEach((user) => {
-			instagramUpdate(user)
-			.then(() => res.redirect('/integrate'));
-		});
-	});
-});
-
-router.get('/update/youtube', function(req, res, next) {
-	User.find(function(err, users) {
-		users.forEach((user) => {
-			youtubeUpdate(user)
-			.then(() => res.redirect('/integrate'));
-		});
-	});
-});
-
-router.get('/update/twitter', function(req, res, next) {
-	User.find(function(err, users) {
-		users.forEach((user) => {
-			twitterUpdate(user)
-			.then(() => res.redirect('/integrate'));
-		});
-	});
-});
-
-router.get('/update/vine', function(req, res, next) {
-	User.find(function(err, users) {
-		users.forEach((user) => {
-			vineUpdate(user)
-			.then(() => res.redirect('/integrate'));
-		});
-	});
-});
-
-router.get('/update', (req, res, next) => {
-	User.find(function(err, users) {
-		users.forEach(function(user) {
-			instagramUpdate(user)
-			.then(() => {
-				console.log('instagram......success');
-				youtubeUpdate(user)
-			})
-			.then(() => {
-				console.log('youtube........success');
-				twitterUpdate(user)
-			})
-			.then(() => {
-				console.log('twitter........success');
-				vineUpdate(user)
-			})
-			.then(() => {
-				console.log('vine...........success');
-				facebookUpdate(user)
-			}) //fix pauses the update route
-			.then(() => {
-				console.log('facebook.......success');
-				res.sendStatus(200);
-			});
-		});
-	});
-});
-
-// call this FUNction every 20 minutes, does not make snapshots
-
-router.get('/update/frequent', (req, res, next) => {
-    User.find(function(err, users) {
-        users.forEach(function(user) {
-            var isTwenty = true;
-            instagramUpdate(user, isTwenty)
-            .then(() => {
-                console.log('instagram......success');
-                youtubeUpdate(user, isTwenty)
-            })
-            .then(() => {
-                console.log('youtube........success');
-                twitterUpdate(user, isTwenty)
-            })
-            .then(() => {
-                console.log('twitter........success');
-                vineUpdate(user, isTwenty)
-            })
-            .then(() => {
-                console.log('vine...........success');
-                facebookUpdate(user, isTwenty)
-            })
-            .then(() => {
-                console.log('facebook.......success');
-                res.sendStatus(200);
-            });
-        });
-    });
-});
-
-router.use(function(req, res, next) {
-	if (req.user._id || req.user.isAdmin) {
-		return next();
-	} else {
-		return res.redirect('/login');
-	}
-});
-
-router.get('/update/trigger', (req, res, next) => {
-	User.find(function(err, users) {
-		if (err) return next(err);
-		users.forEach((user)=> {
-			var userTrigger = user.triggerFrequency;
-			var msg = "You're behind on posting to the following channels: ";
-			if(userTrigger.youtube.turnedOn) {
-				userTrigger.youtube.upToDate ? console.log("Nothing was sent") : msg = msg + " Youtube ("+userTrigger.youtube.lastPost+" Days)";
-			}
-			if(userTrigger.instagram.turnedOn) {
-				userTrigger.instagram.upToDate ? console.log("Nothing was sent") : msg = msg + " Instagram ("+userTrigger.instagram.lastPost+" Days)";
-			}
-			if(userTrigger.twitter.turnedOn) {
-				userTrigger.twitter.upToDate ? console.log("Nothing was sent") : msg = msg + " Twitter ("+userTrigger.twitter.lastPost+" Days)";
-			}
-			if(userTrigger.facebook.turnedOn) {
-				userTrigger.facebook.upToDate ? console.log("Nothing was sent") : msg = msg + " Facebook ("+userTrigger.facebook.lastPost+" Days)";
-			}
-			if(userTrigger.vine.turnedOn) {
-				userTrigger.vine.upToDate ? console.log("Nothing was sent") : msg = msg + " Vine ("+userTrigger.vine.lastPost+" Days)";
-			}
-			trigger(msg, user);
-			res.sendStatus(200);
-		});
-	});
 });
 
 // DASHBOARD ROUTES
@@ -367,11 +199,6 @@ router.post('/dashboard/:id',(req, res, next)=>{
 	   	  	res.redirect('/dashboard/'+req.params.id);
 	    });
 	});
-});
-
-router.get('/remind', function(req, res, next) {
-	triggerMeTimbers()
-	.then(() => res.redirect('/integrate'));
 });
 
 module.exports = router;

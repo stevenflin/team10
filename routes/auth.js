@@ -1,10 +1,33 @@
 var router = require('express').Router();
 var models = require('../models/models');
 var Vineapple = require('vineapple');
-var User = models.User;
-var Profile = models.Profile;
 var vine = new Vineapple();
 var facebook = require('fb');
+
+var twilio = require('../test/trigger.js');
+var trigger = twilio.sendMessage;
+
+var facebook = require('../update/facebook');
+var facebookUpdate = facebook.facebookUpdate;
+
+var vine = require('../update/vine');
+var vineUpdate = vine.vineUpdate;
+
+var instagram = require('../update/ig');
+var instagramUpdate = instagram.instagramUpdate;
+
+var twitter = require('../update/twitter');
+var twitterUpdate = twitter.twitterUpdate;
+
+var youtubeFunctions = require('../update/youtube');
+var youtubeUpdate = youtubeFunctions.youtubeUpdate;
+
+var models = require('../models/models');
+var User = models.User;
+var Profile = models.Profile;
+var ProfileSnapshot = models.ProfileSnapshot;
+var Post = models.Post;
+var PostSnapshot = models.PostSnapshot;
 
 /* GET home page. */
 
@@ -42,6 +65,148 @@ module.exports = function(passport) {
       res.redirect('/integrate');
   });
 
+  // DAILY SNAPSHOTS
+
+  router.get('/update/facebook', function(req, res, next) {  //should be /update/page
+    User.find(function(err, users) {
+      users.forEach((user) => {
+        facebookUpdate(user)
+        .then(() => res.redirect('/integrate'));
+      });
+    });
+  });
+
+  router.get('/update/instagram', function(req, res, next) {
+    User.find(function(err, users) {
+      users.forEach((user) => {
+        instagramUpdate(user)
+        .then(() => res.redirect('/integrate'));
+      });
+    });
+  });
+
+  router.get('/update/youtube', function(req, res, next) {
+    User.find(function(err, users) {
+      users.forEach((user) => {
+        youtubeUpdate(user)
+        .then(() => res.redirect('/integrate'));
+      });
+    });
+  });
+
+  router.get('/update/twitter', function(req, res, next) {
+    User.find(function(err, users) {
+      users.forEach((user) => {
+        twitterUpdate(user)
+        .then(() => res.redirect('/integrate'));
+      });
+    });
+  });
+
+  router.get('/update/vine', function(req, res, next) {
+    User.find(function(err, users) {
+      users.forEach((user) => {
+        vineUpdate(user)
+        .then(() => res.redirect('/integrate'));
+      });
+    });
+  });
+
+  router.get('/update', (req, res, next) => {
+    User.find(function(err, users) {
+      users.forEach(function(user) {
+        instagramUpdate(user)
+        .then(() => {
+          console.log('instagram......success');
+          youtubeUpdate(user)
+        })
+        .then(() => {
+          console.log('youtube........success');
+          twitterUpdate(user)
+        })
+        .then(() => {
+          console.log('twitter........success');
+          vineUpdate(user)
+        })
+        .then(() => {
+          console.log('vine...........success');
+          facebookUpdate(user)
+        }) //fix pauses the update route
+        .then(() => {
+          console.log('facebook.......success');
+          res.sendStatus(200);
+        });
+      });
+    });
+  });
+
+  // call this FUNction every 20 minutes, does not make snapshots
+
+  router.get('/update/frequent', (req, res, next) => {
+      User.find(function(err, users) {
+          users.forEach(function(user) {
+              var isTwenty = true;
+              instagramUpdate(user, isTwenty)
+              .then(() => {
+                  console.log('instagram......success');
+                  youtubeUpdate(user, isTwenty)
+              })
+              .then(() => {
+                  console.log('youtube........success');
+                  twitterUpdate(user, isTwenty)
+              })
+              .then(() => {
+                  console.log('twitter........success');
+                  vineUpdate(user, isTwenty)
+              })
+              .then(() => {
+                  console.log('vine...........success');
+                  facebookUpdate(user, isTwenty)
+              })
+              .then(() => {
+                  console.log('facebook.......success');
+                  res.sendStatus(200);
+              });
+          });
+      });
+  });
+
+  router.get('/update/trigger', (req, res, next) => {
+    User.find(function(err, users) {
+      if (err) return next(err);
+      users.forEach((user)=> {
+        var userTrigger = user.triggerFrequency;
+        var msg = "You're behind on posting to the following channels: ";
+        if(userTrigger.youtube.turnedOn) {
+          userTrigger.youtube.upToDate ? console.log("Nothing was sent") : msg = msg + " Youtube ("+userTrigger.youtube.lastPost+" Day(s))";
+        }
+        if(userTrigger.instagram.turnedOn) {
+          userTrigger.instagram.upToDate ? console.log("Nothing was sent") : msg = msg + " Instagram ("+userTrigger.instagram.lastPost+" Day(s))";
+        }
+        if(userTrigger.twitter.turnedOn) {
+          userTrigger.twitter.upToDate ? console.log("Nothing was sent") : msg = msg + " Twitter ("+userTrigger.twitter.lastPost+" Day(s))";
+        }
+        if(userTrigger.facebook.turnedOn) {
+          userTrigger.facebook.upToDate ? console.log("Nothing was sent") : msg = msg + " Facebook ("+userTrigger.facebook.lastPost+" Day(s))";
+        }
+        if(userTrigger.vine.turnedOn) {
+          userTrigger.vine.upToDate ? console.log("Nothing was sent") : msg = msg + " Vine ("+userTrigger.vine.lastPost+" Day(s))";
+        }
+        trigger(msg, user);
+        res.sendStatus(200);
+      });
+    });
+  });
+
+  // WALL
+  router.use(function(req, res, next) {
+    if (!req.user) {
+      return res.redirect('/login');
+    } else {
+      return next();
+    }
+  });
+
   // FACEBOOK
   router.get('/auth/facebook', passport.authenticate('facebook', {scope: 'email manage_pages read_insights', return_scopes: true})); //'manage_pages'
   router.get('/auth/facebook/cb', passport.authenticate('facebook', {
@@ -49,7 +214,7 @@ module.exports = function(passport) {
     successRedirect: '/fbPageSelector'
   }));
 
-//INSTAGRAM 
+  // INSTAGRAM 
   router.get('/auth/instagram',
   passport.authorize('instagram', { scope: 'public_content follower_list basic'}));
 
@@ -83,15 +248,6 @@ module.exports = function(passport) {
     res.redirect('/integrate');
   });
 
-
-  router.use(function(req, res, next) {
-    if (!req.user) {
-      return res.redirect('/login');
-    } else {
-      return next();
-    }
-  });
-
   //VINE
 
   router.post('/auth/vine', function(req, res, next) {
@@ -100,9 +256,6 @@ module.exports = function(passport) {
       userId: req.body.id
     }
     req.user.save();
-    // console.log('[BODY]', req.body);
-    // console.log('[USER]', req.user);
-    // res.sendStatus(200);
   })
 
   router.post('/integrate', function(req, res, next){

@@ -1,14 +1,11 @@
-<h1>Choose Facebook pages to integrate</h1>
+<div class="col-xs-6 col-xs-offset-3" style="text-align: center">
+	<h1>Choose Facebook pages to integrate</h1>
 
-<p>{{result.1.access_token}}</p>
-<p>{{result.1.id}}</p>
-<ul>
-	{{#each result}}
-		<p>{{this.id}}</p>
-		<a href='/fbPageConfirmation?pageId={{this.id}}&name={{this.name}}'> Authorize {{this.name}}</li></a>
-		<br></br>
-	{{/each}}
-</ul>
-		<a href='/integrate'> Return to integrations page</li></a>
-
-
+	<ul>
+		{{#each result}}
+			<a href='/fbPageConfirmation?pageId={{this.id}}&name={{this.name}}'>Integrate {{this.name}}</li></a>
+			<br></br>
+		{{/each}}
+	</ul>
+	<a href='/integrate'> Return to integrations page</li></a>
+</div>
