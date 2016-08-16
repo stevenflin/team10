@@ -310,9 +310,9 @@ function facebookUpdate(user, twentyMinUpdate) {
 												posts = posts.sort(function(a, b) {
 													return b.date - a.date;
 												});
-												// console.log('post post post..........', posts)
 												interResolve(posts[0]);
 											}
+											resolve();
 										});			
 									});
 								});
