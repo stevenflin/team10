@@ -158,7 +158,7 @@ passport.use(new YoutubeStrategy({
 passport.use(new InstagramStrategy({
     clientID: process.env.INSTAGRAM_CLIENT_ID,
     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
-    callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
+    callbackURL: process.env.HOST + "/auth/instagram/callback",
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {
