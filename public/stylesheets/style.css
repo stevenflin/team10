@@ -1,11 +1,11 @@
 html {
-	background-color: black;
+	background-color: #333333;
 }
 
 body {
     /*padding: 50px;*/
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: black;
+    background-color: #333333;
 }
 
 .fa-bars {
