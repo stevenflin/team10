@@ -64,7 +64,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 									desc = post.caption.text
 								}
 
-								console.log("[post.created_time]", post.created_time);
+								// console.log("[post.created_time]", post.created_time);
 								// console.log("[post.created_time as Date]", new Date(post.created_time * 1000));
 								// If post doesn't exist, create it
 								Post.findOrCreate({postId: post.id}, {

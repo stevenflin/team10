@@ -137,7 +137,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 									profileId: profile._id,
 									date: new Date(video.snippet.publishedAt)
 								}, function(err, post) {
-									console.log('what does this look like.........', post)
+									// console.log('what does this look like.........', post)
 									if (err) return next(err);
 
 									new PostSnapshot({
@@ -200,7 +200,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 				if (user.triggerFrequency.youtube.turnedOn){
 					var daysSinceLastPost = Math.floor((new Date() - latestPost.date) / (1000 * 60 * 60 * 24)); // Current unix time - allowed number of days in unix
 					user.triggerFrequency.youtube.lastPost = daysSinceLastPost;
-					console.log("[apparently the days since last post]", daysSinceLastPost);
+					// console.log("[apparently the days since last post]", daysSinceLastPost);
 
 					// has this use updated within the last day?
 					user.triggerFrequency.youtube.upToDate = (daysSinceLastPost - user.triggerFrequency.youtube.frequency > 0) ? false : true;
