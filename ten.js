@@ -3,7 +3,7 @@ var request = require('request');
 
 
 // the one that happens every 20 mins
-request.get(`http://localhost:${process.env.PORT}/update/frequent`, function(err, resp, body) {
+request.get(process.env.HOST +`\${process.env.PORT}/update/frequent`, function(err, resp, body) {
 	if (err) {
 		console.log("lmao");
 		throw new Error(err)
