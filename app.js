@@ -87,7 +87,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
 passport.use(new FacebookStrategy({
     clientID: process.env.FB_CLIENT_ID,
     clientSecret: process.env.FB_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/cb", //fix when callback URL is updated
+    callbackURL: process.env.HOST + "/auth/facebook/cb", //fix when callback URL is updated
     passReqToCallback: true,
     profileFields: ['email', 'displayName']
   },
@@ -126,7 +126,7 @@ passport.use(new FacebookStrategy({
 passport.use(new YoutubeStrategy({
     clientID: process.env.YOUTUBE_CLIENT_ID,
     clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/youtube/callback",
+    callbackURL: process.env.HOST + "/auth/youtube/callback",
     scope: 'https://www.googleapis.com/auth/youtube',
     passReqToCallback: true
   },
@@ -185,7 +185,7 @@ passport.use(new InstagramStrategy({
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "http://localhost:3000/auth/twitter/callback", 
+    callbackURL: process.env.HOST + "/auth/twitter/callback", 
      passReqToCallback: true
   },
   function(req, token, tokenSecret, profile, cb) {
