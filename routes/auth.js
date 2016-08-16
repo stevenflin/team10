@@ -210,9 +210,43 @@ module.exports = function(passport) {
   // FACEBOOK
   router.get('/auth/facebook', passport.authenticate('facebook', {scope: 'email manage_pages read_insights', return_scopes: true})); //'manage_pages'
   router.get('/auth/facebook/cb', passport.authenticate('facebook', {
-    failureRedirect:'/login',
-    successRedirect: '/fbPageSelector'
-  }));
+   failureRedirect:'/login',
+   successRedirect: '/fbPageSelector'
+ }));
+  
+  router.get('/auth/deleteFb', (req, res, next)=>{
+      User.findById(req.user.id, function(err, user){
+        user.facebook = null;
+        user.save(function(err, success){
+          if(err){
+            console.log("Error saving user", err)
+          }
+          else{
+            console.log("Success", success)
+          }
+          Profile.findOne({userId: user._id}, function(err, profile) {
+            profile.facebook = null;
+            profile.save(function(err, success){
+              if(err){
+                console.log("Error saving profile,", err)
+                }
+              else{
+                ProfileSnapshot.find({profileId: profile._id}).remove(function(err, success){
+                  if(err){
+                    console.log("Error saving user", err)
+                  }
+                  else{
+                    console.log("Success", success)
+                  }
+                });
+              }
+            })
+          })
+        })
+      })
+    }
+  );
+
 
   // INSTAGRAM 
   router.get('/auth/instagram',

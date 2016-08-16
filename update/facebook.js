@@ -254,7 +254,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 			];
 			Promise
 			.all(functions)
-			.then((result) => { // create profile and profile snapshot here
+			.then((result) => { // creates and profile snapshot here
 				// console.log("$$0")
 
 				return new Promise(function(interResolve, interReject) {

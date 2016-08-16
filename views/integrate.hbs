@@ -35,6 +35,26 @@
     	width: 300px;
     	margin: 0 auto;
     }
+    a {
+	  text-decoration: none;
+	  color: white;
+	  appearance: none;
+	  background-color: white;
+	  border: 1px solid white;
+	  width: 250px;
+	  cursor: pointer;
+	  transition-duration: 0.25s;
+	  border-radius: 3px;
+	  padding: 10px 15px;
+	  margin: 0 auto 10px auto;
+	  display: block;
+	  text-align: center;
+	  font-size: 18px;
+	}
+	#register-button {
+	  border: 1px solid white;
+	  background: transparent;
+	}
 
 
 </style>
@@ -66,8 +86,10 @@
 <div class="grid">
 	<div class="grid-row">
 		{{#if profile.facebook.displayName}}
-		<a href="/auth/facebook" class="color-tile" style="background-color: #3B5998">
+		<a href="/auth/deleteFb" class="color-tile" style="background-color: #3B5998"> 
+		<!-- use route that deletes shit -->
 			<i class="fa fa-facebook" style="color: white"></i>
+
 		</a>
 		{{else}}
 		<a href="/auth/facebook" class="tile">
