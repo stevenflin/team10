@@ -210,6 +210,9 @@ router.get("/privacy",function(req, res, next){
 	res.render("privacy");
 })
 
+router.get("/terms",function(req, res, next){
+	res.render("terms");
+})
 
 module.exports = router;
 

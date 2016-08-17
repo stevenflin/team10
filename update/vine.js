@@ -14,7 +14,7 @@ function vineInformation(username, password){
 		var user1;
 		// Authenticate the Vine user
 		var decrypted = encryptor.decrypt(password);
-		console.log("password is ", decrypted)
+	
 		vine.login(username, decrypted, function (error, client) {
 			// console.log("login error", error);
 		    // Make an API request
