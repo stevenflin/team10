@@ -1,7 +1,7 @@
 <html>
 <head>
 <style>
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300);
 * {
   box-sizing: border-box;
   margin: 0;
@@ -43,7 +43,7 @@ body :-ms-input-placeholder {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.7) url(https://www.burgessyachts.com/media/adminforms/locations/l/o/los_angeles.jpg) no-repeat;
+  background: rgba(0,0,0,0.7) url(https://pbs.twimg.com/media/CpMxb72UkAAiNTY.jpg) no-repeat;
   background-blend-mode: overlay;
   background-size: cover; 
 }
@@ -68,7 +68,7 @@ form {
   position: relative;
   z-index: 2;
 }
-a {
+form input {
   appearance: none;
   outline: 0;
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -84,8 +84,15 @@ a {
   transition-duration: 0.25s;
   font-weight: 300;
 }
-
-#login-button {
+form input:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+form input:focus {
+  background-color: white;
+  width: 300px;
+  color: #2A3F54;
+}
+form button {
   appearance: none;
   background-color: white;
   border: 1px solid white;
@@ -100,10 +107,25 @@ a {
   text-align: center;
   font-size: 18px;
 }
-#login-button:hover {
+form button:hover {
   background-color: rgba(255, 255, 255, 0.5);
 }
-
+a {
+  text-decoration: none;
+  color: white;
+  appearance: none;
+  background-color: white;
+  border: 1px solid white;
+  width: 250px;
+  cursor: pointer;
+  transition-duration: 0.25s;
+  border-radius: 3px;
+  padding: 10px 15px;
+  margin: 0 auto 10px auto;
+  display: block;
+  text-align: center;
+  font-size: 18px;
+}
 #register-button {
   border: 1px solid white;
   background: transparent;
@@ -119,21 +141,16 @@ a {
 <body>
 	<div class="wrapper">
 		<div class="container">
-      <img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="200" width="200"/>
-			<h1 style="margin: 0">Choose Facebook Pages to Integrate</h1>
+      		{{!-- <img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="200" width="200"/> --}}
+      		<i class="fa fa-lock" style="font-size: 200px"></i>
+			<h1 style="margin: 0">Ultra Dashboard</h1>
 			<form method="post" role="form">
-		<!-- 		<p id="login-button">{{result.1.access_token}}</p>
-				<p id="login-buttton">{{result.1.id}}</p> -->
-					<ul>
-						{{#each result}}
-							<!-- <p>{{this.id}}</p> -->
-								<a href='/fbPageConfirmation?pageId={{this.id}}&name={{this.name}}' id="login-button"> Authorize {{this.name}}</li></a>
-						{{/each}}
-					</ul>
-				<a href='/integrate' id="register-button"> Return to Integrations Page</li></a>
+				<input type="password" name="key" placeholder="Key">
+				<button type="submit">Enter</button>
 			</form>
 		</div>
 	</div>
+
 </body>
 
 </html>

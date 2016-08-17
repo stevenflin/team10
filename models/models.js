@@ -37,9 +37,6 @@ var user = new mongoose.Schema({
     twitterProfile: Object
   },
   youtube: {
-    profile: Object,
-    accessToken: String,
-    refreshToken: String,
     profile: Object
   },
   vine: {

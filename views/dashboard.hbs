@@ -277,15 +277,24 @@
                 {{#each userArray}}
                 <li><a><i class="fa fa-edit"></i> {{username}} <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                      <li><a href="/dashboard/{{id}}">{{username}}</a></li>
+                      <li><a href="/dashboard/{{id}}">Overview</a></li>
+                      <li><a href="/dashboard/youtube/{{id}}">Youtube</a></li>
+                      <li><a href="/dashboard/instagram/{{id}}">Instagram</a></li>
+                      <li><a href="/dashboard/twitter/{{id}}">Twitter</a></li>
+                      <li><a href="/dashboard/facebook/{{id}}">Facebook</a></li>
+                      <li><a href="/dashboard/vine/{{id}}">Vine</a></li>
                   </ul>
                 </li>
                 {{/each}}
                 {{else}}
                 <li><a><i class="fa fa-edit"></i> {{me.username}} <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                      <li><a href="/dashboard/{{me.id}}">{{me.username}}</a></li>
-
+                      <li><a href="/dashboard/{{me.id}}">Overview</a></li>
+                      <li><a href="/dashboard/youtube/{{me.id}}">Youtube</a></li>
+                      <li><a href="/dashboard/instagram/{{me.id}}">Instagram</a></li>
+                      <li><a href="/dashboard/twitter/{{me.id}}">Twitter</a></li>
+                      <li><a href="/dashboard/facebook/{{me.id}}">Facebook</a></li>
+                      <li><a href="/dashboard/vine/{{me.id}}">Vine</a></li>
                   </ul>
                 </li>
                 {{/if}}
@@ -418,20 +427,9 @@
                 <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy Link</button>
 
                 {{#if admin}}<button class="trigger-btn" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>{{/if}}
-                <ul class="dropdown-menu dropdown-usermenu pull-right">
-                  <li><a href="javascript:;"> Profile</a></li>
-                  <li>
-                    <a href="javascript:;">
-                      <span class="badge bg-red pull-right">50%</span>
-                      <span>Settings</span>
-                    </a>
-                  </li>
-                  <li><a href="javascript:;">Help</a></li>
-                  <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
-                </ul>
               </li>
 
-              <li role="presentation" class="dropdown">
+              {{!-- <li role="presentation" class="dropdown">
                 <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                   <li>
                     <a>
@@ -490,7 +488,7 @@
                     </div>
                   </li>
                 </ul>
-              </li>
+              </li> --}}
             </ul>
           </nav>
         </div>
@@ -844,7 +842,7 @@
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-          Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          <a href="/privacy">Privacy Policy</a>
         </div>
         <div class="clearfix"></div>
       </footer>

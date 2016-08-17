@@ -4,6 +4,10 @@ var Vineapple = require('vineapple');
 var vine = new Vineapple();
 var facebook = require('fb');
 
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+var encryptor = require('simple-encryptor')(process.env.SECRET);
 
 var twilio = require('../test/trigger.js');
 var trigger = twilio.sendMessage;
@@ -39,19 +43,50 @@ var PostSnapshot = models.PostSnapshot;
 /* GET home page. */
 
 module.exports = function(passport) {
-  
+
+  router.get('/lock', function(req, res, next) {
+    res.render('lock')
+  });
+
+  router.post('/lock', function(req, res, next) {
+    if (req.body.key === process.env.KEY) {
+      req.session.unlocked = true;
+      req.session.unlockDate = new Date();
+      res.redirect('/login');
+    } else {
+      res.redirect('/lock');
+    }
+  });
+
+  //1ST WALL
+  router.use(function(req, res, next) {
+    console.log("first wall");
+    var threshold = 30 * 60 * 1000;
+    var diff = new Date - new Date(req.session.unlockDate);
+    if (!req.session.unlocked || diff > threshold ) {
+      req.session.unlocked = false;
+      return res.redirect('/lock');
+    } else {
+      return next();
+    }
+  });
+
   router.get('/register', function(req, res, next) {
       res.render('register');
   });
 
   router.post('/register', function(req, res, next) {
-  	new User({
-  	  username: req.body.username,
-  	  password: req.body.password, 
+
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(req.body.password, salt);
+
+    new User({
+      username: req.body.username,
+      password: hash, 
       phoneNumber: req.body.phoneNumber
-  	}).save(function(err, user) {
-  	  console.log(err);
-  	  if (err) return next(err);
+    }).save(function(err, user) {
+      console.log(err);
+      if (err) return next(err);
       new Profile({
         userId: user._id
       }).save(function(err, profile) {
@@ -59,7 +94,7 @@ module.exports = function(passport) {
         res.redirect('/login');
       })
 
-  	});
+    });
   });
 
   router.get('/login', function(req, res, next) {
@@ -84,108 +119,12 @@ module.exports = function(passport) {
       })
   });
 
-  // DAILY SNAPSHOTS
-
-  router.get('/update/facebook', function(req, res, next) {  //should be /update/page
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        facebookUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update/instagram', function(req, res, next) {
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        instagramUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update/youtube', function(req, res, next) {
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        youtubeUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update/twitter', function(req, res, next) {
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        twitterUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update/vine', function(req, res, next) {
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        vineUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update', (req, res, next) => {
-    clear1()
-    .then(() => {
-      console.log('clearing profile snaps................');
-      clear2()
-    })
-    .then(() => {
-      console.log('clearing post snaps....................');
-      updateDaily()
-    })
-    .then(() => {
-      console.log('updating all posts and snaps..............');
-      res.sendStatus(200);
-    });
-  });
-
-  // call this FUNction every 20 minutes, does not make snapshots
-
-  router.get('/update/frequent', (req, res, next) => {
-    updateFrequent()
-    .then(() => res.sendStatus(200));
-  });
-
-  router.get('/update/trigger', (req, res, next) => {
-    User.find(function(err, users) {
-      if (err) return next(err);
-      users.forEach((user)=> {
-        var userTrigger = user.triggerFrequency;
-        var msg = "You're behind on posting to the following channels: ";
-        if(userTrigger.youtube.turnedOn) {
-          userTrigger.youtube.upToDate ? console.log("Nothing was sent") : msg = msg + " Youtube ("+userTrigger.youtube.lastPost+" Days)";
-        }
-        if(userTrigger.instagram.turnedOn) {
-          userTrigger.instagram.upToDate ? console.log("Nothing was sent") : msg = msg + " Instagram ("+userTrigger.instagram.lastPost+" Days)";
-        }
-        if(userTrigger.twitter.turnedOn) {
-          userTrigger.twitter.upToDate ? console.log("Nothing was sent") : msg = msg + " Twitter ("+userTrigger.twitter.lastPost+" Days)";
-        }
-        if(userTrigger.facebook.turnedOn) {
-          userTrigger.facebook.upToDate ? console.log("Nothing was sent") : msg = msg + " Facebook ("+userTrigger.facebook.lastPost+" Days)";
-        }
-        if(userTrigger.vine.turnedOn) {
-          userTrigger.vine.upToDate ? console.log("Nothing was sent") : msg = msg + " Vine ("+userTrigger.vine.lastPost+" Days)";
-        }
-        trigger(msg, user);
-        res.sendStatus(200);
-      });
-    });
-  });
-
-  // WALL
+  // 2ND WALL
   router.use(function(req, res, next) {
     if (!req.user) {
       return res.redirect('/login');
     } else {
+      req.session.unlockDate = new Date();
       return next();
     }
   });
@@ -280,10 +219,13 @@ module.exports = function(passport) {
   })
 
   router.post('/integrate', function(req, res, next){
+    req.session.unlockDate = new Date();
+
+    var encrypted = encryptor.encrypt(req.body.password);
 
     req.user.vine = {
       username: req.body.username,
-      password: req.body.password,
+      password: encrypted,
     }
     req.user.save(function(err, user) {
       console.log(err);

@@ -18,6 +18,8 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var Vineapple = require('vineapple');
 var Facebook = require('fb');
 
+var bcrypt = require('bcrypt');
+
 //** end passport auth **
 //Checks if all the process.env tokensar e there
 var REQUIRED_ENV = "MONGODB_URI SECRET FB_CLIENT_ID FB_CLIENT_SECRET".split(" ");
@@ -75,7 +77,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
         return done(null, false);
       }
       // if passwords do not match, auth failed
-      if (user.password !== password) {
+      if (!bcrypt.compareSync(password, user.password)) {
         return done(null, false);
       }
       // auth has has succeeded
@@ -137,8 +139,8 @@ passport.use(new YoutubeStrategy({
     
     var user = req.user;
     // console.log('[PROFILE]', profile)
-    user.youtube.accessToken = accessToken;
-    user.youtube.refreshToken = refreshToken;
+    // user.youtube.accessToken = accessToken;
+    // user.youtube.refreshToken = refreshToken;
     user.youtube.profile = profile;
     user.url.youtube = "www.youtube.com/user/channel/"+user.youtube.profile.id;
     user.save(function(err, user) {
@@ -211,9 +213,11 @@ passport.use(new TwitterStrategy({
   }
 ));
 
-
+var webhooks = require('./routes/webhook');
 var auth = require('./routes/auth');
 var routes = require('./routes/index');
+
+app.use('/', webhooks);
 app.use('/', auth(passport));
 app.use('/', routes);
 

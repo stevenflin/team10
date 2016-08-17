@@ -1,4 +1,5 @@
 var Vineapple = require('vineapple');
+var encryptor = require('simple-encryptor')(process.env.SECRET);
 var models = require('../models/models');
 var User = models.User;
 var Profile = models.Profile;
@@ -12,7 +13,9 @@ function vineInformation(username, password){
 		var vine = new Vineapple();
 		var user1;
 		// Authenticate the Vine user
-		vine.login(username, password, function (error, client) {
+		var decrypted = encryptor.decrypt(password);
+	
+		vine.login(username, decrypted, function (error, client) {
 			// console.log("login error", error);
 		    // Make an API request
 		    client.me(function (error, user) {
@@ -50,10 +53,10 @@ function vineUpdate(user, twentyMinUpdate) {
 			if (!user.vine.username) {
 				return resolve();
 			}
-
 			vineInformation(user.vine.username, user.vine.password)
 			.then(function(data) {
-				user.url.vine = 'www.vine.co/u/'+data.userId;
+				console.log("DATA", data)
+				user.url.vine = data.user.shareUrl;
 				console.log("USER YO", user.url.vine)
 				user.save();
 				// console.log("REACHED")

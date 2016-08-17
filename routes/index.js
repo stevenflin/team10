@@ -6,6 +6,8 @@ var ig = require('instagram-node').instagram();
 var dashboardFunctions = require('../update/dashboard');
 var getPosts = dashboardFunctions.getPosts;
 var getGeneral = dashboardFunctions.getGeneral;
+var checkAdmin = dashboardFunctions.checkAdmin;
+var getPlatformPosts = dashboardFunctions.getPlatformPosts;
 
 var update = require('../update/update');
 var updateUser = update.updateUser;
@@ -24,11 +26,13 @@ var time = facebook.time; //DO NOT COMMENT THIS SHIT OUT **** !!!
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	req.session.unlockDate = new Date();
 	res.redirect('/dashboard/'+req.user._id);
 });
 
 
 router.get('/integrate', function(req, res, next) {
+	req.session.unlockDate = new Date();
 	Profile.findOne({userId: req.user._id}, function(err, profile) {
 		if (err) return next(err);
 		// console.log('profile..........', profile)
@@ -94,26 +98,18 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 // DASHBOARD ROUTES
 
 router.get('/dashboard', function(req, res, next) {
+	req.session.unlockDate = new Date();
 	updateUser(req.user)
 	.then(() => res.redirect('/dashboard/'+req.user._id));
 });
 
 router.get('/dashboard/:id', function(req, res, next) {
+	req.session.unlockDate = new Date();
 	var id = req.params.id;
 	User.findById(id)
 	.lean() 
 	.exec(function(err, user) {
-		return new Promise(function(resolve, reject) {
-			if(req.user.isAdmin) {
-				User.find((err, users) => {
-					if (err) return reject(err);
-					var userArray = users.map((users) => {return {id: users._id, username: users.username}})
-					resolve(userArray)
-				});
-			} else {
-				resolve([]);
-			}
-		})
+		checkAdmin(req.user)
 		.then((userArray) => {
 			getGeneral(id) // gets subscriber, follower/data
 			.then((platformData) => { 
@@ -149,7 +145,6 @@ router.get('/dashboard/:id', function(req, res, next) {
 							on[key] = "true";
 						}
 					}
-					// console.log('what does this look like......', platformData.snaps.youtube[0]);
 					res.render('dashboard', {
 						platformData: platformData,
 						postData: postData,
@@ -167,9 +162,30 @@ router.get('/dashboard/:id', function(req, res, next) {
 	});
 });
 
-router.post('/dashboard/:id',(req, res, next)=>{
-	User.findById(req.params.id, function(err, user){
+router.get('/dashboard/:platform/:id', function(req, res, next) {
+	req.session.unlockDate = new Date();
+	var id = req.params.id;
+	var users;
+	checkAdmin(req.user)
+	.then((userArray) => {
+		users = userArray;
+		return getPlatformPosts(id, req.params.platform)
+	})
+	.then((data) => {
+		console.log('data data data........', data.change);
+		// console.log('is this defined..............', users);
+		res.render('platform', {
+			me: req.user,
+			admin: req.user.isAdmin,
+			userArray: users,
+			data: data
+		});
+	});
+});
 
+router.post('/dashboard/:id',(req, res, next) => {
+	req.session.unlockDate = new Date();
+	User.findById(req.params.id, function(err, user) {
 	    if (req.body.youtube) {
 	    	user.triggerFrequency.youtube.turnedOn = true;
 	    	user.triggerFrequency.youtube.frequency = req.body.youtubeDays;
