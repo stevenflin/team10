@@ -44,109 +44,12 @@ var PostSnapshot = models.PostSnapshot;
 
 module.exports = function(passport) {
 
-  // DAILY SNAPSHOTS
-
-  router.get('/update/facebook', function(req, res, next) {  //should be /update/page
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        facebookUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update/instagram', function(req, res, next) {
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        instagramUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update/youtube', function(req, res, next) {
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        youtubeUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update/twitter', function(req, res, next) {
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        twitterUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update/vine', function(req, res, next) {
-    User.find(function(err, users) {
-      users.forEach((user) => {
-        vineUpdate(user)
-        .then(() => res.redirect('/integrate'));
-      });
-    });
-  });
-
-  router.get('/update', (req, res, next) => {
-    clear1()
-    .then(() => {
-      console.log('clearing profile snaps................');
-      clear2()
-    })
-    .then(() => {
-      console.log('clearing post snaps....................');
-      updateDaily()
-    })
-    .then(() => {
-      console.log('updating all posts and snaps..............');
-      res.sendStatus(200);
-    });
-  });
-
-  // call this FUNction every 20 minutes, does not make snapshots
-
-  router.get('/update/frequent', (req, res, next) => {
-    updateFrequent()
-    .then(() => res.sendStatus(200));
-  });
-
-  router.get('/update/trigger', (req, res, next) => {
-    User.find(function(err, users) {
-      if (err) return next(err);
-      users.forEach((user)=> {
-        var userTrigger = user.triggerFrequency;
-        var msg = "You're behind on posting to the following channels: ";
-        if(userTrigger.youtube.turnedOn) {
-          userTrigger.youtube.upToDate ? console.log("Nothing was sent") : msg = msg + " Youtube ("+userTrigger.youtube.lastPost+" Days)";
-        }
-        if(userTrigger.instagram.turnedOn) {
-          userTrigger.instagram.upToDate ? console.log("Nothing was sent") : msg = msg + " Instagram ("+userTrigger.instagram.lastPost+" Days)";
-        }
-        if(userTrigger.twitter.turnedOn) {
-          userTrigger.twitter.upToDate ? console.log("Nothing was sent") : msg = msg + " Twitter ("+userTrigger.twitter.lastPost+" Days)";
-        }
-        if(userTrigger.facebook.turnedOn) {
-          userTrigger.facebook.upToDate ? console.log("Nothing was sent") : msg = msg + " Facebook ("+userTrigger.facebook.lastPost+" Days)";
-        }
-        if(userTrigger.vine.turnedOn) {
-          userTrigger.vine.upToDate ? console.log("Nothing was sent") : msg = msg + " Vine ("+userTrigger.vine.lastPost+" Days)";
-        }
-        trigger(msg, user);
-      });
-      res.sendStatus(200);
-    });
-  });
-
   router.get('/lock', function(req, res, next) {
     res.render('lock')
   });
 
   router.post('/lock', function(req, res, next) {
-    if (req.body.key === 'austinhawkins') {
+    if (req.body.key === process.env.KEY) {
       req.session.unlocked = true;
       req.session.unlockDate = new Date();
       res.redirect('/login');

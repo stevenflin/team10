@@ -221,12 +221,6 @@ router.post('/dashboard/:id',(req, res, next) => {
 	});
 });
 
-router.get("/privacy",function(req, res, next) {
-	req.session.unlockDate = new Date();
-	res.render("privacy");
-})
-
-
 module.exports = router;
 
 

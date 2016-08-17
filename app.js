@@ -210,9 +210,11 @@ passport.use(new TwitterStrategy({
   }
 ));
 
-
+var webhooks = require('./routes/webhook');
 var auth = require('./routes/auth');
 var routes = require('./routes/index');
+
+app.use('/', webhooks);
 app.use('/', auth(passport));
 app.use('/', routes);
 
