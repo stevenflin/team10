@@ -136,5 +136,11 @@ router.get("/privacy",function(req, res, next) {
 });
 
 
+router.get("/terms",function(req, res, next) {
+  req.session.unlockDate = new Date();
+  res.render("terms");
+})
+
+
 module.exports = router;
 
