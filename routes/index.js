@@ -206,6 +206,11 @@ router.post('/dashboard/:id',(req, res, next)=>{
 	});
 });
 
+router.get("/privacy",function(req, res, next){
+	res.render("privacy");
+})
+
+
 module.exports = router;
 
 
