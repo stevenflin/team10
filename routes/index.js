@@ -92,6 +92,7 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 // DASHBOARD ROUTES
 
 router.get('/dashboard', function(req, res, next) {
+	console.log('did i make it here')
 	updateUser(req.user)
 	.then(() => res.redirect('/dashboard/'+req.user._id));
 });
