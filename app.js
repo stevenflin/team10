@@ -18,6 +18,8 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var Vineapple = require('vineapple');
 var Facebook = require('fb');
 
+var bcrypt = require('bcrypt');
+
 //** end passport auth **
 //Checks if all the process.env tokensar e there
 var REQUIRED_ENV = "MONGODB_URI SECRET FB_CLIENT_ID FB_CLIENT_SECRET".split(" ");
@@ -75,7 +77,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
         return done(null, false);
       }
       // if passwords do not match, auth failed
-      if (user.password !== password) {
+      if (!bcrypt.compareSync(password, user.password)) {
         return done(null, false);
       }
       // auth has has succeeded
