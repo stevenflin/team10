@@ -5,5 +5,4 @@ request.get(process.env.HOST +`/update`, function(err, resp, body) {
 	if (err) {
 		console.log("lmao")
 	}
-	console.log("nice job boyo x2")
 })

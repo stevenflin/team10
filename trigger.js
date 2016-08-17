@@ -5,5 +5,4 @@ request.get(process.env.HOST +`/update/trigger`, function(err, resp, body) {
 	if (err) {
 		console.log("lmao you suck")
 	}
-	console.log("nice job")
 })

@@ -4,7 +4,5 @@ var request = require('request');
 request.get(process.env.HOST +`/update/frequent`, function(err, resp, body) {
 	if (err) {
 		console.log("lmao");
-		throw new Error(err)
 	}
-	console.log("nice job boyo")
 })
