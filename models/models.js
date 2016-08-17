@@ -49,6 +49,13 @@ var user = new mongoose.Schema({
     userId: String,
     profile: Object
   },
+  url:{
+    twitter: String,
+    instagram: String,
+    facebook: String,
+    youtube: String,
+    vine: String,
+  },
   triggerFrequency: {
     youtube: {
       lastPost: Number,

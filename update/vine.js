@@ -53,6 +53,9 @@ function vineUpdate(user, twentyMinUpdate) {
 
 			vineInformation(user.vine.username, user.vine.password)
 			.then(function(data) {
+				user.url.vine = 'www.vine.co/u/'+data.userId;
+				console.log("USER YO", user.url.vine)
+				user.save();
 				// console.log("REACHED")
 				return new Promise(function(interResolve, interReject) {
 

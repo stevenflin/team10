@@ -64,6 +64,8 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 		FB.setAccessToken(req.user.facebook.token);
 
 		req.user.facebook.pages.push({pageId: req.query.pageId, pageName: req.query.name})
+		console.log("USER FACEBOOK PAGES", req.user.facebook.pages);
+		req.user.url.facebook = "www.facebook.com/"+req.query.pageId
 		req.user.save(function(err, success) {
 			if(err) {
 				console.log("ERROR ", err);

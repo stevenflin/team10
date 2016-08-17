@@ -143,7 +143,6 @@
             <div class="container">
               <div class="row">
                 <div class="col-xs-12">
-
                   <!-- List group -->
                   <ul class="list-group">
                     <li class="list-group-item">
@@ -254,7 +253,7 @@
               <img src="images/img.jpg" alt="..." class="img-circle profile_img">
             </div>
             <div class="profile_info">
-              <span>Welcome,</span>
+              <span>Welcome</span>
               <h2>{{me.username}}</h2>
             </div>
           </div> --}}
@@ -265,7 +264,7 @@
           <!-- sidebar menu -->
           <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
-              <h3 style="border-bottom: 1px solid white; padding-bottom: 5px">Welcome, {{me.username}}</h3>
+              <h3 style="border-bottom: 1px solid white; padding-bottom: 5px">Welcome {{me.username}}</h3>
               <ul class="nav side-menu">
                 {{!-- <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
@@ -286,6 +285,7 @@
                 <li><a><i class="fa fa-edit"></i> {{me.username}} <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
                       <li><a href="/dashboard/{{me.id}}">{{me.username}}</a></li>
+
                   </ul>
                 </li>
                 {{/if}}
@@ -413,6 +413,10 @@
 
             <ul class="nav navbar-nav navbar-right">
               <li class="">
+
+              <input id="copyAll" style="visibility: hidden" value="Youtube: {{user.url.youtube}}, Instagram: {{user.url.instagram}}, Twitter:{{user.url.twitter}}, Facebook: {{user.url.facebook}}, Vine: {{user.url.vine}}"/>
+                <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy Link</button>
+
                 {{#if admin}}<button class="trigger-btn" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>{{/if}}
                 <ul class="dropdown-menu dropdown-usermenu pull-right">
                   <li><a href="javascript:;"> Profile</a></li>
@@ -508,6 +512,9 @@
               {{else}}
               <span class="count_bottom"><i class="fa"></i>{{change.youtube}}% Since Yesterday</span>
               {{/if}}
+              <br>
+              <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#youtubeUrl')">Copy Link</button>
+              <input id="youtubeUrl" style="visibility: hidden" value={{user.url.youtube}} />
             </div>
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
@@ -520,6 +527,9 @@
               {{else}}
                 <span class="count_bottom"><i class="fa"></i>{{change.instagram}}% Since Yesterday</span>
               {{/if}}
+              <br>
+              <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#instagramUrl')">Copy Link</button>
+              <input id="instagramUrl" style="visibility: hidden" value={{user.url.instagram}} />
             </div>
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
@@ -532,6 +542,9 @@
               {{else}}
                 <span class="count_bottom"><i class="fa"></i>{{change.twitter}}% Since Yesterday</span>
               {{/if}}
+              <br>
+              <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#twitterUrl')">Copy Link</button>
+              <input id="twitterUrl" style="visibility: hidden" value={{user.url.twitter}} />
             </div>
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
@@ -544,6 +557,9 @@
               {{else}}
                 <span class="count_bottom"><i class="fa"></i>{{change.facebook}}% Since Yesterday</span>
               {{/if}}
+              <br>
+              <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#facebookUrl')">Copy Link</button>
+              <input id="facebookUrl" style="visibility: hidden" value={{user.url.facebook}}/>
             </div>
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
@@ -556,11 +572,12 @@
               {{else}}
                 <span class="count_bottom"><i class="fa"></i>{{change.vine}}% Since Yesterday</span>
               {{/if}}
+              <br>
+              <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#vineUrl')">Copy Link</button>
+              <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
             </div>
 
           </div>
-
-
 
           <div>
             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -862,7 +879,16 @@
 
   <!-- Custom Theme Scripts -->
   <script src="../build/js/custom.min.js"></script>
-
+<!-- COPY LINKS BUTTON-->  
+  <script>
+    function copyToClipboard(element) {
+      var $temp = $("<input>");
+      $("body").append($temp);
+      $temp.val($(element).val()).select();
+      document.execCommand("copy");
+      $temp.remove();
+    }
+  </script>
   {{!-- modal stuff --}}
   <script type="text/javascript">
     $("input[type='checkbox']").change(function() {

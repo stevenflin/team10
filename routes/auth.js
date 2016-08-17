@@ -206,7 +206,7 @@ module.exports = function(passport) {
             console.log("Error saving user", err)
           }
           else{
-            console.log("Success", success)
+            console.log("Success 1", success)
           }
           Profile.findOne({userId: user._id}, function(err, profile) {
             profile.facebook = null;
@@ -215,12 +215,13 @@ module.exports = function(passport) {
                 console.log("Error saving profile,", err)
                 }
               else{
-                ProfileSnapshot.find({profileId: profile._id}).remove(function(err, success){
+                console.log("Success 2")
+                ProfileSnapshot.remove({profileId: profile._id}, function(err, success){
                   if(err){
                     console.log("Error removing snapshot", err)
                   }
                   else{
-                    console.log("Success", success)
+                    console.log("Success 3", success)
                     res.redirect('/integrate')
 
                   }

@@ -140,6 +140,7 @@ passport.use(new YoutubeStrategy({
     user.youtube.accessToken = accessToken;
     user.youtube.refreshToken = refreshToken;
     user.youtube.profile = profile;
+    user.url.youtube = "www.youtube.com/user/channel/"+user.youtube.profile.id;
     user.save(function(err, user) {
       if (err) {
         return done(null, false, err);
@@ -171,6 +172,7 @@ passport.use(new InstagramStrategy({
     var user = req.user;
     user.instagram.AccessToken = accessToken;
     user.instagram.instagramProfile = profile;
+    user.url.instagram = 'www.instagram.com/'+user.instagram.instagramProfile.username;
     user.save(function () {
       Profile.findOne({userId: user._id}, function(err, p) {
         p.instagram.displayName = profile.displayName;
@@ -195,6 +197,7 @@ passport.use(new TwitterStrategy({
       req.user.twitter.twitterToken = token;
       req.user.twitter.twitterTokenSecret = tokenSecret;
       req.user.twitter.twitterProfile = profile;
+      req.user.url.twitter = "www.twitter.com/"+req.user.twitter.twitterProfile.username;
       req.user.save(function (err, user) {
         Profile.findOne({userId: user._id}, function(err, p) {
         p.twitter.displayName = profile.displayName;
