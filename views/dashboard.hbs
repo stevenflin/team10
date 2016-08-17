@@ -278,14 +278,24 @@
                 {{#each userArray}}
                 <li><a><i class="fa fa-edit"></i> {{username}} <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                      <li><a href="/dashboard/{{id}}">{{username}}</a></li>
+                      <li><a href="/dashboard/{{id}}">Overview</a></li>
+                      <li><a href="/dashboard/youtube/{{id}}">Youtube</a></li>
+                      <li><a href="/dashboard/instagram/{{id}}">Instagram</a></li>
+                      <li><a href="/dashboard/twitter/{{id}}">Twitter</a></li>
+                      <li><a href="/dashboard/facebook/{{id}}">Facebook</a></li>
+                      <li><a href="/dashboard/vine/{{id}}">Vine</a></li>
                   </ul>
                 </li>
                 {{/each}}
                 {{else}}
                 <li><a><i class="fa fa-edit"></i> {{me.username}} <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                      <li><a href="/dashboard/{{me.id}}">{{me.username}}</a></li>
+                      <li><a href="/dashboard/{{me.id}}">Overview</a></li>
+                      <li><a href="/dashboard/youtube/{{me.id}}">Youtube</a></li>
+                      <li><a href="/dashboard/instagram/{{me.id}}">Instagram</a></li>
+                      <li><a href="/dashboard/twitter/{{me.id}}">Twitter</a></li>
+                      <li><a href="/dashboard/facebook/{{me.id}}">Facebook</a></li>
+                      <li><a href="/dashboard/vine/{{me.id}}">Vine</a></li>
                   </ul>
                 </li>
                 {{/if}}
@@ -427,7 +437,7 @@
                 </ul>
               </li>
 
-              <li role="presentation" class="dropdown">
+              {{!-- <li role="presentation" class="dropdown">
                 <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                   <li>
                     <a>
@@ -486,7 +496,7 @@
                     </div>
                   </li>
                 </ul>
-              </li>
+              </li> --}}
             </ul>
           </nav>
         </div>
