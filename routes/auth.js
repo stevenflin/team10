@@ -4,6 +4,10 @@ var Vineapple = require('vineapple');
 var vine = new Vineapple();
 var facebook = require('fb');
 
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+var encryptor = require('simple-encryptor')(process.env.SECRET);
 
 var twilio = require('../test/trigger.js');
 var trigger = twilio.sendMessage;
@@ -45,9 +49,13 @@ module.exports = function(passport) {
   });
 
   router.post('/register', function(req, res, next) {
+
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(req.body.password, salt);
+
   	new User({
   	  username: req.body.username,
-  	  password: req.body.password, 
+  	  password: hash, 
       phoneNumber: req.body.phoneNumber
   	}).save(function(err, user) {
   	  console.log(err);
@@ -280,9 +288,11 @@ module.exports = function(passport) {
 
   router.post('/integrate', function(req, res, next){
 
+    var encrypted = encryptor.encrypt(req.body.password);
+
     req.user.vine = {
       username: req.body.username,
-      password: req.body.password,
+      password: encrypted,
     }
     req.user.save(function(err, user) {
       console.log(err);
