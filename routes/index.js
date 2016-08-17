@@ -26,11 +26,13 @@ var time = facebook.time; //DO NOT COMMENT THIS SHIT OUT **** !!!
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	req.session.unlockDate = new Date();
 	res.redirect('/dashboard/'+req.user._id);
 });
 
 
 router.get('/integrate', function(req, res, next) {
+	req.session.unlockDate = new Date();
 	Profile.findOne({userId: req.user._id}, function(err, profile) {
 		if (err) return next(err);
 		// console.log('profile..........', profile)
@@ -94,11 +96,13 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 // DASHBOARD ROUTES
 
 router.get('/dashboard', function(req, res, next) {
+	req.session.unlockDate = new Date();
 	updateUser(req.user)
 	.then(() => res.redirect('/dashboard/'+req.user._id));
 });
 
 router.get('/dashboard/:id', function(req, res, next) {
+	req.session.unlockDate = new Date();
 	var id = req.params.id;
 	User.findById(id)
 	.lean() 
@@ -157,6 +161,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 });
 
 router.get('/dashboard/:platform/:id', function(req, res, next) {
+	req.session.unlockDate = new Date();
 	var id = req.params.id;
 	var users;
 	checkAdmin(req.user)
@@ -176,7 +181,8 @@ router.get('/dashboard/:platform/:id', function(req, res, next) {
 	});
 });
 
-router.post('/dashboard/:id',(req, res, next)=>{
+router.post('/dashboard/:id',(req, res, next) => {
+	req.session.unlockDate = new Date();
 	User.findById(req.params.id, function(err, user) {
 	    if (req.body.youtube) {
 	    	user.triggerFrequency.youtube.turnedOn = true;
@@ -215,7 +221,8 @@ router.post('/dashboard/:id',(req, res, next)=>{
 	});
 });
 
-router.get("/privacy",function(req, res, next){
+router.get("/privacy",function(req, res, next) {
+	req.session.unlockDate = new Date();
 	res.render("privacy");
 })
 

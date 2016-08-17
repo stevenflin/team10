@@ -139,8 +139,8 @@ passport.use(new YoutubeStrategy({
     
     var user = req.user;
     // console.log('[PROFILE]', profile)
-    user.youtube.accessToken = accessToken;
-    user.youtube.refreshToken = refreshToken;
+    // user.youtube.accessToken = accessToken;
+    // user.youtube.refreshToken = refreshToken;
     user.youtube.profile = profile;
     user.save(function(err, user) {
       if (err) {

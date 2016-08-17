@@ -318,7 +318,7 @@
     {{#each data.change}}
       var labels = [];
       var n = {{{likes.length}}} || 0;
-      n =(n && n > 0 && n < 30) ? n : 30;
+      n = (n && n > 0 && n < 30) ? n : 30;
       while (n --> 0) { labels.push(n);}
       var ctx = document.getElementById("lineChart-{{@index}}");
       var lineChart = new Chart(ctx, {
@@ -349,7 +349,7 @@
             xAxes: [{
               scaleLabel: {
                 display: true,
-                labelString: 'Last 30 Days'
+                labelString: 'Last {{{likes.length}}} Days'
               }
             }]
           }

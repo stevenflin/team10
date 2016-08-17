@@ -43,54 +43,6 @@ var PostSnapshot = models.PostSnapshot;
 /* GET home page. */
 
 module.exports = function(passport) {
-  
-  router.get('/register', function(req, res, next) {
-      res.render('register');
-  });
-
-  router.post('/register', function(req, res, next) {
-
-    var salt = bcrypt.genSaltSync(saltRounds);
-    var hash = bcrypt.hashSync(req.body.password, salt);
-
-  	new User({
-  	  username: req.body.username,
-  	  password: hash, 
-      phoneNumber: req.body.phoneNumber
-  	}).save(function(err, user) {
-  	  console.log(err);
-  	  if (err) return next(err);
-      new Profile({
-        userId: user._id
-      }).save(function(err, profile) {
-        if (err) return next(err);
-        res.redirect('/login');
-      })
-
-  	});
-  });
-
-  router.get('/login', function(req, res, next) {
-    res.render('login');
-  });
-
-  router.post('/login', 
-    passport.authenticate('local', { failureRedirect: '/login' }),
-    function(req, res, next) {
-
-      Profile.findOne({userId: req.user._id}, function(err, profile) {
-        if (err) return next(err);
-        if(profile.youtube.displayName
-        && profile.instagram.displayName
-        && profile.vine.displayName
-        && profile.facebook.displayName
-        && profile.twitter.displayName) {
-          res.redirect('/dashboard');
-        } else {
-          res.redirect('/integrate');
-        }
-      })
-  });
 
   // DAILY SNAPSHOTS
 
@@ -184,16 +136,92 @@ module.exports = function(passport) {
           userTrigger.vine.upToDate ? console.log("Nothing was sent") : msg = msg + " Vine ("+userTrigger.vine.lastPost+" Days)";
         }
         trigger(msg, user);
-        res.sendStatus(200);
       });
+      res.sendStatus(200);
     });
   });
 
-  // WALL
+  router.get('/lock', function(req, res, next) {
+    res.render('lock')
+  });
+
+  router.post('/lock', function(req, res, next) {
+    if (req.body.key === 'austinhawkins') {
+      req.session.unlocked = true;
+      req.session.unlockDate = new Date();
+      res.redirect('/login');
+    } else {
+      res.redirect('/lock');
+    }
+  });
+
+  //1ST WALL
+  router.use(function(req, res, next) {
+    console.log("first wall");
+    var threshold = 30 * 60 * 1000;
+    var diff = new Date - new Date(req.session.unlockDate);
+    if (!req.session.unlocked || diff > threshold ) {
+      req.session.unlocked = false;
+      return res.redirect('/lock');
+    } else {
+      return next();
+    }
+  });
+
+  router.get('/register', function(req, res, next) {
+      res.render('register');
+  });
+
+  router.post('/register', function(req, res, next) {
+
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(req.body.password, salt);
+
+    new User({
+      username: req.body.username,
+      password: hash, 
+      phoneNumber: req.body.phoneNumber
+    }).save(function(err, user) {
+      console.log(err);
+      if (err) return next(err);
+      new Profile({
+        userId: user._id
+      }).save(function(err, profile) {
+        if (err) return next(err);
+        res.redirect('/login');
+      })
+
+    });
+  });
+
+  router.get('/login', function(req, res, next) {
+    res.render('login');
+  });
+
+  router.post('/login', 
+    passport.authenticate('local', { failureRedirect: '/login' }),
+    function(req, res, next) {
+
+      Profile.findOne({userId: req.user._id}, function(err, profile) {
+        if (err) return next(err);
+        if(profile.youtube.displayName
+        && profile.instagram.displayName
+        && profile.vine.displayName
+        && profile.facebook.displayName
+        && profile.twitter.displayName) {
+          res.redirect('/dashboard');
+        } else {
+          res.redirect('/integrate');
+        }
+      })
+  });
+
+  // 2ND WALL
   router.use(function(req, res, next) {
     if (!req.user) {
       return res.redirect('/login');
     } else {
+      req.session.unlockDate = new Date();
       return next();
     }
   });
@@ -287,6 +315,7 @@ module.exports = function(passport) {
   })
 
   router.post('/integrate', function(req, res, next){
+    req.session.unlockDate = new Date();
 
     var encrypted = encryptor.encrypt(req.body.password);
 
