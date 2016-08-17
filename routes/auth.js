@@ -4,6 +4,7 @@ var Vineapple = require('vineapple');
 var vine = new Vineapple();
 var facebook = require('fb');
 
+
 var twilio = require('../test/trigger.js');
 var trigger = twilio.sendMessage;
 
@@ -197,7 +198,7 @@ module.exports = function(passport) {
  }));
   
   router.get('/auth/deleteFb', (req, res, next)=>{
-      FB.api("/"+req.user.facebook.id+"/permissions", "delete");
+      // facebook.api("/"+req.user.facebook.id+"/permissions", "delete");
       User.findById(req.user.id, function(err, user){
         user.facebook = null;
         user.save(function(err, success){
@@ -216,10 +217,12 @@ module.exports = function(passport) {
               else{
                 ProfileSnapshot.find({profileId: profile._id}).remove(function(err, success){
                   if(err){
-                    console.log("Error saving user", err)
+                    console.log("Error removing snapshot", err)
                   }
                   else{
                     console.log("Success", success)
+                    res.redirect('/integrate')
+
                   }
                 });
               }

@@ -35,26 +35,6 @@
     	width: 300px;
     	margin: 0 auto;
     }
-    a {
-	  text-decoration: none;
-	  color: white;
-	  appearance: none;
-	  background-color: white;
-	  border: 1px solid white;
-	  width: 250px;
-	  cursor: pointer;
-	  transition-duration: 0.25s;
-	  border-radius: 3px;
-	  padding: 10px 15px;
-	  margin: 0 auto 10px auto;
-	  display: block;
-	  text-align: center;
-	  font-size: 18px;
-	}
-	#register-button {
-	  border: 1px solid white;
-	  background: transparent;
-	}
 
 
 </style>
@@ -134,7 +114,7 @@
 			<i class="fa fa-vine" style="color: white"></i>
 		</div>
 		{{/if}}
-		<a href="/dashboard" class="color-tile" style="background-color: black">
+		<a href="/dashboard/{{userId}}" class="color-tile" style="background-color: black">
 			<i class="fa fa-bar-chart" style="color: white"></i>
 	    </a>
 	</div>
