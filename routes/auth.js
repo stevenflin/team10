@@ -197,6 +197,7 @@ module.exports = function(passport) {
  }));
   
   router.get('/auth/deleteFb', (req, res, next)=>{
+      FB.api("/"+req.user.facebook.id+"/permissions", "delete");
       User.findById(req.user.id, function(err, user){
         user.facebook = null;
         user.save(function(err, success){
