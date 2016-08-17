@@ -160,19 +160,19 @@ module.exports = function(passport) {
         var userTrigger = user.triggerFrequency;
         var msg = "You're behind on posting to the following channels: ";
         if(userTrigger.youtube.turnedOn) {
-          userTrigger.youtube.upToDate ? console.log("Nothing was sent") : msg = msg + " Youtube ("+userTrigger.youtube.lastPost+" Day(s))";
+          userTrigger.youtube.upToDate ? console.log("Nothing was sent") : msg = msg + " Youtube ("+userTrigger.youtube.lastPost+" Days)";
         }
         if(userTrigger.instagram.turnedOn) {
-          userTrigger.instagram.upToDate ? console.log("Nothing was sent") : msg = msg + " Instagram ("+userTrigger.instagram.lastPost+" Day(s))";
+          userTrigger.instagram.upToDate ? console.log("Nothing was sent") : msg = msg + " Instagram ("+userTrigger.instagram.lastPost+" Days)";
         }
         if(userTrigger.twitter.turnedOn) {
-          userTrigger.twitter.upToDate ? console.log("Nothing was sent") : msg = msg + " Twitter ("+userTrigger.twitter.lastPost+" Day(s))";
+          userTrigger.twitter.upToDate ? console.log("Nothing was sent") : msg = msg + " Twitter ("+userTrigger.twitter.lastPost+" Days)";
         }
         if(userTrigger.facebook.turnedOn) {
-          userTrigger.facebook.upToDate ? console.log("Nothing was sent") : msg = msg + " Facebook ("+userTrigger.facebook.lastPost+" Day(s))";
+          userTrigger.facebook.upToDate ? console.log("Nothing was sent") : msg = msg + " Facebook ("+userTrigger.facebook.lastPost+" Days)";
         }
         if(userTrigger.vine.turnedOn) {
-          userTrigger.vine.upToDate ? console.log("Nothing was sent") : msg = msg + " Vine ("+userTrigger.vine.lastPost+" Day(s))";
+          userTrigger.vine.upToDate ? console.log("Nothing was sent") : msg = msg + " Vine ("+userTrigger.vine.lastPost+" Days)";
         }
         trigger(msg, user);
         res.sendStatus(200);
