@@ -151,7 +151,7 @@
         <div class="modal-content inner-mod" >
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Update Musical.ly</h4>
+            <h4 class="modal-title">Update <span style="color:#ff0f50;">Musical.ly</span></h4>
           </div>
           <div class="modal-body">
               <form action="/music" method="post" style="width: 75%; margin: auto">
@@ -162,7 +162,7 @@
                       <input class="form-control input" type="number" name="musicFollowers" placeholder="Number of Followers">
                   </div> 
                   <div class="row">
-                      <input class="form-control btn btn-default submit" type="submit" value="Submit"/>
+                      <input class="form-control btn btn-default submit" style="color:#ff0f50;"                     type="submit" value="Submit"/>
                   </div>
               </form>
           </div>
@@ -421,7 +421,7 @@
 
             <ul class="nav navbar-nav navbar-right">
               <li class="">
-                <input id="copyAll" style="visibility: hidden" value="Youtube: {{user.url.youtube}}, Instagram: {{user.url.instagram}}, Twitter:{{user.url.twitter}}, Facebook: {{user.url.facebook}}, Vine: {{user.url.vine}}"/>
+              <input id="copyAll" style="visibility: hidden" value="Youtube: {{user.url.youtube}}, Instagram: {{user.url.instagram}}, Twitter:{{user.url.twitter}}, Facebook: {{user.url.facebook}}, Vine: {{user.url.vine}}, Snapchat: {{user.url.snapchat}}, Muscal.ly: {{user.url.music}}"/>
                 <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy All Links</button>
 
                 {{#if admin}}<button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>{{/if}}
@@ -518,18 +518,18 @@
             <div class="col-md-offset-4 col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
               <span class="count_top" style="color: black"><i class="fa fa-snapchat"></i> Snapchat Followers</span>
               <div class="count">{{platformData.recent.snapchat.followers}}</div>
-              <button class="btn btn-default" data-toggle="modal" data-target="#snapchat">Modal</button>
-              <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#vineUrl')">Copy Link</button>
-              <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
+              <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#snapchat">Update</button>
+              <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#snapchatUrl')">Copy Link</button>
+              <input id="snapchatUrl" style="visibility: hidden" value={{user.url.snapchat}} />
             </div>
 
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
               <span class="count_top" style="color: #ff0f50"><i class="fa fa-music"></i> Musical.ly Followers</span>
               <div class="count">{{platformData.recent.music.followers}}</div>
-              <button class="btn btn-default" data-toggle="modal" data-target="#music">Modal</button>
-              <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#vineUrl')">Copy Link</button>
-              <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
+              <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#music">Update</button>
+              <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#musicUrl')">Copy Link</button>
+              <input id="musicUrl" style="visibility: hidden" value={{user.url.music}} />
             </div>
 
 
