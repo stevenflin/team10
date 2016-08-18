@@ -119,6 +119,58 @@
 </style>
 
 <body class="nav-md">
+    <div id="snapchat" class="modal fade" role="dialog">
+      <div class="modal-dialog mod">
+        <!-- Modal content-->
+        <div class="modal-content inner-mod" >
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Update Snapchat</h4>
+          </div>
+          <div class="modal-body">
+              <form action="/snapchat" method="post" style="width: 75%; margin: auto">
+                  <div class="row">
+                      <input class="form-control input" type="text" name="snapchat"                     placeholder="Snapchat Handle">
+                  </div>
+                  <div class="row">
+                      <input class="form-control input" type="number" name="followers"                     placeholder="Number of Followers">
+                  </div> 
+                  <div class="row">
+                      <input class="form-control btn btn-default submit" type="submit"                      value="Submit"/>
+                  </div>
+              </form>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+  <div id="music" class="modal fade" role="dialog">
+      <div class="modal-dialog mod">
+        <!-- Modal content-->
+        <div class="modal-content inner-mod" >
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Update Musical.ly</h4>
+          </div>
+          <div class="modal-body">
+              <form action="/music/{{user._id}}" method="post" style="width: 75%; margin: auto">
+                  <div class="row">
+                      <input class="form-control input" type="text" name="music"                     placeholder="Musical.ly Handle">
+                  </div>
+                  <div class="row">
+                      <input class="form-control input" type="number" name="followers"                     placeholder="Number of Followers">
+                  </div> 
+                  <div class="row">
+                      <input class="form-control btn btn-default submit" type="submit"                      value="Submit"/>
+                  </div>
+              </form>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
   <div id="triggers" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -565,8 +617,26 @@
               <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
             </div>
 
-          </div>
 
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+              <span class="count_top" style="color: black"><i class="fa fa-snapchat"></i> Snapchat Followers</span>
+              <div class="count">PlaceHolder</div>
+              <button class="btn btn-default" data-toggle="modal" data-target="#snapchat">Modal</button>
+              <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#vineUrl')">Copy Link</button>
+              <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
+            </div>
+
+
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+              <span class="count_top" style="color: #ff0f50"><i class="fa fa-music"></i> Musical.ly Followers</span>
+              <div class="count">PlaceHolder</div>
+              <button class="btn btn-default" data-toggle="modal" data-target="#music">Modal</button>
+              <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#vineUrl')">Copy Link</button>
+              <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
+            </div>
+
+
+          </div>
           <div>
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">

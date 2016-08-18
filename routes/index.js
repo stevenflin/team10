@@ -223,6 +223,21 @@ router.post('/dashboard/:id',(req, res, next) => {
 	});
 });
 
+router.post('/snapchat', function(req, res, next) {
+	Profile.findOne({userId: req.user._id}, function(err, profile) {
+		if (err) return next(err);
+		// console.log('profile..........', profile)
+		('integrate', {
+			userId: req.user._id,
+			profile
+		});
+	});
+});
+
+router.post('/music', function(req, res, next) {
+
+});
+
 module.exports = router;
 
 

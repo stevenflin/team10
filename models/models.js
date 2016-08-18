@@ -52,6 +52,8 @@ var user = new mongoose.Schema({
     facebook: String,
     youtube: String,
     vine: String,
+    snapchat: String,
+    music: String
   },
   triggerFrequency: {
     youtube: {
@@ -114,6 +116,14 @@ var profile = new mongoose.Schema({
     displayName: String,
     followers: Number,
     last: Number
+  },
+  snapchat: {
+    displayName: String,
+    followers: Number
+  },
+  music: {
+    displayName: String,
+    followers: Number
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
