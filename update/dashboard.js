@@ -5,6 +5,47 @@ var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
+function getAll() {
+	return new Promise(function(resolve, reject) {
+		Profile.find()
+		.lean()
+		.exec(function(err, profiles) {
+			if (err) return reject(err);
+			var tot = {};
+			var keys = Object.keys(profiles[0]);
+			keys = keys.filter(function(k) {
+				return (k === "instagram" ||
+						k === "facebook" ||
+						k === "vine" ||
+						k === "twitter" ||
+						k === "music" ||
+						k === "snapchat" ||
+						k === "youtube")
+			});
+			for (var i = 0; i < keys.length; i++) {
+				if (!tot[keys[i]]) {
+					tot[keys[i]] = [];
+				}
+			}
+			profiles.forEach(function(profile) {
+				// console.log('profile', profile);
+				for (var i = 0; i < keys.length; i++) {
+					if (profile[keys[i]]) {
+						tot[keys[i]].push(profile[keys[i]].followers)
+					}
+				}
+			});
+			for (var key in tot) {
+				tot[key] = tot[key].reduce(function(a,b) {
+					return a + b;
+				});
+				// console.log('keys', tot[key])
+			}
+			resolve(tot);
+		});
+	});
+}
+
 function getGeneral(id) { //chanel info for each function
 	return new Promise(function(masterResolve, masterReject) {
 		var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
@@ -187,5 +228,6 @@ module.exports = {
 	getPosts: getPosts,
 	getGeneral: getGeneral,
 	checkAdmin: checkAdmin,
-	getPlatformPosts: getPlatformPosts
+	getPlatformPosts: getPlatformPosts,
+	getAll: getAll
 }

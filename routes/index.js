@@ -8,6 +8,7 @@ var getPosts = dashboardFunctions.getPosts;
 var getGeneral = dashboardFunctions.getGeneral;
 var checkAdmin = dashboardFunctions.checkAdmin;
 var getPlatformPosts = dashboardFunctions.getPlatformPosts;
+var getAll = dashboardFunctions.getAll;
 
 var update = require('../update/update');
 var updateUser = update.updateUser;
@@ -109,52 +110,57 @@ router.get('/dashboard/:id', function(req, res, next) {
 	User.findById(id)
 	.lean() 
 	.exec(function(err, user) {
-		checkAdmin(req.user)
-		.then((userArray) => {
-			getGeneral(id) // gets subscriber, follower/data
-			.then((platformData) => { 
-				var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
-				var change = {};
-				var direction = {};
-				platforms.map((p) => {
-					if (platformData.recent[p]) {
-						change[p] = (((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100).toFixed(2);
-						if (change[p] > 0) {
-							direction[p] = {
-								up: true,
-								down: false
-							}
-						} else if (change[p] < 0) {
-							direction[p] = {
-								up: false,
-								down: true
-							}
-						} else {
-							direction[p] = {
-								up: false,
-								down: false
+		getAll()
+		.then((tot) => {
+			checkAdmin(req.user)
+			.then((userArray) => {
+				getGeneral(id) // gets subscriber, follower/data
+				.then((platformData) => { 
+					var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
+					var change = {};
+					var direction = {};
+					platforms.map((p) => {
+						if (platformData.recent[p]) {
+							change[p] = (((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100).toFixed(2);
+							if (change[p] > 0) {
+								direction[p] = {
+									up: true,
+									down: false
+								}
+							} else if (change[p] < 0) {
+								direction[p] = {
+									up: false,
+									down: true
+								}
+							} else {
+								direction[p] = {
+									up: false,
+									down: false
+								}
 							}
 						}
-					}
-				});
-				getPosts(id) // get posts for the person
-				.then((postData) => {
-					var on = {};
-					for (var key in user.triggerFrequency) {
-						if (user.triggerFrequency[key].turnedOn) {
-							on[key] = "true";
+					});
+					getPosts(id) // get posts for the person
+					.then((postData) => {
+						var on = {};
+						for (var key in user.triggerFrequency) {
+							if (user.triggerFrequency[key].turnedOn) {
+								on[key] = "true";
+							}
 						}
-					}
-					res.render('dashboard', {
-						platformData: platformData,
-						postData: postData,
-						user: user,
-						admin: req.user.isAdmin,
-						userArray: userArray,
-						me: req.user,
-						change,
-						direction,
-						on
+						// console.log('tottsdifjapdogapoiegpijoawejgp..........', tot)
+						res.render('dashboard', {
+							platformData: platformData,
+							postData: postData,
+							user: user,
+							admin: req.user.isAdmin,
+							userArray: userArray,
+							me: req.user,
+							change,
+							direction,
+							on,
+							tot
+						});
 					});
 				});
 			});
@@ -247,7 +253,11 @@ router.post('/music', function(req, res, next) {
 			res.redirect('/dashboard')
 		});
 	});
+});
 
+router.get('/test', function(req, res, next) {
+	getAll()
+	.then(() => res.send('hi'))
 });
 
 module.exports = router;
