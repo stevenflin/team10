@@ -318,7 +318,7 @@
     {{#each data.change}}
       var labels = [];
       var n = {{{likes.length}}} || 0;
-      n = (n && n > 0 && n < 30) ? n : 30;
+      j = n = (n && n > 0 && n < 30) ? n : 30;
       while (n --> 0) { labels.push(n);}
       var ctx = document.getElementById("lineChart-{{@index}}");
       var lineChart = new Chart(ctx, {
@@ -326,7 +326,7 @@
         data: {
           labels: labels,
           datasets: [{
-            label: "My {{@index}} dataset",
+            label: "Likes",
             backgroundColor: "rgba(3, 88, 106, 0.3)",
             borderColor: "rgba(3, 88, 106, 0.70)",
             pointBorderColor: "rgba(3, 88, 106, 0.70)",
@@ -340,16 +340,20 @@
         options: {
           scales: {
             yAxes: [{
-                ticks: {
-                  // beginAtZero:true,
-                  suggestedMin: 0,
-                  stepSize: 5
-                }
+              scaleLabel: {
+                display: true,
+                labelString: 'Likes'
+              },
+              ticks: {
+                // beginAtZero:true,
+                suggestedMin: 0,
+                stepSize: 5
+              }
             }],
             xAxes: [{
               scaleLabel: {
                 display: true,
-                labelString: 'Last {{{likes.length}}} Days'
+                labelString: 'Last ' + j +' Days'
               }
             }]
           }
