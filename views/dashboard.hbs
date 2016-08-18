@@ -130,10 +130,10 @@
           <div class="modal-body">
               <form action="/snapchat" method="post" style="width: 75%; margin: auto">
                   <div class="row">
-                      <input class="form-control input" type="text" name="snapchat"                     placeholder="Snapchat Handle">
+                      <input class="form-control input" type="text" name="snapHandle"                     placeholder="Snapchat Handle">
                   </div>
                   <div class="row">
-                      <input class="form-control input" type="number" name="followers"                     placeholder="Number of Followers">
+                      <input class="form-control input" type="number" name="snapFollowers"                     placeholder="Number of Followers">
                   </div> 
                   <div class="row">
                       <input class="form-control btn btn-default submit" type="submit"                      value="Submit"/>
@@ -154,12 +154,12 @@
             <h4 class="modal-title">Update Musical.ly</h4>
           </div>
           <div class="modal-body">
-              <form action="/music/{{user._id}}" method="post" style="width: 75%; margin: auto">
+              <form action="/music" method="post" style="width: 75%; margin: auto">
                   <div class="row">
-                      <input class="form-control input" type="text" name="music"                     placeholder="Musical.ly Handle">
+                      <input class="form-control input" type="text" name="musicHandle"                     placeholder="Musical.ly Handle">
                   </div>
                   <div class="row">
-                      <input class="form-control input" type="number" name="followers"                     placeholder="Number of Followers">
+                      <input class="form-control input" type="number" name="musicFollowers"                     placeholder="Number of Followers">
                   </div> 
                   <div class="row">
                       <input class="form-control btn btn-default submit" type="submit"                      value="Submit"/>
@@ -340,50 +340,6 @@
                   </ul>
                 </li>
                 {{/if}}
-                {{!-- <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="form.html">General Form</a></li>
-                    <li><a href="form_advanced.html">Advanced Components</a></li>
-                    <li><a href="form_validation.html">Form Validation</a></li>
-                    <li><a href="form_wizards.html">Form Wizard</a></li>
-                    <li><a href="form_upload.html">Form Upload</a></li>
-                    <li><a href="form_buttons.html">Form Buttons</a></li>
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-desktop"></i> UI Elements <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="general_elements.html">General Elements</a></li>
-                    <li><a href="media_gallery.html">Media Gallery</a></li>
-                    <li><a href="typography.html">Typography</a></li>
-                    <li><a href="icons.html">Icons</a></li>
-                    <li><a href="glyphicons.html">Glyphicons</a></li>
-                    <li><a href="widgets.html">Widgets</a></li>
-                    <li><a href="invoice.html">Invoice</a></li>
-                    <li><a href="inbox.html">Inbox</a></li>
-                    <li><a href="calendar.html">Calendar</a></li>
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-table"></i> Tables <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="tables.html">Tables</a></li>
-                    <li><a href="tables_dynamic.html">Table Dynamic</a></li>
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-bar-chart-o"></i> Data Presentation <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="chartjs.html">Chart JS</a></li>
-                    <li><a href="chartjs2.html">Chart JS2</a></li>
-                    <li><a href="morisjs.html">Moris JS</a></li>
-                    <li><a href="echarts.html">ECharts</a></li>
-                    <li><a href="other_charts.html">Other Charts</a></li>
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
-                    <li><a href="fixed_footer.html">Fixed Footer</a></li>
-                  </ul>
-                </li> --}}
               </ul>
             </div>
             {{!-- <div class="menu_section">
@@ -617,10 +573,12 @@
               <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
             </div>
 
+          </div>
 
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+          <div class="row tile_count" style="margin-bottom: 0">
+            <div class="col-md-offset-4 col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
               <span class="count_top" style="color: black"><i class="fa fa-snapchat"></i> Snapchat Followers</span>
-              <div class="count">PlaceHolder</div>
+              <div class="count">{{platformData.recent.snapchat.followers}}</div>
               <button class="btn btn-default" data-toggle="modal" data-target="#snapchat">Modal</button>
               <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#vineUrl')">Copy Link</button>
               <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
@@ -629,7 +587,7 @@
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
               <span class="count_top" style="color: #ff0f50"><i class="fa fa-music"></i> Musical.ly Followers</span>
-              <div class="count">PlaceHolder</div>
+              <div class="count">{{platformData.recent.music.followers}}</div>
               <button class="btn btn-default" data-toggle="modal" data-target="#music">Modal</button>
               <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#vineUrl')">Copy Link</button>
               <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
