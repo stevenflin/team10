@@ -223,6 +223,33 @@ router.post('/dashboard/:id',(req, res, next) => {
 	});
 });
 
+router.post('/snapchat', function(req, res, next) {
+	Profile.findOne({userId: req.user._id}, function(err, profile) {
+		if (err) return next(err);
+		// console.log('profile..........', profile)
+		profile.snapchat.displayName = req.body.snapHandle;
+		profile.snapchat.followers = req.body.snapFollowers;
+		profile.save(function(err) {
+			if(err) return next(err);
+			res.redirect('/dashboard')
+		});
+	});
+});
+
+router.post('/music', function(req, res, next) {
+	Profile.findOne({userId: req.user._id}, function(err, profile) {
+		if (err) return next(err);
+		// console.log('profile..........', profile)
+		profile.music.displayName = req.body.musicHandle;
+		profile.music.followers = req.body.musicFollowers;
+		profile.save(function(err) {
+			if(err) return next(err);
+			res.redirect('/dashboard')
+		});
+	});
+
+});
+
 module.exports = router;
 
 
