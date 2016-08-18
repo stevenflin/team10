@@ -149,17 +149,21 @@ router.get('/dashboard/:id', function(req, res, next) {
 							}
 						}
 						// console.log('tottsdifjapdogapoiegpijoawejgp..........', tot)
-						res.render('dashboard', {
-							platformData: platformData,
-							postData: postData,
-							user: user,
-							admin: req.user.isAdmin,
-							userArray: userArray,
-							me: req.user,
-							change,
-							direction,
-							on,
-							tot
+						Profile.findOne({userId: user._id}, function(err, p) {
+							res.render('dashboard', {
+								platformData: platformData,
+								postData: postData,
+								user: user,
+								admin: req.user.isAdmin,
+								userArray: userArray,
+								me: req.user,
+								change,
+								direction,
+								on,
+								tot,
+								snapchat: p.snapchat.displayName,
+								music: p.music.displayName
+							});
 						});
 					});
 				});
