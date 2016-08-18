@@ -1,5 +1,14 @@
 <style>
 
+  .top_nav .navbar-right {
+    display: inline-block;
+    width: initial;
+  }
+
+  .fa-bars {
+    margin-top: 5px;
+  }
+
   .triggerForm .list-group {
     margin-bottom: 0;
   }
@@ -410,14 +419,16 @@
             <div class="nav toggle">
               <a id="menu_toggle"><i class="fa fa-bars"></i></a>
             </div>
-            <div style="float: left"><img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="40" width="40"/> Totals:</div>
-            <div style="float: left; margin-left: 10px"><i class="fa fa-instagram"></i> {{tot.instagram}}</div>
-            <div style="float: left; margin-left: 10px"><i class="fa fa-facebook"></i> {{tot.facebook}}</div>
-            <div style="float: left; margin-left: 10px"><i class="fa fa-vine"></i> {{tot.vine}}</div>
-            <div style="float: left; margin-left: 10px"><i class="fa fa-youtube"></i> {{tot.youtube}}</div>
-            <div style="float: left; margin-left: 10px"><i class="fa fa-snapchat"></i> {{tot.snapchat}}</div>
-            <div style="float: left; margin-left: 10px"><i class="fa fa-twitter"></i> {{tot.twitter}}</div>
-            <div style="float: left; margin-left: 10px"><i class="fa fa-music"></i> {{tot.music}}</div>
+            {{#if admin}}
+            <div style="float: left; margin-left: 30px"><img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="40" width="40"/> Totals</div>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-instagram"></i> {{tot.instagram}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-facebook"></i> {{tot.facebook}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-vine"></i> {{tot.vine}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-youtube"></i> {{tot.youtube}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-snapchat"></i> {{tot.snapchat}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-twitter"></i> {{tot.twitter}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-music"></i> {{tot.music}}</li>
+            {{/if}}
 
             <ul class="nav navbar-nav navbar-right">
               <li class="">
