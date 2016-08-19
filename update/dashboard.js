@@ -12,21 +12,13 @@ function getAll() {
 		.exec(function(err, profiles) {
 			if (err) return reject(err);
 			var tot = {};
-			var keys = Object.keys(profiles[0]);
-			keys = keys.filter(function(k) {
-				return (k === "instagram" ||
-						k === "facebook" ||
-						k === "vine" ||
-						k === "twitter" ||
-						k === "music" ||
-						k === "snapchat" ||
-						k === "youtube")
-			});
+			var keys = ['instagram', 'youtube', 'vine', 'twitter', 'facebook', 'snapchat', 'music']
 			for (var i = 0; i < keys.length; i++) {
 				if (!tot[keys[i]]) {
 					tot[keys[i]] = [];
 				}
 			}
+			// console.log('tototototo.............josh', tot)
 			profiles.forEach(function(profile) {
 				// console.log('profile', profile);
 				for (var i = 0; i < keys.length; i++) {
@@ -44,9 +36,9 @@ function getAll() {
 					} else {
 						return a + b;
 					}
-				});
-				// console.log('keys', tot[key])
+				}, 0);
 			}
+			// console.log('la......................................', tot)
 			resolve(tot);
 		});
 	});

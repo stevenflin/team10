@@ -110,11 +110,11 @@ router.get('/dashboard/:id', function(req, res, next) {
 	req.session.unlockDate = new Date();
 	var id = req.params.id;
 	User.findById(id)
-		.lean() 
-		.exec(function(err, user) {
-			getAll()
-			.then((tot)=>{
-				checkAdmin(req.user)
+	.lean() 
+	.exec(function(err, user) {
+		getAll()
+		.then((tot) => {
+			checkAdmin(req.user)
 			.then((userArray) => {
 				getGeneral(id) // gets subscriber, follower/data
 				.then((platformData) => { 
@@ -149,17 +149,17 @@ router.get('/dashboard/:id', function(req, res, next) {
 					getPosts(id) // get posts for the person
 					.then((postData)=>{
 						posts = postData;
-						console.log("got posts");
+						// console.log("got posts");
 						getAllUrls(req.user)
 							.then((urlArray)=>{
-								console.log("Gets to this ish", urlArray)
+								// console.log("Gets to this ish", urlArray)
 								var on = {};
 								for (var key in user.triggerFrequency) {
 									if (user.triggerFrequency[key].turnedOn) {
 										on[key] = "true";
 									}
 								}
-								console.log("718")
+								// console.log("tototototototototootototot", tot)
 
 								Profile.findOne({userId: user._id}, function(err, p) {
 									var d = {
@@ -175,13 +175,12 @@ router.get('/dashboard/:id', function(req, res, next) {
 										change,
 										direction,
 										on,
-										tot,
 										urlArray
 									}
 									res.render('dashboard', d);
 								});
 							})
-						console.log("here x2")
+						// console.log("here x2")
 					})
 				})
 			})
