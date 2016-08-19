@@ -81,13 +81,13 @@ module.exports = function(passport) {
     var hash = bcrypt.hashSync(req.body.password, salt);
 
     if (!req.body.username || !req.body.password || !req.body.phoneNumber || !req.body.passwordagain) {
-      res.render('register', {
+      return res.render('register', {
         message: 'Missing fields required.'
       });
     }
 
     if (req.body.password !== req.body.passwordagain) {
-      res.render('register', {
+      return res.render('register', {
         message: 'Passwords do not match.'
       });
     }
@@ -98,7 +98,7 @@ module.exports = function(passport) {
       phoneNumber: req.body.phoneNumber
     }).save(function(err, user) {
       if (err) {
-        res.render('register', {
+        return res.render('register', {
           message: 'Username is taken.'
         });
       } else {
