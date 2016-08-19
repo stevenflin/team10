@@ -125,6 +125,9 @@ router.get('/dashboard/:id', function(req, res, next) {
 					platforms.map((p) => {
 						if (platformData.recent[p]) {
 							change[p] = (((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100).toFixed(2);
+							if (isNaN(change[p])) {
+								change[p] = 0;
+							}
 							if (change[p] > 0) {
 								direction[p] = {
 									up: true,
