@@ -80,20 +80,35 @@ module.exports = function(passport) {
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.password, salt);
 
+    if (!req.body.username || !req.body.password || !req.body.phoneNumber || !req.body.passwordagain) {
+      res.render('register', {
+        message: 'Missing fields required.'
+      });
+    }
+
+    if (req.body.password !== req.body.passwordagain) {
+      res.render('register', {
+        message: 'Passwords do not match.'
+      });
+    }
+
     new User({
       username: req.body.username,
       password: hash, 
       phoneNumber: req.body.phoneNumber
     }).save(function(err, user) {
-      console.log(err);
-      if (err) return next(err);
-      new Profile({
-        userId: user._id
-      }).save(function(err, profile) {
-        if (err) return next(err);
-        res.redirect('/login');
-      })
-
+      if (err) {
+        res.render('register', {
+          message: 'Username is taken.'
+        });
+      } else {
+        new Profile({
+          userId: user._id
+        }).save(function(err, profile) {
+          if (err) return next(err);
+          res.redirect('/login');
+        })
+      }
     });
   });
 
