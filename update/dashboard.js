@@ -166,7 +166,6 @@ function getAllUrls(user) {
 	var userUrls = {facebook: [], youtube: [], snapchat: [], twitter: [], instagram:[], vine:[], music: []};
 	// var platforms = ['facebook', 'youtube', 'snapchat', 'twitter', 'instagram', 'vine', 'music']
 	return new Promise(function(resolve, reject) {
-		console.log("HERe")
 		if(user.isAdmin) {
 
 			new Promise(function(moveOn, stop) {
@@ -176,13 +175,12 @@ function getAllUrls(user) {
 					if (err) return reject(err);
 					users.forEach((user) => { //user array is an array of user objects
 						for(key in user.url){
-							console.log("HEYA", key)
+							// console.log("HEYA", key)
 							user.url[key]
-							console.log("HEYA", user.url[key])
+							// console.log("HEYA", user.url[key])
 							if(user.url[key] !== undefined || user.url[key] !== null){
-								console.log("TITTIES")
 								userUrls[key].push(user.username+"'s "+key+": "+user.url[key]);
-								console.log("Reached", userUrls)
+								// console.log("Reached", userUrls)
 							}
 						}
 					})
@@ -192,7 +190,7 @@ function getAllUrls(user) {
 							allUrls += (userUrls[key][i]+", ")
 						}
 					}
-					console.log("6969", allUrls)
+					// console.log("6969", allUrls)
 					moveOn(allUrls);
 				});
 			})
