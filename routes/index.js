@@ -8,6 +8,7 @@ var getPosts = dashboardFunctions.getPosts;
 var getGeneral = dashboardFunctions.getGeneral;
 var checkAdmin = dashboardFunctions.checkAdmin;
 var getPlatformPosts = dashboardFunctions.getPlatformPosts;
+var getAllUrls = dashboardFunctions.getAllUrls;
 
 var update = require('../update/update');
 var updateUser = update.updateUser;
@@ -116,6 +117,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 				var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 				var change = {};
 				var direction = {};
+				var posts;
 				platforms.map((p) => {
 					if (platformData.recent[p]) {
 						change[p] = (((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100).toFixed(2);
@@ -138,25 +140,34 @@ router.get('/dashboard/:id', function(req, res, next) {
 					}
 				});
 				getPosts(id) // get posts for the person
-				.then((postData) => {
+				.then((postData)=>{
+					posts = postData;
+					getAllUrls(req.user)
+				})
+				.then((urlArray)=>{
+					console.log("Gets to this ish", urlArray)
 					var on = {};
 					for (var key in user.triggerFrequency) {
 						if (user.triggerFrequency[key].turnedOn) {
 							on[key] = "true";
 						}
 					}
+					console.log("URL MANE", urlArray)
+					console.log("PLEASE WORK YO,", posts)
 					res.render('dashboard', {
+						postData: posts,
 						platformData: platformData,
-						postData: postData,
-						user: user,
 						admin: req.user.isAdmin,
 						userArray: userArray,
+						user,
 						me: req.user,
 						change,
 						direction,
-						on
+						on,
+						urlArray
 					});
-				});
+					console.log("here x2")
+				})
 			});
 		}).catch(console.log.bind(this, "[error]"));
 	});

@@ -412,10 +412,12 @@
 
             <ul class="nav navbar-nav navbar-right">
               <li class="">
-
+              {{#if admin}}
+              <input id="copyTeamTen" style="visibility: hidden" value="{{urlArray}}"/>
+                <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyTeamTen')">Copy Team Ten Links</button>
+              {{/if}}
               <input id="copyAll" style="visibility: hidden" value="Youtube: {{user.url.youtube}}, Instagram: {{user.url.instagram}}, Twitter:{{user.url.twitter}}, Facebook: {{user.url.facebook}}, Vine: {{user.url.vine}}"/>
-                <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy All Links</button>
-
+                <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy my links</button>
                 {{#if admin}}<button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>{{/if}}
               </li>
 

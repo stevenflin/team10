@@ -123,14 +123,64 @@ function getPosts(id) {
 		});
 	});
 }
+function getAllUrls(user) {
+	var userUrls = {facebook: [], youtube: [], snapchat: [], twitter: [], instagram:[], vine:[], music: []};
+	// var platforms = ['facebook', 'youtube', 'snapchat', 'twitter', 'instagram', 'vine', 'music']
+	return new Promise(function(resolve, reject) {
+		console.log("HERe")
+		if(user.isAdmin) {
 
+			new Promise(function(moveOn, stop) {
+				User.find()
+				.lean()
+				.exec((err, users) => {
+					if (err) return reject(err);
+					users.forEach((user) => { //user array is an array of user objects
+						for(key in user.url){
+							console.log("HEYA", key)
+							user.url[key]
+							console.log("HEYA", user.url[key])
+							if(user.url[key] !== undefined || user.url[key] !== null){
+								console.log("TITTIES")
+								userUrls[key].push(user.username+"'s "+key+": "+user.url[key]);
+								console.log("Reached", userUrls)
+							}
+						}
+					})
+					var allUrls = "";
+					for(var key in userUrls){
+						for(var i =0; i<userUrls[key].length; i++){
+							allUrls += (userUrls[key][i]+", ")
+						}
+					}
+					console.log("6969", allUrls)
+					moveOn(allUrls);
+				});
+			})
+			.then((userUrls) => {
+				resolve(userUrls)
+			});
+		} else {
+			resolve([]);
+		}
+	});
+}
 function checkAdmin(user) {
+	var userUrls = {facebook: [], youtube: [], snapchat: [], twitter: [], instagram:[], vine:[], music: []};
 	return new Promise(function(resolve, reject) {
 		if(user.isAdmin) {
 			User.find((err, users) => {
 				if (err) return reject(err);
-				var userArray = users.map((user) => {return {id: user._id, username: user.username}})
-				resolve(userArray)
+				var userArray = users.map((user) => { //user array is an array of user objects
+					// userUrls.facebook.push(user.url.facebook);
+					// userUrls.youtube.push(user.url.youtube);
+					// userUrls.snapchat.push(user.url.snapchat);
+					// userUrls.twitter.push(user.url.twitter);
+					// userUrls.instagram.push(user.url.instagram);
+					// userUrls.vine.push(user.url.vine);
+					// userUrls.music.push(user.url.music);
+					return {id: user._id, username: user.username}});
+				resolve(userArray, userUrls)
 			});
 		} else {
 			resolve([]);
@@ -185,6 +235,7 @@ function getPlatformPosts(id, platform) {
 
 module.exports = {
 	getPosts: getPosts,
+	getAllUrls,
 	getGeneral: getGeneral,
 	checkAdmin: checkAdmin,
 	getPlatformPosts: getPlatformPosts

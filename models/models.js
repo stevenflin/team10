@@ -46,12 +46,14 @@ var user = new mongoose.Schema({
     userId: String,
     profile: Object
   },
-  url:{
+  url:{ //only used for copy all
     twitter: String,
     instagram: String,
     facebook: String,
     youtube: String,
     vine: String,
+    snapchat: String,
+    music: String
   },
   triggerFrequency: {
     youtube: {
