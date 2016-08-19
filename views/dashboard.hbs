@@ -154,12 +154,12 @@
               style="color:#ffff00;">Snapchat</span></h4>
           </div>
           <div class="modal-body">
-              <form action="/snapchat" method="post" style="width: 75%; margin: auto">
+              <form action="/snapchat/" method="post" style="width: 75%; margin: auto">
                   <div class="row">
-                      <input class="form-control input" type="text" name="snapHandle" placeholder="Snapchat Handle" value="{{snapchat}}">
+                      <input class="form-control input" type="text" name="snapHandle" placeholder="Snapchat Handle" value="{{snapchat.displayName}}">
                   </div>
                   <div class="row">
-                      <input class="form-control input" type="number" name="snapFollowers" placeholder="Number of Followers">
+                      <input class="form-control input" type="number" name="snapFollowers" placeholder="Number of Followers" value="{{snapchat.followers}}">
                   </div> 
                   <div class="row">
                       <input class="form-control btn btn-default submit" style=" background-color:#ffff00; color:black;" type="hidden" name="user" value="{{user._id}}"/>
@@ -186,10 +186,10 @@
           <div class="modal-body">
               <form action="/music" method="post" style="width: 75%; margin: auto">
                   <div class="row">
-                      <input class="form-control input" type="text" name="musicHandle" placeholder="Musical.ly Handle" value="{{music}}">
+                      <input class="form-control input" type="text" name="musicHandle" placeholder="Musical.ly Handle" value="{{music.displayName}}">
                   </div>
                   <div class="row">
-                      <input class="form-control input" type="number" name="musicFollowers" placeholder="Number of Followers">
+                      <input class="form-control input" type="number" name="musicFollowers" placeholder="Number of Followers" value="{{music.followers}}">
                   </div> 
                   <div class="row">
                       <input class="form-control btn btn-default submit" style=" background-color:#ffff00; color:black;" type="hidden" name="user" value="{{user._id}}"/>
@@ -402,26 +402,62 @@
             </div>
             {{#if admin}}
             <div style="float: left; margin-left: 30px"><img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="40" width="40"/> Totals</div>
-            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-instagram"></i> {{tot.instagram}}</li>
-            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-facebook"></i> {{tot.facebook}}</li>
-            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-vine"></i> {{tot.vine}}</li>
-            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-youtube"></i> {{tot.youtube}}</li>
-            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-snapchat"></i> {{tot.snapchat}}</li>
-            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-twitter"></i> {{tot.twitter}}</li>
-            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-music"></i> {{tot.music}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-instagram"></i> 
+            {{#if tot.instagram}}
+              {{tot.instagram}}
+            {{else}}
+              0
+            {{/if}}
+            </li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-facebook"></i> 
+            {{#if tot.facebook}}
+              {{tot.facebook}}
+            {{else}}
+              0
+            {{/if}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-vine"></i> 
+            {{#if tot.vine}}
+              {{tot.vine}}
+            {{else}}
+              0
+            {{/if}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-youtube"></i> 
+            {{#if tot.youtube}}
+              {{tot.youtube}}
+            {{else}}
+              0
+            {{/if}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-snapchat"></i> 
+            {{#if tot.snapchat}}
+              {{tot.snapchat}}
+            {{else}}
+              0
+            {{/if}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-twitter"></i> 
+            {{#if tot.twitter}}
+              {{tot.twitter}}
+            {{else}}
+              0
+            {{/if}}</li>
+            <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-music"></i> 
+            {{#if tot.music}}
+              {{tot.music}}
+            {{else}}
+              0
+            {{/if}}</li>
             {{/if}}
 
             <ul class="nav navbar-nav navbar-right">
               
-                <input id="copyAll" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="Youtube: {{user.url.youtube}}, Instagram: {{user.url.instagram}}, Twitter:{{user.url.twitter}}, Facebook: {{user.url.facebook}}, Vine: {{user.url.vine}}, Snapchat: {{user.url.snapchat}}, Muscal.ly: {{user.url.music}}"/>
-                {{#if admin}}
-                  <input id="copyTeamTen" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="{{urlArray}}"/>
-                  <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyTeamTen')">Copy Team Ten Links</button>
-                {{/if}}
-                <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy my links</button>
-                {{#if admin}}
-                <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>
-                {{/if}}
+              <input id="copyAll" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="Youtube: {{user.url.youtube}}, Instagram: {{user.url.instagram}}, Twitter:{{user.url.twitter}}, Facebook: {{user.url.facebook}}, Vine: {{user.url.vine}}, Snapchat: {{user.url.snapchat}}, Muscal.ly: {{user.url.music}}"/>
+              {{#if admin}}
+                <input id="copyTeamTen" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="{{urlArray}}"/>
+                <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyTeamTen')">Copy Team Ten Links</button>
+              {{/if}}
+              <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy my links</button>
+              {{#if admin}}
+              <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>
+              {{/if}}
               
             </ul>
           </nav>
@@ -436,7 +472,13 @@
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #e52d27"><i class="fa fa-youtube"></i> Youtube Subscribers</span>
-              <div class="count">{{platformData.recent.youtube.followers}}</div>
+               <div class="count">
+              {{#if platformData.recent.youtube.followers}}
+                {{platformData.recent.youtube.followers}}
+              {{else}}
+                0
+              {{/if}}
+              </div>
               {{#if direction.youtube.up}}
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{change.youtube}}% </i> Since Yesterday</span>
               {{else if direction.youtube.down}}
@@ -451,7 +493,13 @@
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #ffc838"><i class="fa fa-instagram"></i> Instagram Followers</span>
-              <div class="count">{{platformData.recent.instagram.followers}}</div>
+               <div class="count">
+              {{#if platformData.recent.instagram.followers}}
+                {{platformData.recent.instagram.followers}}
+              {{else}}
+                0
+              {{/if}}
+              </div>
               {{#if direction.instagram.up}}
                 <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{change.instagram}}% </i> Since Yesterday</span>
               {{else if direction.instagram.down}}
@@ -466,7 +514,13 @@
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #4099FF"><i class="fa fa-twitter"></i> Twitter Followers</span>
-              <div class="count">{{platformData.recent.twitter.followers}}</div>
+               <div class="count">
+              {{#if platformData.recent.twitter.followers}}
+                {{platformData.recent.twitter.followers}}
+              {{else}}
+                0
+              {{/if}}
+              </div>
               {{#if direction.twitter.up}}
                 <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{change.twitter}}% </i> Since Yesterday</span>
               {{else if direction.twitter.down}}
@@ -481,7 +535,13 @@
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #3B5998"><i class="fa fa-facebook"></i> Facebook Page Fans</span>
-              <div class="count">{{platformData.recent.facebook.followers}}</div>
+               <div class="count">
+              {{#if platformData.recent.facebook.followers}}
+                {{platformData.recent.facebook.followers}}
+              {{else}}
+                0
+              {{/if}}
+              </div>
               {{#if direction.facebook.up}}
                 <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{change.facebook}}% </i> Since Yesterday</span>
               {{else if direction.facebook.down}}
@@ -499,7 +559,13 @@
           <div class="row tile_count" style="margin-bottom: 5px; margin-top: 0">
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #00a478"><i class="fa fa-vine"></i> Vine Followers</span>
-              <div class="count">{{platformData.recent.vine.followers}}</div>
+               <div class="count">
+              {{#if platformData.recent.vine.followers}}
+                {{platformData.recent.vine.followers}}
+              {{else}}
+                0
+              {{/if}}
+              </div>
               {{#if direction.vine.up}}
                 <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{change.vine}}% </i> Since Yesterday</span>
               {{else if direction.vine.down}}
@@ -513,7 +579,19 @@
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: black"><i class="fa fa-snapchat"></i> Snapchat Followers</span>
+              {{!-- {{#if platformData.recent.snapchat.followers}}
               <div class="count">{{platformData.recent.snapchat.followers}}</div>
+              {{else}}
+              <div class="count">0</div>
+              {{/if}} --}}
+              <div class="count">
+              {{#if platformData.recent.snapchat.followers}}
+                {{platformData.recent.snapchat.followers}}
+              {{else}}
+                0
+              {{/if}}
+              </div>
+              
               <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#snapchat">Update</button>
               <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#snapchatUrl')">Copy Link</button>
               <input id="snapchatUrl" style="visibility: hidden" value={{user.url.snapchat}} />
@@ -522,7 +600,13 @@
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #ff0f50"><i class="fa fa-music"></i> Musical.ly Followers</span>
-              <div class="count">{{platformData.recent.music.followers}}</div>
+               <div class="count">
+              {{#if platformData.recent.music.followers}}
+                {{platformData.recent.music.followers}}
+              {{else}}
+                0
+              {{/if}}
+              </div>
               <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#music">Update</button>
               <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#musicUrl')">Copy Link</button>
               <input id="musicUrl" style="visibility: hidden" value={{user.url.music}} />

@@ -125,6 +125,9 @@ router.get('/dashboard/:id', function(req, res, next) {
 					platforms.map((p) => {
 						if (platformData.recent[p]) {
 							change[p] = (((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100).toFixed(2);
+							if (isNaN(change[p])) {
+								change[p] = 0;
+							}
 							if (change[p] > 0) {
 								direction[p] = {
 									up: true,
@@ -161,8 +164,8 @@ router.get('/dashboard/:id', function(req, res, next) {
 								Profile.findOne({userId: user._id}, function(err, p) {
 									var d = {
 										tot,
-										snapchat: p.snapchat.displayName,
-										music: p.music.displayName,
+										snapchat: p.snapchat,
+										music: p.music,
 										postData: postData,
 										platformData: platformData,
 										admin: req.user.isAdmin,
@@ -172,6 +175,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 										change,
 										direction,
 										on,
+										tot,
 										urlArray
 									}
 									res.render('dashboard', d);
@@ -247,30 +251,30 @@ router.post('/dashboard/:id',(req, res, next) => {
 });
 
 router.post('/snapchat', function(req, res, next) {
-	User.findById(req.user._id, function(err, user){
+	User.findById(req.body.user, function(err, user) {
 		if(err) return console.log(err);
 		user.url.snapchat = req.body.snapHandle;
-		Profile.findOne({userId: req.user._id}, function(err, profile) {
+		Profile.findOne({userId: user._id}, function(err, profile) {
 			if (err) return next(err);
 			// console.log('profile..........', profile)
 			profile.snapchat.displayName = req.body.snapHandle;
 			profile.snapchat.followers = req.body.snapFollowers;
 			profile.save(function(err) {
 				if(err) return next(err);
-				user.save(function(err){
-				if(err) return next(err);
-				res.redirect('/dashboard')
-				})
+				user.save(function(err) {
+					if(err) return next(err);
+					res.redirect('/dashboard/' + user._id);
+				});
 			});
 		});	
 	});
 });
 
 router.post('/music', function(req, res, next) {
-	User.findById(req.user._id,function(err,user){
+	User.findById(req.body.user, function(err,user) {
 		if (err) return next(err);
 		user.url.music = req.body.musicHandle;
-		Profile.findOne({userId: req.user._id}, function(err, profile) {
+		Profile.findOne({userId: user._id}, function(err, profile) {
 			if (err) return next(err);
 			// console.log('profile..........', profile)
 			profile.music.displayName = req.body.musicHandle;
@@ -279,7 +283,7 @@ router.post('/music', function(req, res, next) {
 				if(err) return next(err);
 				user.save(function(err) {
 					if(err) return next(err);
-					res.redirect('/dashboard');
+					res.redirect('/dashboard/' + user._id);
 				});
 			});
 		});	

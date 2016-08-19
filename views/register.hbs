@@ -142,7 +142,11 @@ a {
 			<div class="container">
         <img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="150" width="150"/>
 				<h1 style="margin: 0">Register</h1>
+
 				<form method="post" role="form">
+        {{#if message}}
+        <p>{{message}}</p>
+        {{/if}}
 					<input type="text" name="username" placeholder="Username">
 	        <input  type="text" name="phoneNumber" placeholder="Phone Number">
 					<input type="password" name="password" placeholder="Password">
