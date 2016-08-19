@@ -175,6 +175,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 										change,
 										direction,
 										on,
+										tot,
 										urlArray
 									}
 									res.render('dashboard', d);
