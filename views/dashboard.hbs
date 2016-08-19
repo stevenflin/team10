@@ -406,58 +406,58 @@
             {{#if tot.instagram}}
               {{tot.instagram}}
             {{else}}
-            0
+              0
             {{/if}}
             </li>
             <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-facebook"></i> 
             {{#if tot.facebook}}
               {{tot.facebook}}
             {{else}}
-            0
+              0
             {{/if}}</li>
             <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-vine"></i> 
             {{#if tot.vine}}
               {{tot.vine}}
             {{else}}
-            0
+              0
             {{/if}}</li>
             <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-youtube"></i> 
             {{#if tot.youtube}}
               {{tot.youtube}}
             {{else}}
-            0
+              0
             {{/if}}</li>
             <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-snapchat"></i> 
             {{#if tot.snapchat}}
               {{tot.snapchat}}
             {{else}}
-            0
+              0
             {{/if}}</li>
             <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-twitter"></i> 
             {{#if tot.twitter}}
               {{tot.twitter}}
             {{else}}
-            0
+              0
             {{/if}}</li>
             <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-music"></i> 
             {{#if tot.music}}
               {{tot.music}}
             {{else}}
-            0
+              0
             {{/if}}</li>
             {{/if}}
 
             <ul class="nav navbar-nav navbar-right">
               
-                <input id="copyAll" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="Youtube: {{user.url.youtube}}, Instagram: {{user.url.instagram}}, Twitter:{{user.url.twitter}}, Facebook: {{user.url.facebook}}, Vine: {{user.url.vine}}, Snapchat: {{user.url.snapchat}}, Muscal.ly: {{user.url.music}}"/>
-                {{#if admin}}
-                  <input id="copyTeamTen" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="{{urlArray}}"/>
-                  <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyTeamTen')">Copy Team Ten Links</button>
-                {{/if}}
-                <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy my links</button>
-                {{#if admin}}
-                <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>
-                {{/if}}
+              <input id="copyAll" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="Youtube: {{user.url.youtube}}, Instagram: {{user.url.instagram}}, Twitter:{{user.url.twitter}}, Facebook: {{user.url.facebook}}, Vine: {{user.url.vine}}, Snapchat: {{user.url.snapchat}}, Muscal.ly: {{user.url.music}}"/>
+              {{#if admin}}
+                <input id="copyTeamTen" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="{{urlArray}}"/>
+                <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyTeamTen')">Copy Team Ten Links</button>
+              {{/if}}
+              <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy my links</button>
+              {{#if admin}}
+              <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>
+              {{/if}}
               
             </ul>
           </nav>
