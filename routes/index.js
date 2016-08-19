@@ -157,6 +157,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 								admin: req.user.isAdmin,
 								userArray: userArray,
 								me: req.user,
+								relevant: req.user.isAdmin || req.user._id === user._id,
 								change,
 								direction,
 								on,

@@ -4,6 +4,18 @@
     margin: 0;
   }
 
+  .tile_count .tile_stats_count {
+    margin-bottom: 0; 
+    padding-top: 10px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .top {
+    width: 25%;
+    margin-top: 10px;
+  }
+
   .top_nav .navbar-right {
     display: inline-block;
     width: initial;
@@ -149,6 +161,9 @@
                   <div class="row">
                       <input class="form-control input" type="number" name="snapFollowers" placeholder="Number of Followers">
                   </div> 
+                  <div class="row">
+                      <input class="form-control btn btn-default submit" style=" background-color:#ffff00; color:black;" type="hidden" name="user" value="{{user._id}}"/>
+                  </div>
                   <div class="row">
                       <input class="form-control btn btn-default submit" style="
                         background-color:#ffff00; color:black;" type="submit" value="Submit"/>
@@ -176,6 +191,9 @@
                   <div class="row">
                       <input class="form-control input" type="number" name="musicFollowers" placeholder="Number of Followers">
                   </div> 
+                  <div class="row">
+                      <input class="form-control btn btn-default submit" style=" background-color:#ffff00; color:black;" type="hidden" name="user" value="{{user._id}}"/>
+                  </div>
                   <div class="row">
                       <input class="form-control btn btn-default submit" style="
                         background-color:#ff0f50; color:white;" type="submit" value="Submit"/>
@@ -358,55 +376,11 @@
                 {{/if}}
               </ul>
             </div>
-            {{!-- <div class="menu_section">
-              <h3>Live On</h3>
-              <ul class="nav side-menu">
-                <li><a><i class="fa fa-bug"></i> Additional Pages <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="e_commerce.html">E-commerce</a></li>
-                    <li><a href="projects.html">Projects</a></li>
-                    <li><a href="project_detail.html">Project Detail</a></li>
-                    <li><a href="contacts.html">Contacts</a></li>
-                    <li><a href="profile.html">Profile</a></li>
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-windows"></i> Extras <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                    <li><a href="page_403.html">403 Error</a></li>
-                    <li><a href="page_404.html">404 Error</a></li>
-                    <li><a href="page_500.html">500 Error</a></li>
-                    <li><a href="plain_page.html">Plain Page</a></li>
-                    <li><a href="login.html">Login Page</a></li>
-                    <li><a href="pricing_tables.html">Pricing Tables</a></li>
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-sitemap"></i> Multilevel Menu <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu">
-                      <li><a href="#level1_1">Level One</a>
-                      <li><a>Level One<span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
-                          <li class="sub_menu"><a href="level2.html">Level Two</a>
-                          </li>
-                          <li><a href="#level2_1">Level Two</a>
-                          </li>
-                          <li><a href="#level2_2">Level Two</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a href="#level1_2">Level One</a>
-                      </li>
-                  </ul>
-                </li>                  
-                <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li>
-              </ul>
-            </div> --}}
 
           </div>
           <!-- /sidebar menu -->
 
           <!-- /menu footer buttons -->
-          {{!-- <a href="/logout" id="logout">
-            <p>Logout</p> --}}
             <div class="sidebar-footer hidden-small black" style="text-align: center">
             <a data-toggle="tooltip" data-placement="top" title="Back to integration" id="integrate" href="/integrate">
               <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -453,9 +427,9 @@
       <!-- page content -->
       <div class="right_col" role="main" style="background: white">
         <div class="">
-          <div class="row tile_count" style="margin-bottom: 0">
+          <div class="row tile_count " style="margin-bottom: 0">
 
-            <div class="col-md-2 col-md-offset-1 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #e52d27"><i class="fa fa-youtube"></i> Youtube Subscribers</span>
               <div class="count">{{platformData.recent.youtube.followers}}</div>
               {{#if direction.youtube.up}}
@@ -470,7 +444,7 @@
               <input id="youtubeUrl" style="visibility: hidden" value={{user.url.youtube}} />
             </div>
 
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #ffc838"><i class="fa fa-instagram"></i> Instagram Followers</span>
               <div class="count">{{platformData.recent.instagram.followers}}</div>
               {{#if direction.instagram.up}}
@@ -485,7 +459,7 @@
               <input id="instagramUrl" style="visibility: hidden" value={{user.url.instagram}} />
             </div>
 
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #4099FF"><i class="fa fa-twitter"></i> Twitter Followers</span>
               <div class="count">{{platformData.recent.twitter.followers}}</div>
               {{#if direction.twitter.up}}
@@ -500,7 +474,7 @@
               <input id="twitterUrl" style="visibility: hidden" value={{user.url.twitter}} />
             </div>
 
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #3B5998"><i class="fa fa-facebook"></i> Facebook Page Fans</span>
               <div class="count">{{platformData.recent.facebook.followers}}</div>
               {{#if direction.facebook.up}}
@@ -515,7 +489,10 @@
               <input id="facebookUrl" style="visibility: hidden" value={{user.url.facebook}}/>
             </div>
 
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+          </div>
+
+          <div class="row tile_count" style="margin-bottom: 5px; margin-top: 0">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #00a478"><i class="fa fa-vine"></i> Vine Followers</span>
               <div class="count">{{platformData.recent.vine.followers}}</div>
               {{#if direction.vine.up}}
@@ -529,11 +506,7 @@
               <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#vineUrl')">Copy Link</button>
               <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
             </div>
-
-          </div>
-
-          <div class="row tile_count" style="margin-bottom: 0; margin-top: 0">
-            <div class="col-md-offset-4 col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: black"><i class="fa fa-snapchat"></i> Snapchat Followers</span>
               <div class="count">{{platformData.recent.snapchat.followers}}</div>
               <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#snapchat">Update</button>
@@ -542,7 +515,7 @@
             </div>
 
 
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" style="margin-bottom: 0; padding-top: 10px">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #ff0f50"><i class="fa fa-music"></i> Musical.ly Followers</span>
               <div class="count">{{platformData.recent.music.followers}}</div>
               <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#music">Update</button>

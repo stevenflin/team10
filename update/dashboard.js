@@ -37,7 +37,13 @@ function getAll() {
 			});
 			for (var key in tot) {
 				tot[key] = tot[key].reduce(function(a,b) {
-					return a + b;
+					if (a === NaN || a === undefined || a === null) {
+						return 0 + b;
+					} else if (b === NaN || b === undefined || b === null) {
+						return a + 0;
+					} else {
+						return a + b;
+					}
 				});
 				// console.log('keys', tot[key])
 			}
