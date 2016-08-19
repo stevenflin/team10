@@ -10,6 +10,8 @@ var checkAdmin = dashboardFunctions.checkAdmin;
 var getPlatformPosts = dashboardFunctions.getPlatformPosts;
 var getAllUrls = dashboardFunctions.getAllUrls;
 
+var getAll = dashboardFunctions.getAll;
+
 var update = require('../update/update');
 var updateUser = update.updateUser;
 
@@ -108,67 +110,77 @@ router.get('/dashboard/:id', function(req, res, next) {
 	req.session.unlockDate = new Date();
 	var id = req.params.id;
 	User.findById(id)
-	.lean() 
-	.exec(function(err, user) {
-		checkAdmin(req.user)
-		.then((userArray) => {
-			getGeneral(id) // gets subscriber, follower/data
-			.then((platformData) => { 
-				var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
-				var change = {};
-				var direction = {};
-				var posts;
-				platforms.map((p) => {
-					if (platformData.recent[p]) {
-						change[p] = (((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100).toFixed(2);
-						if (change[p] > 0) {
-							direction[p] = {
-								up: true,
-								down: false
-							}
-						} else if (change[p] < 0) {
-							direction[p] = {
-								up: false,
-								down: true
-							}
-						} else {
-							direction[p] = {
-								up: false,
-								down: false
+		.lean() 
+		.exec(function(err, user) {
+			getAll()
+			.then((tot)=>{
+				checkAdmin(req.user)
+			.then((userArray) => {
+				getGeneral(id) // gets subscriber, follower/data
+				.then((platformData) => { 
+					var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
+					var change = {};
+					var direction = {};
+					var posts;
+					platforms.map((p) => {
+						if (platformData.recent[p]) {
+							change[p] = (((platformData.recent[p].followers - platformData.recent[p].last) / platformData.recent[p].last) * 100).toFixed(2);
+							if (change[p] > 0) {
+								direction[p] = {
+									up: true,
+									down: false
+								}
+							} else if (change[p] < 0) {
+								direction[p] = {
+									up: false,
+									down: true
+								}
+							} else {
+								direction[p] = {
+									up: false,
+									down: false
+								}
 							}
 						}
-					}
-				});
-				getPosts(id) // get posts for the person
-				.then((postData)=>{
-					posts = postData;
-					getAllUrls(req.user)
-				})
-				.then((urlArray)=>{
-					console.log("Gets to this ish", urlArray)
-					var on = {};
-					for (var key in user.triggerFrequency) {
-						if (user.triggerFrequency[key].turnedOn) {
-							on[key] = "true";
-						}
-					}
-					console.log("URL MANE", urlArray)
-					console.log("PLEASE WORK YO,", posts)
-					res.render('dashboard', {
-						postData: posts,
-						platformData: platformData,
-						admin: req.user.isAdmin,
-						userArray: userArray,
-						user,
-						me: req.user,
-						change,
-						direction,
-						on,
-						urlArray
 					});
-					console.log("here x2")
+					getPosts(id) // get posts for the person
+					.then((postData)=>{
+						posts = postData;
+						console.log("got posts");
+						getAllUrls(req.user)
+							.then((urlArray)=>{
+								console.log("Gets to this ish", urlArray)
+								var on = {};
+								for (var key in user.triggerFrequency) {
+									if (user.triggerFrequency[key].turnedOn) {
+										on[key] = "true";
+									}
+								}
+								console.log("718")
+
+								Profile.findOne({userId: user._id}, function(err, p) {
+									var d = {
+										tot,
+										snapchat: p.snapchat.displayName,
+										music: p.music.displayName,
+										postData: postData,
+										platformData: platformData,
+										admin: req.user.isAdmin,
+										userArray: userArray,
+										user,
+										me: req.user,
+										change,
+										direction,
+										on,
+										urlArray
+									}
+									res.render('dashboard', d);
+								});
+							})
+						console.log("here x2")
+					})
 				})
-			});
+			})
 		}).catch(console.log.bind(this, "[error]"));
 	});
 });
@@ -190,7 +202,7 @@ router.get('/dashboard/:platform/:id', function(req, res, next) {
 			admin: req.user.isAdmin,
 			userArray: users,
 			data: data
-		});
+		})
 	});
 });
 
@@ -232,6 +244,46 @@ router.post('/dashboard/:id',(req, res, next) => {
 	   	  	res.redirect('/dashboard/'+req.params.id);
 	    });
 	});
+});
+
+router.post('/snapchat', function(req, res, next) {
+	User.findById(req.user._id, function(err, user){
+		if(err) return console.log(err);
+		user.url.snapchat = req.body.snapHandle;
+		Profile.findOne({userId: req.user._id}, function(err, profile) {
+			if (err) return next(err);
+			// console.log('profile..........', profile)
+			profile.snapchat.displayName = req.body.snapHandle;
+			profile.snapchat.followers = req.body.snapFollowers;
+			profile.save(function(err) {
+				if(err) return next(err);
+				user.save(function(err){
+				if(err) return next(err);
+				res.redirect('/dashboard')
+				})
+			});
+		});	
+	});
+});
+
+router.post('/music', function(req, res, next) {
+	User.findById(req.user._id,function(err,user){
+		if (err) return next(err);
+		user.url.music = req.body.musicHandle;
+		Profile.findOne({userId: req.user._id}, function(err, profile) {
+			if (err) return next(err);
+			// console.log('profile..........', profile)
+			profile.music.displayName = req.body.musicHandle;
+			profile.music.followers = req.body.musicFollowers;
+			profile.save(function(err) {
+				if(err) return next(err);
+				user.save(function(err) {
+					if(err) return next(err);
+					res.redirect('/dashboard');
+				});
+			});
+		});	
+	})
 });
 
 module.exports = router;

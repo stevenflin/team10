@@ -117,6 +117,14 @@ var profile = new mongoose.Schema({
     followers: Number,
     last: Number
   },
+  snapchat: {
+    displayName: String,
+    followers: Number
+  },
+  music: {
+    displayName: String,
+    followers: Number
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
