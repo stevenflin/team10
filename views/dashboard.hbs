@@ -154,12 +154,12 @@
               style="color:#ffff00;">Snapchat</span></h4>
           </div>
           <div class="modal-body">
-              <form action="/snapchat" method="post" style="width: 75%; margin: auto">
+              <form action="/snapchat/" method="post" style="width: 75%; margin: auto">
                   <div class="row">
-                      <input class="form-control input" type="text" name="snapHandle" placeholder="Snapchat Handle" value="{{snapchat}}">
+                      <input class="form-control input" type="text" name="snapHandle" placeholder="Snapchat Handle" value="{{snapchat.displayName}}">
                   </div>
                   <div class="row">
-                      <input class="form-control input" type="number" name="snapFollowers" placeholder="Number of Followers">
+                      <input class="form-control input" type="number" name="snapFollowers" placeholder="Number of Followers" value="{{snapchat.followers}}">
                   </div> 
                   <div class="row">
                       <input class="form-control btn btn-default submit" style=" background-color:#ffff00; color:black;" type="hidden" name="user" value="{{user._id}}"/>
@@ -186,10 +186,10 @@
           <div class="modal-body">
               <form action="/music" method="post" style="width: 75%; margin: auto">
                   <div class="row">
-                      <input class="form-control input" type="text" name="musicHandle" placeholder="Musical.ly Handle" value="{{music}}">
+                      <input class="form-control input" type="text" name="musicHandle" placeholder="Musical.ly Handle" value="{{music.displayName}}">
                   </div>
                   <div class="row">
-                      <input class="form-control input" type="number" name="musicFollowers" placeholder="Number of Followers">
+                      <input class="form-control input" type="number" name="musicFollowers" placeholder="Number of Followers" value="{{music.followers}}">
                   </div> 
                   <div class="row">
                       <input class="form-control btn btn-default submit" style=" background-color:#ffff00; color:black;" type="hidden" name="user" value="{{user._id}}"/>
