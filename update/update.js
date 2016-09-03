@@ -41,7 +41,7 @@ var updateDaily = function() {
                 .then(() => {
                     console.log('vine...........success');
                     facebookUpdate(user)
-                }) //fix pauses the update route
+                })
                 .then(() => {
                     console.log('facebook.......success');
                 });

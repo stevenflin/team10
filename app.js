@@ -165,6 +165,8 @@ passport.use(new InstagramStrategy({
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {
+    console.log('is there anybody out there????');
+    console.log('profile profile.............', profile);
     // console.log("token", accessToken);
     // console.log("refreshToken", refreshToken);
     // console.log("profile", profile);
@@ -177,7 +179,7 @@ passport.use(new InstagramStrategy({
     user.url.instagram = 'www.instagram.com/'+user.instagram.instagramProfile.username;
     user.save(function () {
       Profile.findOne({userId: user._id}, function(err, p) {
-        p.instagram.displayName = profile.displayName;
+        p.instagram.displayName = profile.username;
         p.save(function(err) {
           if (err) return console.log(err);
         })
