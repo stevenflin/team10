@@ -55,6 +55,7 @@ var updateFrequent = function() {
     return new Promise(function(resolve, reject) {
         User.find(function(err, users) {
             users.forEach(function(user) {
+                console.log('how many times do i run through here?')
                 var isTwenty = true;
                 instagramUpdate(user, isTwenty)
                 .then(() => {
