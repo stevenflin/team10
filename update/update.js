@@ -44,48 +44,41 @@ var updateDaily = function() {
                 }) //fix pauses the update route
                 .then(() => {
                     console.log('facebook.......success');
-                    resolve();
                 });
             });
+            resolve();
         });
     });
 }
 
 var updateFrequent = function() {
-    var arr = [];
-    return new Promise(function(masterResolve, masterReject) {
+    return new Promise(function(resolve, reject) {
         User.find(function(err, users) {
             users.forEach(function(user) {
-                arr.push(
-                new Promise(function(resolve, reject) {
-                    var isTwenty = true;
-                    instagramUpdate(user, isTwenty)
-                    .then(() => {
-                        console.log('instagram......success');
-                        youtubeUpdate(user, isTwenty)
-                    })
-                    .then(() => {
-                        console.log('youtube........success');
-                        twitterUpdate(user, isTwenty)
-                    })
-                    .then(() => {
-                        console.log('twitter........success');
-                        vineUpdate(user, isTwenty)
-                    })
-                    .then(() => {
-                        console.log('vine...........success');
-                        facebookUpdate(user, isTwenty)
-                    })
-                    .then(() => {
-                        console.log('facebook.......success');
-                        resolve();
-                    });
-                }));
+                var isTwenty = true;
+                instagramUpdate(user, isTwenty)
+                .then(() => {
+                    console.log('instagram......success');
+                    youtubeUpdate(user, isTwenty)
+                })
+                .then(() => {
+                    console.log('youtube........success');
+                    twitterUpdate(user, isTwenty)
+                })
+                .then(() => {
+                    console.log('twitter........success');
+                    vineUpdate(user, isTwenty)
+                })
+                .then(() => {
+                    console.log('vine...........success');
+                    facebookUpdate(user, isTwenty)
+                })
+                .then(() => {
+                    console.log('facebook.......success');
+                });
             });
+            resolve();
         });
-        Promise
-        .all(arr)
-        .then(() => masterResolve());
     });
 }
 
