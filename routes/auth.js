@@ -60,7 +60,7 @@ module.exports = function(passport) {
 
   //1ST WALL
   router.use(function(req, res, next) {
-    console.log("first wall");
+    // console.log("first wall");
     var threshold = 30 * 60 * 1000;
     var diff = new Date - new Date(req.session.unlockDate);
     if (!req.session.unlocked || diff > threshold ) {
@@ -152,41 +152,35 @@ module.exports = function(passport) {
  }));
   
   router.get('/auth/deleteFb', (req, res, next)=>{
-      // facebook.api("/"+req.user.facebook.id+"/permissions", "delete");
-      User.findById(req.user.id, function(err, user){
-        user.facebook = null;
-        user.save(function(err, success){
-          if(err){
-            console.log("Error saving user", err)
-          }
-          else{
-            console.log("Success 1", success)
-          }
-          Profile.findOne({userId: user._id}, function(err, profile) {
-            profile.facebook = null;
-            profile.save(function(err, success){
-              if(err){
-                console.log("Error saving profile,", err)
+    // facebook.api("/"+req.user.facebook.id+"/permissions", "delete");
+    User.findById(req.user.id, function(err, user){
+      user.facebook = null;
+      user.save(function(err, success){
+        if(err){
+          console.log("Error saving user", err)
+        }
+        Profile.findOne({userId: user._id}, function(err, profile) {
+          profile.facebook = null;
+          profile.save(function(err, success){
+            if(err){
+              console.log("Error saving profile,", err)
+            }
+            else {
+              ProfileSnapshot.remove({profileId: profile._id}, function(err, success) {
+                if(err){
+                  console.log("Error removing snapshot", err)
                 }
-              else{
-                console.log("Success 2")
-                ProfileSnapshot.remove({profileId: profile._id}, function(err, success){
-                  if(err){
-                    console.log("Error removing snapshot", err)
-                  }
-                  else{
-                    console.log("Success 3", success)
-                    res.redirect('/integrate')
-
-                  }
-                });
-              }
-            })
-          })
-        })
-      })
-    }
-  );
+                else{
+                  // console.log("Success 3", success)
+                  res.redirect('/integrate')
+                }
+              });
+            }
+          });
+        });
+      });
+    });
+  });
 
 
   // INSTAGRAM 
@@ -243,8 +237,6 @@ module.exports = function(passport) {
       password: encrypted,
     }
     req.user.save(function(err, user) {
-      console.log(err);
-      console.log("vine user", user)
       if (err) return next(err);
       Profile.findOne({userId: user._id}, function(err, p){
         p.vine.displayName = user.vine.username;
