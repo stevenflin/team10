@@ -16,8 +16,8 @@ function instagramInformation(id, accessToken){
 		    pagination.next(instagramPages); // Will get second page results 
 		  } else {
 		 	ig.user(id, function(err, result, remaining, limit) {
-		 		if(err) return next(err);
-		 			resolve({bigArr, profile: result.counts.followed_by})
+		 		if(err) return reject(err);
+		 		resolve({bigArr, profile: result.counts.followed_by})
 		 	});
 		  }
 		}
