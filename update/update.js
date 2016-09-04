@@ -61,7 +61,7 @@ var updateDaily = function() {
                 promises.push(youtubeUpdate(user) );
                 promises.push(twitterUpdate(user) );
                 promises.push(vineUpdate(user) );
-                // promises.push(facebookUpdate(user) );
+                promises.push(facebookUpdate(user) );
             });
 
             console.log("AM I HERE");
@@ -88,7 +88,7 @@ var updateFrequent = function() {
                 promises.push(youtubeUpdate(user, isTwenty) );
                 promises.push(twitterUpdate(user, isTwenty) );
                 promises.push(vineUpdate(user, isTwenty) );
-                // promises.push(facebookUpdate(user, isTwenty) );
+                promises.push(facebookUpdate(user, isTwenty) );
             });
 
             console.log("AM I HERE");
