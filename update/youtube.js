@@ -103,13 +103,13 @@ function getYoutubeData(channelId) {
 }
 
 function youtubeUpdate(user, twentyMinUpdate) {
-	console.log('hello')
+	console.log('youtube 111');
 	return new Promise(function(resolve, reject) {
 		getYoutubeData(user.youtube.profile.id)
 		.then(function(data) {
 			return new Promise(function(interResolve, interReject) {
 				Profile.findOne({userId: user._id},function(err, profile) {
-					if (err) return next(err);
+					if (err) return reject(err);
 
 					if (data.videos.length === 0) {
 						return resolve();
@@ -152,17 +152,20 @@ function youtubeUpdate(user, twentyMinUpdate) {
 										date: p.date
 									}).save(function(err, psnap) {
 										if (err) return next(err);
-										posts.push(post);
-										if (posts.length === data.videos.length) {
-											posts = posts.sort(function(a, b) {
-												return b.date - a.date;
-											});
-											// console.log('post post post..........', posts)
-											interResolve(posts[0]);
-										}
+										
 										post.snapshots.push(psnap._id);
 										post.save(function(err) {
 											if (err) return next(err);
+
+											posts.push(post);
+											if (posts.length === data.videos.length) {
+												posts = posts.sort(function(a, b) {
+													return b.date - a.date;
+												});
+												// console.log('post post post..........', posts)
+												interResolve(posts[0]);
+											}
+											console.log('youtube 333')
 											resolve();
 										});
 									});
@@ -191,7 +194,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);
-									console.log('hello again')
+									console.log('youtube 222');
 									resolve();
 								});
 							});

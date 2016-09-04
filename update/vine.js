@@ -45,7 +45,7 @@ function vineInformation(username, password){
 
 
 function vineUpdate(user, twentyMinUpdate) {
-	// console.log("reached 9")
+	console.log("vine 111")
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
 			if (err) return next(err);
@@ -101,7 +101,6 @@ function vineUpdate(user, twentyMinUpdate) {
 										post.snapshots.push(psnap._id);
 										post.save(function(err) {
 											if(err) return next(err);
-											resolve();
 
 											posts.push(post);
 											if (posts.length === data.data.records.length) {
@@ -111,9 +110,7 @@ function vineUpdate(user, twentyMinUpdate) {
 												// console.log('post post post..........', posts)
 												interResolve(posts[0]);
 											}
-										});
-										post.save(function(err) {
-											if(err) return next(err);
+											console.log('vine 333')
 											resolve();
 										});
 									});
@@ -140,6 +137,7 @@ function vineUpdate(user, twentyMinUpdate) {
 
 								post.save(function(err) {
 									if (err) return console.log(err);
+									console.log('vine 222')
 									resolve();
 								});
 							});

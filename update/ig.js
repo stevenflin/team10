@@ -29,7 +29,7 @@ function instagramInformation(id, accessToken){
 }
 
 function instagramUpdate(user, twentyMinUpdate) {
-	console.log('do i get in here');
+	console.log('instagram 111');
 	// console.log("[instagram : user]", user);
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
@@ -93,7 +93,6 @@ function instagramUpdate(user, twentyMinUpdate) {
 										postData.snapshots.push(psnap._id);
 										postData.save(function(err){
 											if(err) return next(err);
-											resolve();
 											posts.push(postData);
 
 											if (posts.length === data.bigArr.length) {
@@ -107,6 +106,8 @@ function instagramUpdate(user, twentyMinUpdate) {
 												// console.log("[see these posts]", cPosts);
 												interResolve(posts[0]);
 											}
+											console.log('instagram 333')
+											resolve();
 										});			
 									});
 								});
@@ -134,7 +135,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 
 								postData.save(function(err) {
 									if (err) return console.log(err);
-									console.log('what about HEREE;ASDJF;ASJFD;A')
+									console.log('instagram 222')
 									resolve();
 								});
 							});

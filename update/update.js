@@ -21,32 +21,58 @@ var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
 
+// var updateDaily = function() {
+//     return new Promise(function(resolve, reject) {
+//         User.find(function(err, users) {
+//             users.forEach(function(user) {
+//                 instagramUpdate(user)
+//                 .then(() => {
+//                     console.log('instagram......success');
+//                     youtubeUpdate(user)
+//                 })
+//                 .then(() => {
+//                     console.log('youtube........success');
+//                     twitterUpdate(user)
+//                 })
+//                 .then(() => {
+//                     console.log('twitter........success');
+//                     vineUpdate(user)
+//                 })
+//                 .then(() => {
+//                     console.log('vine...........success');
+//                     facebookUpdate(user)
+//                 })
+//                 .then(() => {
+//                     console.log('facebook.......success');
+//                 });
+//             });
+//             resolve();
+//         });
+//     });
+// }
+
 var updateDaily = function() {
     return new Promise(function(resolve, reject) {
         User.find(function(err, users) {
+            if (err) return reject(err);
+            promises = [];
             users.forEach(function(user) {
-                instagramUpdate(user)
-                .then(() => {
-                    console.log('instagram......success');
-                    youtubeUpdate(user)
-                })
-                .then(() => {
-                    console.log('youtube........success');
-                    twitterUpdate(user)
-                })
-                .then(() => {
-                    console.log('twitter........success');
-                    vineUpdate(user)
-                })
-                .then(() => {
-                    console.log('vine...........success');
-                    facebookUpdate(user)
-                })
-                .then(() => {
-                    console.log('facebook.......success');
-                });
+                // promises.push(instagramUpdate(user) );
+                promises.push(youtubeUpdate(user) );
+                promises.push(twitterUpdate(user) );
+                promises.push(vineUpdate(user) );
+                // promises.push(facebookUpdate(user) );
             });
-            resolve();
+
+            console.log("AM I HERE");
+
+            Promise
+            .all(promises)
+            .then((values) => {
+                console.log(values);
+                console.log("inside values");
+                resolve();
+            });
         });
     });
 }
@@ -59,22 +85,19 @@ var updateFrequent = function() {
             users.forEach(function(user) {
                 var isTwenty = true;
                 // promises.push(instagramUpdate(user, isTwenty) );
-                promises.push( new Promise((interResolve, interReject) => { 
-                    youtubeUpdate(user, isTwenty).then(() => {   
-                        interResolve();   
-                    });   
-                }));
-                // promises.push(twitterUpdate(user, isTwenty) );
-                // promises.push(vineUpdate(user, isTwenty) );
-                // promises.push(facebookUpdate(user, isTwenty)  );
+                promises.push(youtubeUpdate(user, isTwenty) );
+                promises.push(twitterUpdate(user, isTwenty) );
+                promises.push(vineUpdate(user, isTwenty) );
+                // promises.push(facebookUpdate(user, isTwenty) );
             });
 
-            console.log("AM I HERE", promises.length);
+            console.log("AM I HERE");
 
             Promise
             .all(promises)
-            .then((users) => {
-                console.log(users);
+            .then((values) => {
+                console.log(values);
+                console.log("inside values");
                 resolve();
             });
         });
