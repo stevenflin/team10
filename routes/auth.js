@@ -94,7 +94,7 @@ module.exports = function(passport) {
 
     if(req.body.phoneNumber.length !== 10){
       return res.render('register',{
-        message: 'Format it like this please 3105551234'
+        message: 'Format phone number like this please: 3105551234'
       });
     }
 
