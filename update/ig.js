@@ -11,6 +11,7 @@ function instagramInformation(id, accessToken){
 		var bigArr = [];
 		var instagramPages = function (err, medias, pagination, remaining, limit) {
 		// console.log("medias", medias)
+		console.log("accesstoken invalid ", err);
 	 	bigArr = bigArr.concat(medias);
 		if(pagination.next) {
 		    pagination.next(instagramPages); // Will get second page results 

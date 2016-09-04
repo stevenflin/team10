@@ -48,11 +48,12 @@ router.get('/integrate', function(req, res, next) {
 
 router.get('/fbPageSelector', function(req, res, next) {
 	new Promise(function(resolve, reject) {
-
+		// console.log("is this working ", req.user.facebook.token)
 		FB.setAccessToken(req.user.facebook.token);
 
 		FB.api('/'+req.user.facebook.id+'/accounts', function (res) { //takes facebook user id and gets pages that they administer
 			if(!res || res.error) {
+				console.log("what error-----", res.error)
 				console.log(!res ? 'error occurred' : res.error);
 				reject(res.error);
 			}
@@ -60,6 +61,7 @@ router.get('/fbPageSelector', function(req, res, next) {
 		});
 	})
 	.then((result) => {
+		// console.log("result data", result.data)
 		return res.render('fbPageSelector', {result: result.data})
 	})
 	.catch((err) => console.log(err));
