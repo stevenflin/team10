@@ -52,48 +52,48 @@ var updateDaily = function() {
     });
 }
 
-var updateFrequent = function() {
-    return new Promise(function(resolve, reject) {
-        User.find(function(err, users) {
-            if (err) return reject(err);
-            // console.log('users users users...........', users)
-            users = users.map(function(user) {
-                return new Promise(function(interResolve, interReject) {
-                    var isTwenty = true;
-                    instagramUpdate(user, isTwenty)
-                    .then(() => {
-                        console.log('instagram......success');
-                        youtubeUpdate(user, isTwenty)
-                    })
-                    .then(() => {
-                        console.log('youtube........success');
-                        twitterUpdate(user, isTwenty)
-                    })
-                    .then(() => {
-                        console.log('twitter........success');
-                        vineUpdate(user, isTwenty)
-                    })
-                    .then(() => {
-                        console.log('vine...........success');
-                        facebookUpdate(user, isTwenty);
-                    })
-                    .then(() => {
-                        console.log('facebook.......success');
-                        interResolve();
-                    });
-                });
-            });
-            // console.log('again again again...........', users)
-            Promise
-            .all(users)
-            .then((data) => {
-                // console.log('user user user user..................................', users);
-                // console.log('data data data data..................................', data);
-                resolve();
-            });
-        });
-    });
-}
+// var updateFrequent = function() {
+//     return new Promise(function(resolve, reject) {
+//         User.find(function(err, users) {
+//             if (err) return reject(err);
+//             // console.log('users users users...........', users)
+//             users = users.map(function(user) {
+//                 return new Promise(function(interResolve, interReject) {
+//                     var isTwenty = true;
+//                     instagramUpdate(user, isTwenty)
+//                     .then(() => {
+//                         console.log('instagram......success');
+//                         youtubeUpdate(user, isTwenty)
+//                     })
+//                     .then(() => {
+//                         console.log('youtube........success');
+//                         twitterUpdate(user, isTwenty)
+//                     })
+//                     .then(() => {
+//                         console.log('twitter........success');
+//                         vineUpdate(user, isTwenty)
+//                     })
+//                     .then(() => {
+//                         console.log('vine...........success');
+//                         facebookUpdate(user, isTwenty);
+//                     })
+//                     .then(() => {
+//                         console.log('facebook.......success');
+//                         interResolve();
+//                     });
+//                 });
+//             });
+//             // console.log('again again again...........', users)
+//             Promise
+//             .all(users)
+//             .then((data) => {
+//                 // console.log('user user user user..................................', users);
+//                 // console.log('data data data data..................................', data);
+//                 resolve();
+//             });
+//         });
+//     });
+// }
 
 var updateFrequent = function() {
     return new Promise(function(resolve, reject) {
