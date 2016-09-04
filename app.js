@@ -165,8 +165,6 @@ passport.use(new InstagramStrategy({
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {
-    console.log('is there anybody out there????');
-    console.log('profile profile.............', profile);
     // console.log("token", accessToken);
     // console.log("refreshToken", refreshToken);
     // console.log("profile", profile);

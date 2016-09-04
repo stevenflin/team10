@@ -10,7 +10,8 @@ function instagramInformation(id, accessToken){
 	return new Promise(function(resolve, reject){
 		var bigArr = [];
 		var instagramPages = function (err, medias, pagination, remaining, limit) {
-		// console.log("medias", medias)
+		// console.log('what does this look like.........', err)
+		// console.log("PAGINATION PAGINATION PAGINATION..........", pagination)
 	 	bigArr = bigArr.concat(medias);
 		if(pagination.next) {
 		    pagination.next(instagramPages); // Will get second page results 
@@ -28,6 +29,7 @@ function instagramInformation(id, accessToken){
 }
 
 function instagramUpdate(user, twentyMinUpdate) {
+	console.log('do i get in here');
 	// console.log("[instagram : user]", user);
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
@@ -132,6 +134,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 
 								postData.save(function(err) {
 									if (err) return console.log(err);
+									console.log('what about HEREE;ASDJF;ASJFD;A')
 									resolve();
 								});
 							});

@@ -88,7 +88,7 @@ function getYoutubeData(channelId) {
 				});
 
 				// get all data
-				console.log("[exiting function]");
+				// console.log("[exiting function]");
 				Promise
 				.all(videoArr)
 				.then((results) => {
@@ -103,6 +103,7 @@ function getYoutubeData(channelId) {
 }
 
 function youtubeUpdate(user, twentyMinUpdate) {
+	console.log('hello')
 	return new Promise(function(resolve, reject) {
 		getYoutubeData(user.youtube.profile.id)
 		.then(function(data) {
@@ -190,6 +191,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);
+									console.log('hello again')
 									resolve();
 								});
 							});

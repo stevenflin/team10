@@ -54,30 +54,25 @@ var updateDaily = function() {
 var updateFrequent = function() {
     return new Promise(function(resolve, reject) {
         User.find(function(err, users) {
+            if (err) return reject(err);
+            promises = [];
             users.forEach(function(user) {
                 var isTwenty = true;
-                instagramUpdate(user, isTwenty)
-                .then(() => {
-                    console.log('instagram......success');
-                    youtubeUpdate(user, isTwenty)
-                })
-                .then(() => {
-                    console.log('youtube........success');
-                    twitterUpdate(user, isTwenty)
-                })
-                .then(() => {
-                    console.log('twitter........success');
-                    vineUpdate(user, isTwenty)
-                })
-                .then(() => {
-                    console.log('vine...........success');
-                    facebookUpdate(user, isTwenty)
-                })
-                .then(() => {
-                    console.log('facebook.......success');
-                });
+                // promises.push(instagramUpdate(user, isTwenty) );
+                promises.push(youtubeUpdate(user, isTwenty) );
+                // promises.push(twitterUpdate(user, isTwenty) );
+                // promises.push(vineUpdate(user, isTwenty) );
+                // promises.push(facebookUpdate(user, isTwenty)  );
             });
-            resolve();
+
+            console.log("AM I HERE", promises.length);
+
+            // Promise
+            // .all(promises)
+            // .then((users) => {
+            //     console.log(users);
+            //     resolve();
+            // });
         });
     });
 }

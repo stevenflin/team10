@@ -146,7 +146,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 	
 
 			FB.setAccessToken(user.facebook.token);
-			console.log("69", user)
+			// console.log("69", user)
 			if (user.facebook.pages.length === 0) {
 				return resolve();
 			}
