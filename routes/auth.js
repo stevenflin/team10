@@ -92,6 +92,12 @@ module.exports = function(passport) {
       });
     }
 
+    if(req.body.phoneNumber.length !== 10){
+      return res.render('register',{
+        message: 'Format it like this please 3105551234'
+      });
+    }
+
     new User({
       username: req.body.username,
       password: hash, 
