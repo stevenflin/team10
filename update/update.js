@@ -59,7 +59,11 @@ var updateFrequent = function() {
             users.forEach(function(user) {
                 var isTwenty = true;
                 // promises.push(instagramUpdate(user, isTwenty) );
-                promises.push(youtubeUpdate(user, isTwenty) );
+                promises.push( new Promise((interResolve, interReject) => { 
+                    youtubeUpdate(user, isTwenty).then(() => {   
+                        interResolve();   
+                    });   
+                }));
                 // promises.push(twitterUpdate(user, isTwenty) );
                 // promises.push(vineUpdate(user, isTwenty) );
                 // promises.push(facebookUpdate(user, isTwenty)  );
@@ -67,12 +71,12 @@ var updateFrequent = function() {
 
             console.log("AM I HERE", promises.length);
 
-            // Promise
-            // .all(promises)
-            // .then((users) => {
-            //     console.log(users);
-            //     resolve();
-            // });
+            Promise
+            .all(promises)
+            .then((users) => {
+                console.log(users);
+                resolve();
+            });
         });
     });
 }
