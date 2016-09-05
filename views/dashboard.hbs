@@ -577,6 +577,7 @@
               <button class="btn btn-default btn-sm"  style="color:grey" onclick="copyToClipboard('#vineUrl')">Copy Link</button>
               <input id="vineUrl" style="visibility: hidden" value={{user.url.vine}} />
             </div>
+
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: black"><i class="fa fa-snapchat"></i> Snapchat Followers</span>
               {{!-- {{#if platformData.recent.snapchat.followers}}
@@ -612,6 +613,19 @@
               <input id="musicUrl" style="visibility: hidden" value={{user.url.music}} />
             </div>
 
+            <div class="row tile_count" style="margin-bottom: 5px; margin-top: 0">
+              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
+                <span class="count_top" style="color: black"><img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="20" width="20"/> Total {{me.username}} Followers</span>
+                 <div class="count">
+                {{#if platformData.recent.vine.followers}}
+                  {{platformData.recent.vine.followers}}
+                {{else}}
+                  0
+                {{/if}}
+                </div>
+               
+               
+              </div>
 
           </div>
           <div>
