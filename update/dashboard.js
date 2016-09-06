@@ -270,62 +270,11 @@ function getPlatformPosts(id, platform) {
 	});
 }
 
-function getTotalFollowers(id){
-	return new Promise(function(resolve, reject){
-		// console.log("ehehehehehehhe")
-		Profile.findOne({userId: id},(function(err, profile){
-			console.log("heheheeheheh", profile)
-			if(err) return reject(err);
-			var totalFollows = {};
-			var keys = ['instagram', 'youtube', 'vine', 'twitter', 'facebook', 'snapchat','music']
-			for(var i = 0; i < keys.length; i++){
-				if(!totalFollows[keys[i]]){
-					totalFollows[keys[i]] = [];
-				}
-			}
-			console.log('what does this', totalFollows)
-			profile.find({profileId: profile._id}, function(err, p){
-				if(err) return next(err);
-				for(var i = 0; i < keys.length; i++){
-					if(p[keys[i]]){
-						totalFollows[keys[i]].push(p[keys[i]].followers)
-					}
-				}
-			})
-			// console.log("what what", totalFollows)
-			for (var key in totalFollows) {
-				totalFollows[key] = totalFollows[key].reduce(function(a,b) {
-					if (a === NaN || a === undefined || a === null) {
-						return 0 + b;
-					} else if (b === NaN || b === undefined || b === null) {
-						return a + 0;
-					} else {
-						return a + b;
-					}
-				}, 0);
-			}
-			// console.log("this this this", totalFollows);
-			var sum = 0;
-			  for(var el in totalFollows) {
-			    if(totalFollows.hasOwnProperty(el)) {
-			      sum += parseFloat(totalFollows[el]);
-			    }
-			  }
-			  console.log("sum sum sum ", sum);
-			  resolve(sum);
-			})
-		)
-	})
-}
-
-// getTotalFollowers();
-
 module.exports = {
 	getPosts: getPosts,
 	getAllUrls,
 	getGeneral: getGeneral,
 	checkAdmin: checkAdmin,
 	getPlatformPosts: getPlatformPosts,
-	getAll: getAll, 
-	getTotalFollowers: getTotalFollowers
+	getAll: getAll
 }
