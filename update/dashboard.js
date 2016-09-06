@@ -270,11 +270,11 @@ function getPlatformPosts(id, platform) {
 	});
 }
 
-function getTotalFollowers(userId){
+function getTotalFollowers(id){
 	return new Promise(function(resolve, reject){
 		// console.log("ehehehehehehhe")
-		Profile.findOne({userId: user._id},(function(err, profile){
-			console.log("heheheeheheh")
+		Profile.findOne({userId: id},(function(err, profile){
+			console.log("heheheeheheh", profile)
 			if(err) return reject(err);
 			var totalFollows = {};
 			var keys = ['instagram', 'youtube', 'vine', 'twitter', 'facebook', 'snapchat','music']
@@ -284,7 +284,7 @@ function getTotalFollowers(userId){
 				}
 			}
 			console.log('what does this', totalFollows)
-			profile.find({userId: user._id}, function(err, p){
+			profile.find({profileId: profile._id}, function(err, p){
 				if(err) return next(err);
 				for(var i = 0; i < keys.length; i++){
 					if(p[keys[i]]){
