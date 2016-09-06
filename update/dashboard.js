@@ -318,7 +318,7 @@ function getTotalFollowers(id){
 	})
 }
 
-getTotalFollowers();
+// getTotalFollowers();
 
 module.exports = {
 	getPosts: getPosts,

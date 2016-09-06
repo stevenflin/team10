@@ -118,6 +118,40 @@ router.get('/dashboard/:id', function(req, res, next) {
 			.then((userArray) => {
 				getGeneral(id) // gets subscriber, follower/data
 				.then((platformData) => { 
+					console.log('plaform data....................', platformData.recent);
+					var a = platformData.recent.snapchat.followers;
+					var b = platformData.recent.music.followers;
+					var c = platformData.recent.instagram.followers;
+					var d = platformData.recent.youtube.followers;
+					var e = platformData.recent.facebook.followers;
+					var f = platformData.recent.vine.followers;
+					var g = platformData.recent.twitter.followers;
+					var userTot = 0;
+					if (a) {
+						userTot = userTot + a;
+					}
+					if (b) {
+						userTot = userTot + b;
+					}
+					if (c) {
+						userTot = userTot + c;
+					}
+					if (d) {
+						userTot = userTot + d;
+					}
+					if (e) {
+						userTot = userTot + e;
+					}
+					if (f) {
+						userTot = userTot + f;
+					}
+					if (g) {
+						userTot = userTot + g;
+					}
+					console.log('platform total...................', userTot)
+					// console.log('platform total..................', platformData.recent.instagram.followers + platformData.recent.youtube.followers + platformData.recent.facebook.followers + platformData.recent.vine.followers + platformData.recent.twitter.followers + platformData.recent.snapchat.followers + platformData.recent.music.followers)
+					// console.log('totals..........................', tot)
+					// console.log('grand total.....................', tot.instagram + tot.youtube + tot.facebook + tot.vine + tot.twitter + tot.snapchat + tot.music)
 					var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 					var change = {};
 					var direction = {};
