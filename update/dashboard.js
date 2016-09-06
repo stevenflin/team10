@@ -270,7 +270,7 @@ function getPlatformPosts(id, platform) {
 	});
 }
 
-function getTotalFollowers(Profile, userId){
+function getTotalFollowers(userId){
 	return new Promise(function(resolve, reject){
 		// console.log("ehehehehehehhe")
 		Profile.findOne({userId: user._id},(function(err, profile){
