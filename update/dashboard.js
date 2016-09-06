@@ -284,7 +284,7 @@ function getTotalFollowers(userId){
 				}
 			}
 			console.log('what does this', totalFollows)
-			profile.findOne({userId: user._id}, function(err, p){
+			profile.find({userId: user._id}, function(err, p){
 				if(err) return next(err);
 				for(var i = 0; i < keys.length; i++){
 					if(p[keys[i]]){
