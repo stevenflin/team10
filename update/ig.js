@@ -79,6 +79,8 @@ function instagramUpdate(user, twentyMinUpdate) {
 									// if(err) return console.log(err);
 									if (err) return next(err);
 									// console.log("[creating post] for:", post.id);
+									// var engagement = (post.comments.count + post.likes.count)/data.profile;
+									// console.log("engagement...", engagement);
 
 									// snapshot it
 									new PostSnapshot({
@@ -86,7 +88,8 @@ function instagramUpdate(user, twentyMinUpdate) {
 										postId: postData.postId,
 										comments: post.comments.count,
 										likes: post.likes.count,
-										date: p.date
+										date: p.date,
+										engagement: ((post.comments.count + post.likes.count)/data.profile) * 100
 									})
 									.save(function(err, psnap){
 										if(err) return next(err);
@@ -106,7 +109,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 												// console.log("[see these posts]", cPosts);
 												interResolve(posts[0]);
 											}
-											console.log('instagram 333')
+											// console.log('instagram 333')
 											resolve();
 										});			
 									});
@@ -135,7 +138,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 
 								postData.save(function(err) {
 									if (err) return console.log(err);
-									console.log('instagram 222')
+									// console.log('instagram 222')
 									resolve();
 								});
 							});

@@ -233,7 +233,10 @@ var postSnapshot = new mongoose.Schema({
   date: {
     type: Date,
     index: true
-  } 
+  },
+  engagement:{
+    type:Number
+  }
 })
 
 user.plugin(findOrCreate);

@@ -118,7 +118,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 			.then((userArray) => {
 				getGeneral(id) // gets subscriber, follower/data
 				.then((platformData) => { 
-					console.log('plaform data....................', platformData.recent);
+					// console.log('plaform data....................', platformData.recent);
 					var a = platformData.recent.snapchat.followers;
 					var b = platformData.recent.music.followers;
 					var c = platformData.recent.instagram.followers;
@@ -148,7 +148,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 					if (g) {
 						userTot = userTot + g;
 					}
-					console.log('platform total...................', userTot)
+					// console.log('platform total...................', userTot)
 					// console.log('platform total..................', platformData.recent.instagram.followers + platformData.recent.youtube.followers + platformData.recent.facebook.followers + platformData.recent.vine.followers + platformData.recent.twitter.followers + platformData.recent.snapchat.followers + platformData.recent.music.followers)
 					// console.log('totals..........................', tot)
 					// console.log('grand total.....................', tot.instagram + tot.youtube + tot.facebook + tot.vine + tot.twitter + tot.snapchat + tot.music)

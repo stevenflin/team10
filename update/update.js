@@ -91,7 +91,7 @@ var updateFrequent = function() {
                 promises.push(facebookUpdate(user, isTwenty) );
             });
 
-            console.log("AM I HERE");
+            // console.log("AM I HERE");
 
             Promise
             .all(promises)

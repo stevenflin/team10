@@ -103,7 +103,7 @@ function getYoutubeData(channelId) {
 }
 
 function youtubeUpdate(user, twentyMinUpdate) {
-	console.log('youtube 111');
+	// console.log('youtube 111');
 	return new Promise(function(resolve, reject) {
 		getYoutubeData(user.youtube.profile.id)
 		.then(function(data) {
@@ -150,6 +150,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 										views: parseInt(video.stats.viewCount),
 										dislikes: parseInt(video.stats.dislikeCount),
 										date: p.date
+										// engagement: ((parseInt(video.stats.likeCount + video.stats.favoriteCount) / data.channel.subscriberCount)) * 100
 									}).save(function(err, psnap) {
 										if (err) return next(err);
 										
@@ -165,7 +166,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 												// console.log('post post post..........', posts)
 												interResolve(posts[0]);
 											}
-											console.log('youtube 333')
+											// console.log('youtube 333')
 											resolve();
 										});
 									});
@@ -194,7 +195,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);
-									console.log('youtube 222');
+									// console.log('youtube 222');
 									resolve();
 								});
 							});
