@@ -149,10 +149,10 @@ function youtubeUpdate(user, twentyMinUpdate) {
 										favorites: parseInt(video.stats.favoriteCount),
 										views: parseInt(video.stats.viewCount),
 										dislikes: parseInt(video.stats.dislikeCount),
-										date: p.date
-										// engagement: ((parseInt(video.stats.likeCount + video.stats.favoriteCount) / data.channel.subscriberCount)) * 100
+										date: p.date,
+										engagement: (parseInt(video.stats.favoriteCount) + parseInt(video.stats.likeCount)/data.channel.subscriberCount) * 100
 									}).save(function(err, psnap) {
-										if (err) return next(err);
+										if (err) console.log(err);
 										
 										post.snapshots.push(psnap._id);
 										post.save(function(err) {
@@ -192,6 +192,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 								post.favorites = parseInt(video.stats.favoriteCount);
 								post.views = parseInt(video.stats.viewCount);
 								post.dislikes = parseInt(video.stats.dislikeCount);
+								post.engagement = (parseInt(video.stats.favoriteCount) + parseInt(video.stats.likeCount)/data.channel.subscriberCount) * 100;
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);
