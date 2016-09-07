@@ -135,6 +135,7 @@ function vineUpdate(user, twentyMinUpdate) {
 								post.shares = postData.reposts.count;
 								post.likes = postData.likes.count;
 								post.views = postData.loops.count; 
+								post.engagement = ((postData.likes.count + postData.reposts.count) / data.user.followerCount) * 100;
 
 								post.save(function(err) {
 									if (err) return console.log(err);

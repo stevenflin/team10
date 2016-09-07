@@ -245,6 +245,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 								postData.comments = post.comments;
 								postData.likes = post.likes;
 								postData.shares = post.shares;
+								postData.engagement = ((post.likes + post.comments) / result[4]) * 100;
 
 								postData.save(function(err, p) {
 									if (err) return console.log(err);

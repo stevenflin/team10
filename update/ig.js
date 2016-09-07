@@ -29,7 +29,7 @@ function instagramInformation(id, accessToken){
 }
 
 function instagramUpdate(user, twentyMinUpdate) {
-	console.log('instagram 111');
+	// console.log('instagram 111');
 	// console.log("[instagram : user]", user);
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
@@ -135,6 +135,8 @@ function instagramUpdate(user, twentyMinUpdate) {
 
 								postData.comments = post.comments.count;
 								postData.likes = post.likes.count;
+								postData.engagement = ((post.comments.count + post.likes.count)/data.profile) * 100;
+								// console.log("postData.engagement", postData.engagement);
 
 								postData.save(function(err) {
 									if (err) return console.log(err);
