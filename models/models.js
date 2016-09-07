@@ -194,6 +194,9 @@ var post = new mongoose.Schema({
     type: Date,
     index: true
   },
+  engagement:{
+    type: Number
+  },
   profileId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profile'
