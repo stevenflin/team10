@@ -151,7 +151,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 					// console.log('platform total...................', userTot)
 					// console.log('platform total..................', platformData.recent.instagram.followers + platformData.recent.youtube.followers + platformData.recent.facebook.followers + platformData.recent.vine.followers + platformData.recent.twitter.followers + platformData.recent.snapchat.followers + platformData.recent.music.followers)
 					// console.log('totals..........................', tot)
-					// console.log('grand total.....................', tot.instagram + tot.youtube + tot.facebook + tot.vine + tot.twitter + tot.snapchat + tot.music)
+					var grandTot = tot.instagram + tot.youtube + tot.facebook + tot.vine + tot.twitter + tot.snapchat + tot.music;
 					var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 					var change = {};
 					var direction = {};
@@ -194,6 +194,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 									}
 								}
 								// console.log("tototototototototootototot", tot)
+								console.log('postdata.................', postData.youtube.posts)
 
 								Profile.findOne({userId: user._id}, function(err, p) {
 									var d = {
@@ -210,6 +211,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 										direction,
 										on,
 										userTot: userTot,
+										grandTot,
 										urlArray
 									}
 									res.render('dashboard', d);

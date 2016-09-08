@@ -113,7 +113,7 @@ function twitterUpdate(user, twentyMinUpdate){
 
 								post.shares = postData.retweet_count;
 								post.likes = postData.favorite_count;
-								post.engagement = ((postData.retweet_count + postData.favorite_count)/data[0].user.followers_count) * 100;
+								post.engagement = (((postData.retweet_count + postData.favorite_count)/data[0].user.followers_count) * 100).toFixed(2);
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);

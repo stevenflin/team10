@@ -57,7 +57,7 @@ var updateDaily = function() {
             if (err) return reject(err);
             promises = [];
             users.forEach(function(user) {
-                promises.push(instagramUpdate(user) );
+                // promises.push(instagramUpdate(user) );
                 promises.push(youtubeUpdate(user) );
                 promises.push(twitterUpdate(user) );
                 promises.push(vineUpdate(user) );
@@ -84,7 +84,7 @@ var updateFrequent = function() {
             promises = [];
             users.forEach(function(user) {
                 var isTwenty = true;
-                promises.push(instagramUpdate(user, isTwenty) );
+                // promises.push(instagramUpdate(user, isTwenty) );
                 promises.push(youtubeUpdate(user, isTwenty) );
                 promises.push(twitterUpdate(user, isTwenty) );
                 promises.push(vineUpdate(user, isTwenty) );

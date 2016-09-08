@@ -401,7 +401,7 @@
               <a id="menu_toggle"><i class="fa fa-bars"></i></a>
             </div>
             {{#if admin}}
-            <div style="float: left; margin-left: 30px"><img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="40" width="40"/> Totals</div>
+            <div style="float: left; margin-left: 0px"><img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="40" width="40"/> Totals {{grandTot}}</div>
             <li style="float: left; margin: 10px 0 0 10px"><i class="fa fa-instagram"></i> 
             {{#if tot.instagram}}
               {{tot.instagram}}
@@ -453,10 +453,7 @@
               {{#if admin}}
                 <input id="copyTeamTen" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="{{urlArray}}"/>
                 <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyTeamTen')">Copy Team10 Links</button>
-              {{/if}}
-              <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy my links</button>
-              {{#if admin}}
-              <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>
+                <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>
               {{/if}}
               
             </ul>
@@ -601,7 +598,7 @@
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
               <span class="count_top" style="color: #ff0f50"><i class="fa fa-music"></i> Musical.ly Followers</span>
-               <div class="count">
+              <div class="count">
               {{#if platformData.recent.music.followers}}
                 {{platformData.recent.music.followers}}
               {{else}}
@@ -614,15 +611,15 @@
             </div>
 
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count top">
-              <span class="count_top" style="color: black"><img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="20" width="20"/> {{me.username}}'s Total Followers</span>
-               <div class="count">
+              <span class="count_top" style="color: black"><img src="https://static1.squarespace.com/static/ta/579a4a909f7456c1d12301e9/5/assets/Team10_logo.png" height="14" width="14"/> Total Followers</span>
+              <div class="count">
               {{#if userTot}}
                 {{userTot}}
               {{else}}
                 0
               {{/if}}
               </div>
-            </div>
+              <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyAll')">Copy All Links</button>
             </div>
           <div>
             <div class="col-md-12 col-sm-12 col-xs-12">

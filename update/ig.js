@@ -135,7 +135,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 
 								postData.comments = post.comments.count;
 								postData.likes = post.likes.count;
-								postData.engagement = ((post.comments.count + post.likes.count)/data.profile) * 100;
+								postData.engagement = (((post.comments.count + post.likes.count)/data.profile) * 100).toFixed(2);
 								// console.log("postData.engagement", postData.engagement);
 
 								postData.save(function(err) {

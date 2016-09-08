@@ -192,7 +192,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 								post.favorites = parseInt(video.stats.favoriteCount);
 								post.views = parseInt(video.stats.viewCount);
 								post.dislikes = parseInt(video.stats.dislikeCount);
-								post.engagement = (parseInt(video.stats.favoriteCount) + parseInt(video.stats.likeCount)/data.channel.subscriberCount) * 100;
+								post.engagement = ((parseInt(video.stats.favoriteCount) + parseInt(video.stats.likeCount)/data.channel.subscriberCount) * 100).toFixed(2);
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);
