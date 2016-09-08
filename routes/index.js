@@ -194,7 +194,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 									}
 								}
 								// console.log("tototototototototootototot", tot)
-								console.log('postdata.................', postData.youtube.posts)
+								// console.log('postdata.................', postData.youtube.posts)
 
 								Profile.findOne({userId: user._id}, function(err, p) {
 									var d = {
@@ -323,7 +323,17 @@ router.post('/music', function(req, res, next) {
 				});
 			});
 		});	
-	})
+	});
+});
+
+router.post('/admin', function(req, res, next) {
+	User.findById(req.body.person, function(err, user) {
+		if (err) return next(err);
+		// console.log('user user user user.............', user);
+		user.isAdmin = true;
+		user.save();
+		res.redirect('/dashboard/' + req.body.person);
+	});
 });
 
 module.exports = router;

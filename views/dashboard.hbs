@@ -144,6 +144,11 @@
 </style>
 
 <body class="nav-md">
+    <form id="admin-form" method="post" action="/admin">
+      <input value="{{user._id}}" name="person" style="visibility: hidden; position: absolute; width: 0; height: 0;"/>
+    </form>
+    
+
     <div id="snapchat" class="modal fade" role="dialog">
       <div class="modal-dialog mod">
         <!-- Modal content-->
@@ -454,6 +459,9 @@
                 <input id="copyTeamTen" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="{{urlArray}}"/>
                 <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyTeamTen')">Copy Team10 Links</button>
                 <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>
+                {{#unless user.isAdmin}}
+                  <button id="make-admin" class="btn btn-default btn-sm" style="color:grey">Make {{user.username}} Admin</button>
+                {{/unless}}
               {{/if}}
               
             </ul>
@@ -958,6 +966,12 @@
 
     $(".setTrigger").click(function() {
       $(".triggerForm").submit();
+    })
+  </script>
+
+  <script>
+    $("#make-admin").click(function() {
+      $("#admin-form").submit();
     })
   </script>
 
