@@ -112,20 +112,41 @@ router.get('/dashboard/:id', function(req, res, next) {
 	User.findById(id)
 	.lean() 
 	.exec(function(err, user) {
+		console.log(1)
 		getAll()
 		.then((tot) => {
+			console.log(2)
 			checkAdmin(req.user)
 			.then((userArray) => {
+				console.log(3)
 				getGeneral(id) // gets subscriber, follower/data
 				.then((platformData) => { 
+					console.log(4)
 					// console.log('plaform data....................', platformData.recent);
-					var a = platformData.recent.snapchat.followers;
-					var b = platformData.recent.music.followers;
-					var c = platformData.recent.instagram.followers;
-					var d = platformData.recent.youtube.followers;
-					var e = platformData.recent.facebook.followers;
-					var f = platformData.recent.vine.followers;
-					var g = platformData.recent.twitter.followers;
+					// console.log(platformData.recent)
+
+					if (platformData.recent.snapchat) {
+						var a = platformData.recent.snapchat.followers;
+					}
+					if (platformData.recent.music) {
+						var b = platformData.recent.music.followers;
+					}
+					if (platformData.recent.instagram) {
+						var c = platformData.recent.instagram.followers;
+					}
+					if (platformData.recent.youtube) {
+						var d = platformData.recent.youtube.followers;
+					}
+					if (platformData.recent.facebook) {
+						var e = platformData.recent.facebook.followers;
+					}
+					if (platformData.recent.vine) {
+						var f = platformData.recent.vine.followers;
+					}
+					if (platformData.recent.twitter) {
+						var g = platformData.recent.twitter.followers;
+					}
+
 					var userTot = 0;
 					if (a) {
 						userTot = userTot + a;
@@ -148,10 +169,11 @@ router.get('/dashboard/:id', function(req, res, next) {
 					if (g) {
 						userTot = userTot + g;
 					}
-					// console.log('platform total...................', userTot)
-					// console.log('platform total..................', platformData.recent.instagram.followers + platformData.recent.youtube.followers + platformData.recent.facebook.followers + platformData.recent.vine.followers + platformData.recent.twitter.followers + platformData.recent.snapchat.followers + platformData.recent.music.followers)
-					// console.log('totals..........................', tot)
+
 					var grandTot = tot.instagram + tot.youtube + tot.facebook + tot.vine + tot.twitter + tot.snapchat + tot.music;
+					for (var key in tot) {
+						tot[key] = tot[key].toLocaleString();
+					}
 					var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 					var change = {};
 					var direction = {};
@@ -182,45 +204,60 @@ router.get('/dashboard/:id', function(req, res, next) {
 					});
 					getPosts(id) // get posts for the person
 					.then((postData)=>{
+						console.log(5)
 						posts = postData;
 						// console.log("got posts");
 						getAllUrls(req.user)
-							.then((urlArray)=>{
-								// console.log("Gets to this ish", urlArray)
-								var on = {};
-								for (var key in user.triggerFrequency) {
-									if (user.triggerFrequency[key].turnedOn) {
-										on[key] = "true";
+						.then((urlArray)=>{
+							console.log(6)
+							// console.log("Gets to this ish", urlArray)
+							var on = {};
+							for (var key in user.triggerFrequency) {
+								if (user.triggerFrequency[key].turnedOn) {
+									on[key] = "true";
+								}
+							}
+
+							// adding commas
+							if (platformData.recent) {
+								for (var platform in platformData.recent) {
+									if (platform === 'youtube' || 
+										platform === 'instagram' || 
+										platform === 'vine' ||
+										platform === 'twitter' ||
+										platform === 'facebook' ||
+										platform === 'snapchat' ||
+										platform === 'music') {
+										platformData.recent[platform].followers = platformData.recent[platform].followers.toLocaleString();
 									}
 								}
-								// console.log("tototototototototootototot", tot)
-								// console.log('postdata.................', postData.youtube.posts)
+							}
 
-								Profile.findOne({userId: user._id}, function(err, p) {
-									var d = {
-										tot,
-										snapchat: p.snapchat,
-										music: p.music,
-										postData: postData,
-										platformData: platformData,
-										admin: req.user.isAdmin,
-										userArray: userArray,
-										user,
-										me: req.user,
-										change,
-										direction,
-										on,
-										userTot: userTot,
-										grandTot,
-										urlArray
-									}
-									res.render('dashboard', d);
-								});
-							})
-						// console.log("here x2")
-					})
-				})
-			})
+							Profile.findOne({userId: user._id}, function(err, p) {
+								console.log(7)
+								var d = {
+									tot,
+									snapchat: p.snapchat,
+									music: p.music,
+									postData: postData,
+									platformData: platformData,
+									admin: req.user.isAdmin,
+									userArray: userArray,
+									user,
+									me: req.user,
+									change,
+									direction,
+									on,
+									userTot: userTot.toLocaleString(),
+									grandTot: grandTot.toLocaleString(),
+									urlArray
+								}
+								res.render('dashboard', d);
+							});
+						});
+					});
+				});
+			});
 		}).catch(console.log.bind(this, "[error]"));
 	});
 });

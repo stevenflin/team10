@@ -34,51 +34,6 @@ var PostSnapshot = models.PostSnapshot;
 
 // DAILY SNAPSHOTS
 
-router.get('/update/facebook', function(req, res, next) {  //should be /update/page
-  User.find(function(err, users) {
-    users.forEach((user) => {
-      facebookUpdate(user)
-      .then(() => res.redirect('/integrate'));
-    });
-  });
-});
-
-router.get('/update/instagram', function(req, res, next) {
-  User.find(function(err, users) {
-    users.forEach((user) => {
-      instagramUpdate(user)
-      .then(() => res.redirect('/integrate'));
-    });
-  });
-});
-
-router.get('/update/youtube', function(req, res, next) {
-  User.find(function(err, users) {
-    users.forEach((user) => {
-      youtubeUpdate(user)
-      .then(() => res.redirect('/integrate'));
-    });
-  });
-});
-
-router.get('/update/twitter', function(req, res, next) {
-  User.find(function(err, users) {
-    users.forEach((user) => {
-      twitterUpdate(user)
-      .then(() => res.redirect('/integrate'));
-    });
-  });
-});
-
-router.get('/update/vine', function(req, res, next) {
-  User.find(function(err, users) {
-    users.forEach((user) => {
-      vineUpdate(user)
-      .then(() => res.redirect('/integrate'));
-    });
-  });
-});
-
 router.get('/update', (req, res, next) => {
   clear1()
   .then(() => {

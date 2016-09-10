@@ -140,14 +140,13 @@ function pageFans(days, pageId){
 
 
 function facebookUpdate(user, twentyMinUpdate) {
-	// console.log('facebook 111')
+	console.log('facebook 111')
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
 			if(err) return console.log(err);
 	
 
 			FB.setAccessToken(user.facebook.token);
-			// console.log("69", user)
 			if (user.facebook.pages.length === 0) {
 				return resolve();
 			}
@@ -163,7 +162,6 @@ function facebookUpdate(user, twentyMinUpdate) {
 			Promise
 			.all(functions)
 			.then((result) => { // creates and profile snapshot here
-				// console.log("$$0")
 
 				return new Promise(function(interResolve, interReject) {
 					if (!twentyMinUpdate) {
@@ -202,7 +200,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 										likes: post.likes,
 										shares: post.shares,
 										date: p.date,
-										engagement: ((post.likes + post.comments) / result[4]) * 100
+										// engagement: ((post.likes + post.comments) / result[4]) * 100
 									})
 									.save(function(err, psnap) {
 
@@ -245,11 +243,20 @@ function facebookUpdate(user, twentyMinUpdate) {
 								postData.comments = post.comments;
 								postData.likes = post.likes;
 								postData.shares = post.shares;
-								postData.engagement = (((post.likes + post.comments) / result[4]) * 100).toFixed(2);
+
+								var engagement = 0;
+								if (post.likes) {
+									engagement = engagement + post.likes;
+								}
+								if (post.shares) {
+									engagement = engagement + post.shares;
+								}
+
+								postData.engagement = ((engagement / result[4]) * 100).toFixed(2);
 
 								postData.save(function(err, p) {
 									if (err) return console.log(err);
-									// console.log('facebook 222')
+									console.log('facebook 222')
 									resolve();
 								});
 							});

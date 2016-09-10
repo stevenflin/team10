@@ -29,7 +29,7 @@ function instagramInformation(id, accessToken){
 }
 
 function instagramUpdate(user, twentyMinUpdate) {
-	// console.log('instagram 111');
+	console.log('instagram 111');
 	// console.log("[instagram : user]", user);
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
@@ -89,7 +89,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 										comments: post.comments.count,
 										likes: post.likes.count,
 										date: p.date,
-										engagement: ((post.comments.count + post.likes.count)/data.profile) * 100
+										// engagement: ((post.comments.count + post.likes.count)/data.profile) * 100
 									})
 									.save(function(err, psnap){
 										if(err) return next(err);
@@ -135,12 +135,17 @@ function instagramUpdate(user, twentyMinUpdate) {
 
 								postData.comments = post.comments.count;
 								postData.likes = post.likes.count;
-								postData.engagement = (((post.comments.count + post.likes.count)/data.profile) * 100).toFixed(2);
+
+								var engagement = 0;
+								if (post.likes) {
+									engagement = engagement + post.likes.count;
+								}						
+								postData.engagement = ((engagement/data.profile) * 100).toFixed(2);
 								// console.log("postData.engagement", postData.engagement);
 
 								postData.save(function(err) {
 									if (err) return console.log(err);
-									// console.log('instagram 222')
+									console.log('instagram 222')
 									resolve();
 								});
 							});

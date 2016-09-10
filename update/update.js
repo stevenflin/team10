@@ -64,13 +64,13 @@ var updateDaily = function() {
                 promises.push(facebookUpdate(user) );
             });
 
-            console.log("AM I HERE");
+            // console.log("AM I HERE");
 
             Promise
             .all(promises)
             .then((values) => {
-                console.log(values);
-                console.log("inside values");
+                // console.log(values);
+                // console.log("inside values");
                 resolve();
             });
         });
@@ -91,7 +91,7 @@ var updateFrequent = function() {
                 promises.push(facebookUpdate(user, isTwenty) );
             });
 
-            // console.log("AM I HERE");
+            console.log("AM I HERE");
 
             Promise
             .all(promises)

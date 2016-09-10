@@ -47,7 +47,10 @@ function getAll() {
 function getGeneral(id) { //chanel info for each function
 	return new Promise(function(masterResolve, masterReject) {
 		var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
-		Profile.findOne({userId: id}, function(err, profile) {
+		Profile
+		.findOne({userId: id})
+		.lean()
+		.exec(function(err, profile) {
 			if (err) return console.log(err);
 			platforms = platforms.map(function(p) {
 				return new Promise(function(resolve, reject) {

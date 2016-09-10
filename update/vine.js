@@ -45,7 +45,7 @@ function vineInformation(username, password){
 
 
 function vineUpdate(user, twentyMinUpdate) {
-	// console.log("vine 111")
+	console.log("vine 111")
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
 			if (err) return next(err);
@@ -95,7 +95,7 @@ function vineUpdate(user, twentyMinUpdate) {
 										likes: postData.likes.count,
 										views: postData.loops.count, 
 										date: p.date,
-										engagement: ((postData.likes.count + postData.reposts.count) / data.user.followerCount) * 100
+										// engagement: ((postData.likes.count + postData.shares.count) / data.user.followerCount) * 100
 									})
 									.save(function(err, psnap) {
 										if(err) return next(err);
@@ -134,12 +134,20 @@ function vineUpdate(user, twentyMinUpdate) {
 								post.comments = postData.comments.count;
 								post.shares = postData.reposts.count;
 								post.likes = postData.likes.count;
-								post.views = postData.loops.count; 
-								post.engagement = (((postData.likes.count + postData.shares.count) / data.user.followerCount) * 100).toFixed(2);
+								post.views = postData.loops.count;
+
+								var engagement = 0;
+								if (post.likes) {
+									engagement = engagement + postData.likes.count;
+								}
+								if (post.shares) {
+									engagement = engagement + postData.reposts.count;
+								}	
+								post.engagement = ((engagement / data.user.followerCount) * 100).toFixed(2);
 
 								post.save(function(err) {
 									if (err) return console.log(err);
-									// console.log('vine 222')
+									console.log('vine 222')
 									resolve();
 								});
 							});

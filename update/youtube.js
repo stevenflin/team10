@@ -103,7 +103,7 @@ function getYoutubeData(channelId) {
 }
 
 function youtubeUpdate(user, twentyMinUpdate) {
-	// console.log('youtube 111');
+	console.log('youtube 111');
 	return new Promise(function(resolve, reject) {
 		getYoutubeData(user.youtube.profile.id)
 		.then(function(data) {
@@ -150,7 +150,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 										views: parseInt(video.stats.viewCount),
 										dislikes: parseInt(video.stats.dislikeCount),
 										date: p.date,
-										engagement: (parseInt(video.stats.favoriteCount) + parseInt(video.stats.likeCount)/data.channel.subscriberCount) * 100
+										// engagement: (parseInt(video.stats.favoriteCount) + parseInt(video.stats.likeCount)/data.channel.subscriberCount) * 100
 									}).save(function(err, psnap) {
 										if (err) return next(err);
 										
@@ -192,11 +192,20 @@ function youtubeUpdate(user, twentyMinUpdate) {
 								post.favorites = parseInt(video.stats.favoriteCount);
 								post.views = parseInt(video.stats.viewCount);
 								post.dislikes = parseInt(video.stats.dislikeCount);
-								post.engagement = ((parseInt(video.stats.favoriteCount) + parseInt(video.stats.likeCount)/data.channel.subscriberCount) * 100).toFixed(2);
+
+								var engagement = 0;
+								if (post.favorites) {
+									engagement = engagement + parseInt(video.stats.favoriteCount);
+								}
+								if (post.likes) {
+									engagement = engagement + parseInt(video.stats.likeCount);
+								}
+
+								post.engagement = ((engagement/data.channel.subscriberCount) * 100).toFixed(2);
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);
-									// console.log('youtube 222');
+									console.log('youtube 222');
 									resolve();
 								});
 							});

@@ -25,7 +25,7 @@ function twitterInformation(accessToken, accessTokenSecret, id){
 }
 
 function twitterUpdate(user, twentyMinUpdate){
-	// console.log('twitter 111');
+	console.log('twitter 111');
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
 			if (err) return console.log(err);
@@ -74,7 +74,7 @@ function twitterUpdate(user, twentyMinUpdate){
 										shares: postData.retweet_count,
 										likes: postData.favorite_count,
 										date: p.date,
-										engagement: ((postData.retweet_count + postData.favorite_count)/data[0].user.followers_count) * 100
+										// engagement: ((postData.retweet_count + postData.favorite_count)/data[0].user.followers_count) * 100
 									})
 									.save(function(err, psnap){
 										if(err) return next(err);
@@ -113,11 +113,19 @@ function twitterUpdate(user, twentyMinUpdate){
 
 								post.shares = postData.retweet_count;
 								post.likes = postData.favorite_count;
-								post.engagement = (((postData.retweet_count + postData.favorite_count)/data[0].user.followers_count) * 100).toFixed(2);
+
+								var engagement = 0;
+								if (post.likes) {
+									engagement = engagement + postData.favorite_count;
+								}
+								if (post.shares) {
+									engagement = engagement + postData.retweet_count;
+								}	
+								post.engagement = ((engagement/data[0].user.followers_count) * 100).toFixed(2);
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);
-									// console.log('twitter 222');
+									console.log('twitter 222');
 									resolve();
 								});
 							});
