@@ -19,14 +19,18 @@ function instagramInformation(id, accessToken) {
 			    pagination.next(instagramPages); // Will get second page results 
 			} else {
 			 	ig.user(id, function(err, result, remaining, limit) {
-			 		if(err) return reject(err);
+			 		if (err) return console.log(err);
+			 		console.log('and here???', id)
 			 		resolve({bigArr, profile: result.counts.followed_by})
 			 	});
 			}
 		}
+
+		console.log('[ACCESS_TOKEN]', accessToken)
 			
+		var ig = require('instagram-node').instagram({});
 		ig.use({ access_token: accessToken });
-		ig.user_media_recent(id, {cursor: 30}, instagramPages);
+		ig.user_self_media_recent({cursor: 30}, instagramPages);
 	})
 }
 
