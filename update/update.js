@@ -106,28 +106,43 @@ var updateFrequent = function() {
 
 var updateUser = function(user) {
     return new Promise(function(resolve, reject) {
+        promises = [];
         var isTwenty = true;
-        instagramUpdate(user, isTwenty)
-        .then(() => {
-            console.log('instagram......success');
-        })
-        youtubeUpdate(user, isTwenty)
-        .then(() => {
-            console.log('youtube........success');
-        })
-        twitterUpdate(user, isTwenty)
-        .then(() => {
-            console.log('twitter........success');
-        })
-        vineUpdate(user, isTwenty)
-        .then(() => {
-            console.log('vine...........success');
-        })
-        facebookUpdate(user, isTwenty)
-        .then(() => {
-            console.log('facebook.......success');
+        promises.push(instagramUpdate(user, isTwenty) );
+        promises.push(youtubeUpdate(user, isTwenty) );
+        promises.push(twitterUpdate(user, isTwenty) );
+        promises.push(vineUpdate(user, isTwenty) );
+        promises.push(facebookUpdate(user, isTwenty) );
+
+        Promise
+        .all(promises)
+        .then((values) => {
+            console.log(values);
+            console.log("I GOT IN HERE");
             resolve();
         });
+        // var isTwenty = true;
+        // instagramUpdate(user, isTwenty)
+        // .then(() => {
+        //     console.log('instagram......success');
+        // })
+        // youtubeUpdate(user, isTwenty)
+        // .then(() => {
+        //     console.log('youtube........success');
+        // })
+        // twitterUpdate(user, isTwenty)
+        // .then(() => {
+        //     console.log('twitter........success');
+        // })
+        // vineUpdate(user, isTwenty)
+        // .then(() => {
+        //     console.log('vine...........success');
+        // })
+        // facebookUpdate(user, isTwenty)
+        // .then(() => {
+        //     console.log('facebook.......success');
+        //     resolve();
+        // });
     });
 }
 
