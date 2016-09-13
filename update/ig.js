@@ -26,7 +26,7 @@ function instagramInformation(id, accessToken) {
 			}
 		}
 
-		console.log('[ACCESS_TOKEN]', accessToken)
+		// console.log('[ACCESS_TOKEN]', accessToken)
 			
 		var ig = require('instagram-node').instagram({});
 		ig.use({ access_token: accessToken });
