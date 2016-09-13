@@ -105,15 +105,15 @@ function getYoutubeData(channelId) {
 function youtubeUpdate(user, twentyMinUpdate) {
 	console.log('youtube 111');
 	return new Promise(function(resolve, reject) {
-		getYoutubeData(user.youtube.profile.id)
-		.then(function(data) {
-			return new Promise(function(interResolve, interReject) {
-				Profile.findOne({userId: user._id},function(err, profile) {
-					if (err) return reject(err);
+		Profile.findOne({userId: user._id},function(err, profile) {
+			if (err) return reject(err);
 
-					if (data.videos.length === 0) {
-						return resolve();
-					}
+			if (!user.youtube.profile) {
+				return resolve();
+			}
+			getYoutubeData(user.youtube.profile.id)
+			.then(function(data) {
+				return new Promise(function(interResolve, interReject) {
 
 					if (!twentyMinUpdate) {
 						profile.youtube.last = data.channel.subscriberCount;
@@ -210,20 +210,20 @@ function youtubeUpdate(user, twentyMinUpdate) {
 								});
 							});
 						});
-					}
-				});
-			}).then((latestPost) => {
-				if (user.triggerFrequency.youtube.turnedOn){
-					var daysSinceLastPost = Math.floor((new Date() - latestPost.date) / (1000 * 60 * 60 * 24)); // Current unix time - allowed number of days in unix
-					user.triggerFrequency.youtube.lastPost = daysSinceLastPost;
-					// console.log("[apparently the days since last post]", daysSinceLastPost);
+					};
+				}).then((latestPost) => {
+					if (user.triggerFrequency.youtube.turnedOn){
+						var daysSinceLastPost = Math.floor((new Date() - latestPost.date) / (1000 * 60 * 60 * 24)); // Current unix time - allowed number of days in unix
+						user.triggerFrequency.youtube.lastPost = daysSinceLastPost;
+						// console.log("[apparently the days since last post]", daysSinceLastPost);
 
-					// has this use updated within the last day?
-					user.triggerFrequency.youtube.upToDate = (daysSinceLastPost - user.triggerFrequency.youtube.frequency > 0) ? false : true;
-					user.save();
-				}
-			})
-		}).catch((err) => next(err));
+						// has this use updated within the last day?
+						user.triggerFrequency.youtube.upToDate = (daysSinceLastPost - user.triggerFrequency.youtube.frequency > 0) ? false : true;
+						user.save();
+					}
+				})
+			}).catch((err) => next(err));
+		});
 	});
 }
 

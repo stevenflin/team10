@@ -217,7 +217,24 @@ router.get('/dashboard/:id', function(req, res, next) {
 									on[key] = "true";
 								}
 							}
-
+							// console.log('stephanie baoooooooo......', platformData.recent)
+							// console.log('steven lin................', postData.youtube.posts)
+							var engagement = {};
+							for (var p in platformData.recent) {
+								if (p === 'youtube' || 
+									p === 'instagram' || 
+									p === 'vine' ||
+									p === 'twitter' ||
+									p === 'facebook') {
+									// console.log('do i work...........', postData[p].posts)
+									var total = 0;
+									for (var i = 0; i < postData[p].posts.length; i++) {
+										total = total + postData[p].posts[i][0].engagement
+									}
+									engagement[p] = (total / postData[p].posts.length).toFixed(2);
+								}
+							}
+							console.log('engagement................', engagement)
 							// adding commas
 							if (platformData.recent) {
 								for (var platform in platformData.recent) {
@@ -248,6 +265,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 									change,
 									direction,
 									on,
+									engagement,
 									userTot: userTot.toLocaleString(),
 									grandTot: grandTot.toLocaleString(),
 									urlArray
