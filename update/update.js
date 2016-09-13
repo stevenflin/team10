@@ -110,20 +110,20 @@ var updateUser = function(user) {
         instagramUpdate(user, isTwenty)
         .then(() => {
             console.log('instagram......success');
-            youtubeUpdate(user, isTwenty)
         })
+        youtubeUpdate(user, isTwenty)
         .then(() => {
             console.log('youtube........success');
-            twitterUpdate(user, isTwenty)
         })
+        twitterUpdate(user, isTwenty)
         .then(() => {
             console.log('twitter........success');
-            vineUpdate(user, isTwenty)
         })
+        vineUpdate(user, isTwenty)
         .then(() => {
             console.log('vine...........success');
-            facebookUpdate(user, isTwenty)
         })
+        facebookUpdate(user, isTwenty)
         .then(() => {
             console.log('facebook.......success');
             resolve();

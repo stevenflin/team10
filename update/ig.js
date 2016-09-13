@@ -7,9 +7,9 @@ var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
 function instagramInformation(id, accessToken) {
-	console.log('hello am i getting here?');
+	// console.log('hello am i getting here?');
 	return new Promise(function(resolve, reject) {
-		console.log('what about here???')
+		// console.log('what about here???')
 		var bigArr = [];
 		var instagramPages = function (err, medias, pagination, remaining, limit) {
 		// console.log('what does this look like.........', err)
@@ -20,7 +20,7 @@ function instagramInformation(id, accessToken) {
 			} else {
 			 	ig.user(id, function(err, result, remaining, limit) {
 			 		if (err) return console.log(err);
-			 		console.log('and here???', id)
+			 		// console.log('and here???', id)
 			 		resolve({bigArr, profile: result.counts.followed_by})
 			 	});
 			}

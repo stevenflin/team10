@@ -71,7 +71,7 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 		FB.setAccessToken(req.user.facebook.token);
 
 		req.user.facebook.pages.push({pageId: req.query.pageId, pageName: req.query.name})
-		console.log("USER FACEBOOK PAGES", req.user.facebook.pages);
+		// console.log("USER FACEBOOK PAGES", req.user.facebook.pages);
 		req.user.url.facebook = "www.facebook.com/"+req.query.pageId
 		req.user.save(function(err, success) {
 			if(err) {
@@ -207,7 +207,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 						console.log(5)
 						// console.log(';alskfd;klsjdf;ajsdk.....', postData.youtube.posts[0][0].snapshots)
 						posts = postData;
-						console.log("got posts");
+						// console.log("got posts");
 						getAllUrls(req.user)
 						.then((urlArray)=>{
 							console.log(6)
@@ -242,7 +242,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 									// engagement[p] = typeof (total / postData[p].posts.length).toFixed(2);
 								}
 							}
-							console.log('engagement................', engagement)
+							// console.log('engagement................', engagement)
 							// adding commas
 							if (platformData.recent) {
 								for (var platform in platformData.recent) {
@@ -298,7 +298,7 @@ router.get('/dashboard/:platform/:id', function(req, res, next) {
 		return getPlatformPosts(id, req.params.platform)
 	})
 	.then((data) => {
-		console.log('data data data........', data.change);
+		// console.log('data data data........', data.change);
 		// console.log('is this defined..............', users);
 		res.render('platform', {
 			me: req.user,
