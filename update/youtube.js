@@ -103,7 +103,7 @@ function getYoutubeData(channelId) {
 }
 
 function youtubeUpdate(user, twentyMinUpdate) {
-	console.log('youtube 111');
+	console.log('youtube 111', user.username);
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id},function(err, profile) {
 			if (err) return reject(err);
@@ -166,7 +166,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 												// console.log('post post post..........', posts)
 												interResolve(posts[0]);
 											}
-											// console.log('youtube 333')
+											console.log('youtube 333', user.username)
 											resolve();
 										});
 									});
@@ -205,7 +205,7 @@ function youtubeUpdate(user, twentyMinUpdate) {
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);
-									console.log('youtube 222');
+									console.log('youtube 222', user.username);
 									resolve();
 								});
 							});

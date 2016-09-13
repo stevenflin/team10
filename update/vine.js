@@ -45,7 +45,7 @@ function vineInformation(username, password){
 
 
 function vineUpdate(user, twentyMinUpdate) {
-	console.log("vine 111")
+	console.log("vine 111", user.username)
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
 			if (err) return next(err);
@@ -111,7 +111,7 @@ function vineUpdate(user, twentyMinUpdate) {
 												// console.log('post post post..........', posts)
 												interResolve(posts[0]);
 											}
-											// console.log('vine 333')
+											console.log('vine 333', user.username)
 											resolve();
 										});
 									});
@@ -147,7 +147,7 @@ function vineUpdate(user, twentyMinUpdate) {
 
 								post.save(function(err) {
 									if (err) return console.log(err);
-									console.log('vine 222')
+									console.log('vine 222', user.username)
 									resolve();
 								});
 							});

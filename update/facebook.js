@@ -140,7 +140,7 @@ function pageFans(days, pageId){
 
 
 function facebookUpdate(user, twentyMinUpdate) {
-	console.log('facebook 111')
+	console.log('facebook 111', user.username)
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
 			if(err) return console.log(err);
@@ -219,7 +219,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 												});
 												interResolve(posts[0]);
 											}
-											// console.log('facebook 333')
+											console.log('facebook 333', user.username)
 											resolve();
 										});			
 									});
@@ -256,7 +256,7 @@ function facebookUpdate(user, twentyMinUpdate) {
 
 								postData.save(function(err, p) {
 									if (err) return console.log(err);
-									console.log('facebook 222')
+									console.log('facebook 222', user.username)
 									resolve();
 								});
 							});

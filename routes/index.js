@@ -205,6 +205,7 @@ router.get('/dashboard/:id', function(req, res, next) {
 					getPosts(id) // get posts for the person
 					.then((postData)=>{
 						console.log(5)
+						console.log(';alskfd;klsjdf;ajsdk.....', postData.youtube.posts[0][0].snapshots)
 						posts = postData;
 						// console.log("got posts");
 						getAllUrls(req.user)
@@ -231,7 +232,14 @@ router.get('/dashboard/:id', function(req, res, next) {
 									for (var i = 0; i < postData[p].posts.length; i++) {
 										total = total + postData[p].posts[i][0].engagement
 									}
-									engagement[p] = (total / postData[p].posts.length).toFixed(2);
+									if ((total / postData[p].posts.length).toFixed(2) === 'NaN') {
+										engagement[p] = 0.00;
+									} else if ((total / postData[p].posts.length).toFixed(2) === 'Infinity') {
+										engagement[p] = 100;
+									} else {
+										engagement[p] = (total / postData[p].posts.length).toFixed(2);
+									}
+									// engagement[p] = typeof (total / postData[p].posts.length).toFixed(2);
 								}
 							}
 							console.log('engagement................', engagement)

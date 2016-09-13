@@ -25,7 +25,7 @@ function twitterInformation(accessToken, accessTokenSecret, id){
 }
 
 function twitterUpdate(user, twentyMinUpdate){
-	console.log('twitter 111');
+	console.log('twitter 111', user.username);
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
 			if (err) return console.log(err);
@@ -89,7 +89,7 @@ function twitterUpdate(user, twentyMinUpdate){
 												// console.log('post post post..........', posts)
 												interResolve(posts[0]);
 											}
-											// console.log('twitter 333')
+											console.log('twitter 333', user.username)
 											resolve();
 										});			
 									});
@@ -125,7 +125,7 @@ function twitterUpdate(user, twentyMinUpdate){
 
 								post.save(function(err, p) {
 									if (err) return console.log(err);
-									console.log('twitter 222');
+									console.log('twitter 222', user.username);
 									resolve();
 								});
 							});

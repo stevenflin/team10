@@ -6,21 +6,23 @@ var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
-function instagramInformation(id, accessToken){
-	return new Promise(function(resolve, reject){
+function instagramInformation(id, accessToken) {
+	console.log('hello am i getting here?');
+	return new Promise(function(resolve, reject) {
+		console.log('what about here???')
 		var bigArr = [];
 		var instagramPages = function (err, medias, pagination, remaining, limit) {
 		// console.log('what does this look like.........', err)
 		// console.log("PAGINATION PAGINATION PAGINATION..........", pagination)
-	 	bigArr = bigArr.concat(medias);
-		if(pagination.next) {
-		    pagination.next(instagramPages); // Will get second page results 
-		  } else {
-		 	ig.user(id, function(err, result, remaining, limit) {
-		 		if(err) return reject(err);
-		 		resolve({bigArr, profile: result.counts.followed_by})
-		 	});
-		  }
+		 	bigArr = bigArr.concat(medias);
+			if(pagination.next) {
+			    pagination.next(instagramPages); // Will get second page results 
+			} else {
+			 	ig.user(id, function(err, result, remaining, limit) {
+			 		if(err) return reject(err);
+			 		resolve({bigArr, profile: result.counts.followed_by})
+			 	});
+			}
 		}
 			
 		ig.use({ access_token: accessToken });
@@ -29,11 +31,11 @@ function instagramInformation(id, accessToken){
 }
 
 function instagramUpdate(user, twentyMinUpdate) {
-	console.log('instagram 111');
+	console.log('instagram 111', user.username);
 	// console.log("[instagram : user]", user);
 	return new Promise(function(resolve, reject) {
 		Profile.findOne({userId: user._id}, function(err, profile){
-			if (err) return next(err);
+			if (err) return reject(err);
 
 			if (!user.instagram.instagramProfile) {
 				return resolve();
@@ -42,6 +44,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 			// Get instagram data
 			instagramInformation(user.instagram.instagramProfile.id, user.instagram.AccessToken)
 			.then(function(data) {
+				// console.log('HAHAHHAHAHAHAHAHAHAHAHA.......', data);
 				return new Promise(function(interResolve, interReject) {
 					if (!twentyMinUpdate) {
 						profile.instagram.last = data.profile;
@@ -109,7 +112,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 												// console.log("[see these posts]", cPosts);
 												interResolve(posts[0]);
 											}
-											// console.log('instagram 333')
+											console.log('instagram 333', user.username)
 											resolve();
 										});			
 									});
@@ -145,7 +148,7 @@ function instagramUpdate(user, twentyMinUpdate) {
 
 								postData.save(function(err) {
 									if (err) return console.log(err);
-									console.log('instagram 222')
+									console.log('instagram 222', user.username)
 									resolve();
 								});
 							});
