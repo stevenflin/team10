@@ -205,9 +205,9 @@ router.get('/dashboard/:id', function(req, res, next) {
 					getPosts(id) // get posts for the person
 					.then((postData)=>{
 						console.log(5)
-						console.log(';alskfd;klsjdf;ajsdk.....', postData.youtube.posts[0][0].snapshots)
+						// console.log(';alskfd;klsjdf;ajsdk.....', postData.youtube.posts[0][0].snapshots)
 						posts = postData;
-						// console.log("got posts");
+						console.log("got posts");
 						getAllUrls(req.user)
 						.then((urlArray)=>{
 							console.log(6)
