@@ -20,44 +20,13 @@ var ProfileSnapshot = models.ProfileSnapshot;
 var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
-
-// var updateDaily = function() {
-//     return new Promise(function(resolve, reject) {
-//         User.find(function(err, users) {
-//             users.forEach(function(user) {
-//                 instagramUpdate(user)
-//                 .then(() => {
-//                     console.log('instagram......success');
-//                     youtubeUpdate(user)
-//                 })
-//                 .then(() => {
-//                     console.log('youtube........success');
-//                     twitterUpdate(user)
-//                 })
-//                 .then(() => {
-//                     console.log('twitter........success');
-//                     vineUpdate(user)
-//                 })
-//                 .then(() => {
-//                     console.log('vine...........success');
-//                     facebookUpdate(user)
-//                 })
-//                 .then(() => {
-//                     console.log('facebook.......success');
-//                 });
-//             });
-//             resolve();
-//         });
-//     });
-// }
-
 var updateDaily = function() {
     return new Promise(function(resolve, reject) {
         User.find(function(err, users) {
             if (err) return reject(err);
             promises = [];
             users.forEach(function(user) {
-                // promises.push(instagramUpdate(user) );
+                promises.push(instagramUpdate(user) );
                 promises.push(youtubeUpdate(user) );
                 promises.push(twitterUpdate(user) );
                 promises.push(vineUpdate(user) );
@@ -84,7 +53,7 @@ var updateFrequent = function() {
             promises = [];
             users.forEach(function(user) {
                 var isTwenty = true;
-                // promises.push(instagramUpdate(user, isTwenty) );
+                promises.push(instagramUpdate(user, isTwenty) );
                 promises.push(youtubeUpdate(user, isTwenty) );
                 promises.push(twitterUpdate(user, isTwenty) );
                 promises.push(vineUpdate(user, isTwenty) );
@@ -108,7 +77,7 @@ var updateUser = function(user) {
     return new Promise(function(resolve, reject) {
         promises = [];
         var isTwenty = true;
-        // promises.push(instagramUpdate(user, isTwenty) );
+        promises.push(instagramUpdate(user, isTwenty) );
         promises.push(youtubeUpdate(user, isTwenty) );
         promises.push(twitterUpdate(user, isTwenty) );
         promises.push(vineUpdate(user, isTwenty) );
@@ -119,30 +88,8 @@ var updateUser = function(user) {
         .then((values) => {
             console.log(values);
             console.log("I GOT IN HERE");
-            resolve();
         });
-        // var isTwenty = true;
-        // instagramUpdate(user, isTwenty)
-        // .then(() => {
-        //     console.log('instagram......success');
-        // })
-        // youtubeUpdate(user, isTwenty)
-        // .then(() => {
-        //     console.log('youtube........success');
-        // })
-        // twitterUpdate(user, isTwenty)
-        // .then(() => {
-        //     console.log('twitter........success');
-        // })
-        // vineUpdate(user, isTwenty)
-        // .then(() => {
-        //     console.log('vine...........success');
-        // })
-        // facebookUpdate(user, isTwenty)
-        // .then(() => {
-        //     console.log('facebook.......success');
-        //     resolve();
-        // });
+        resolve();
     });
 }
 
