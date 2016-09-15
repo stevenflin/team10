@@ -86,6 +86,10 @@ var user = new mongoose.Schema({
       lastPost: Number,        
       frequency: Number
     }
+  },
+  first_login: {
+    type: Boolean,
+    default: true
   }
 });
 var profile = new mongoose.Schema({

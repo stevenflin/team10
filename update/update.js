@@ -21,7 +21,7 @@ var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
 var updateDaily = function() {
-    return new Promise(function(resolve, reject) {
+    // return new Promise(function(resolve, reject) {
         User.find(function(err, users) {
             if (err) return reject(err);
             promises = [];
@@ -37,17 +37,15 @@ var updateDaily = function() {
 
             Promise
             .all(promises)
-            .then((values) => {
-                // console.log(values);
-                console.log("inside values");
-                resolve();
+            .then(() => {
+                console.log("Daily Update Success");
             });
         });
-    });
+    // });
 }
 
 var updateFrequent = function() {
-    return new Promise(function(resolve, reject) {
+    // return new Promise(function(resolve, reject) {
         User.find(function(err, users) {
             if (err) return reject(err);
             promises = [];
@@ -64,17 +62,15 @@ var updateFrequent = function() {
 
             Promise
             .all(promises)
-            .then((values) => {
-                console.log(values);
-                console.log("inside values");
-                resolve();
+            .then(() => {
+                console.log("Ten Minute Update Success");
             });
         });
-    });
+    // });
 }
 
 var updateUser = function(user) {
-    return new Promise(function(resolve, reject) {
+    // return new Promise(function(resolve, reject) {
         promises = [];
         var isTwenty = true;
         promises.push(instagramUpdate(user, isTwenty) );
@@ -85,12 +81,12 @@ var updateUser = function(user) {
 
         Promise
         .all(promises)
-        .then((values) => {
-            console.log(values);
-            console.log("I GOT IN HERE");
+        .then(() => {
+            console.log("User Update Success");
+            user.first_login = false;
+            user.save();
         });
-        resolve();
-    });
+    // });
 }
 
 var clearProfileSnaps = function() {

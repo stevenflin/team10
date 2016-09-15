@@ -42,19 +42,16 @@ router.get('/update', (req, res, next) => {
   })
   .then(() => {
     console.log('clearing post snaps....................');
-    updateDaily()
   })
-  .then(() => {
-    console.log('updating all posts and snaps..............');
-    res.sendStatus(200);
-  });
+  updateDaily();
+  res.sendStatus(200);
 });
 
 // call this FUNction every 20 minutes, does not make snapshots
 
 router.get('/update/frequent', (req, res, next) => {
-  updateFrequent()
-  .then(() => res.sendStatus(200));
+  updateFrequent();
+  res.sendStatus(200);
 });
 
 router.get('/update/trigger', (req, res, next) => {

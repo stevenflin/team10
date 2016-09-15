@@ -14,6 +14,7 @@ var getAll = dashboardFunctions.getAll;
 
 var update = require('../update/update');
 var updateUser = update.updateUser;
+var updateFrequent = update.updateFrequent;
 
 // MODELS
 var models = require('../models/models');
@@ -102,8 +103,10 @@ router.get('/fbPageConfirmation/', function(req, res, next) {
 
 router.get('/dashboard', function(req, res, next) {
 	req.session.unlockDate = new Date();
-	updateUser(req.user)
-	.then(() => res.redirect('/dashboard/'+req.user._id));
+	updateUser(req.user);
+	// updateFrequent()
+	// .then(() => res.redirect('/dashboard/'+req.user._id));
+	res.redirect('/dashboard/'+req.user._id);
 });
 
 router.get('/dashboard/:id', function(req, res, next) {
@@ -253,11 +256,13 @@ router.get('/dashboard/:id', function(req, res, next) {
 										platform === 'facebook' ||
 										platform === 'snapchat' ||
 										platform === 'music') {
-										platformData.recent[platform].followers = platformData.recent[platform].followers.toLocaleString();
+										if (typeof platformData.recent[platform].followers === "number") {
+											platformData.recent[platform].followers = platformData.recent[platform].followers.toLocaleString();
+										}
 									}
 								}
 							}
-
+							console.log(8)
 							Profile.findOne({userId: user._id}, function(err, p) {
 								console.log(7)
 								var d = {

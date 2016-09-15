@@ -472,6 +472,11 @@
 
       <!-- page content -->
       <div class="right_col" role="main" style="background: white">
+        {{#if user.first_login}}
+        <div class="col-xs-8 col-xs-offset-2">
+        We are currently updating data for this user. Please try refreshing in a few moments.
+        </div>
+        {{else}}
         <div class="">
           <div class="row tile_count " style="margin-bottom: 0">
 
@@ -898,6 +903,7 @@
             </div>
           </div>
         </div>
+        {{/if}}
       </div>
 
 
