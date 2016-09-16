@@ -84,7 +84,11 @@ var updateUser = function(user) {
         .then(() => {
             console.log("User Update Success");
             user.first_login = false;
-            user.save();
+            user.save(function(err, u) {
+                if (err) return console.log('BIG ERROR', err);
+                console.log('User Update Success X2')
+            });
+            // user.save();
         });
     // });
 }

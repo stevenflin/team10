@@ -14,7 +14,7 @@ function twitterInformation(accessToken, accessTokenSecret, id){
 		  access_token_key: accessToken,
 		  access_token_secret: accessTokenSecret
 		});
-		var params = {user_id: id};
+		var params = {user_id: id, count: 200};
 		client.get('statuses/user_timeline', params, function(error, tweets, response) {
 
 		  if (error) return next(error); 
