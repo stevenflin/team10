@@ -145,6 +145,9 @@ function facebookUpdate(user, twentyMinUpdate) {
 		Profile.findOne({userId: user._id}, function(err, profile) {
 			if(err) return console.log(err);
 	
+			if (!user.facebook.token) {
+				return resolve();
+			}
 
 			FB.setAccessToken(user.facebook.token);
 			if (user.facebook.pages.length === 0) {
