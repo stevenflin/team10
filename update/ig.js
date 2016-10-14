@@ -15,14 +15,16 @@ function instagramInformation(id, accessToken) {
 		// console.log('what does this look like.........', err)
 		// console.log("PAGINATION PAGINATION PAGINATION..........", pagination)
 		 	bigArr = bigArr.concat(medias);
-			if(pagination.next) {
-			    pagination.next(instagramPages); // Will get second page results 
-			} else {
-			 	ig.user(id, function(err, result, remaining, limit) {
-			 		if (err) return console.log(err);
-			 		// console.log('and here???', id)
-			 		resolve({bigArr, profile: result.counts.followed_by})
-			 	});
+			if(pagination) {	
+				if(pagination.next) {
+				    pagination.next(instagramPages); // Will get second page results 
+				} else {
+				 	ig.user(id, function(err, result, remaining, limit) {
+				 		if (err) return console.log(err);
+				 		// console.log('and here???', id)
+				 		resolve({bigArr, profile: result.counts.followed_by})
+				 	});
+				}
 			}
 		}
 
