@@ -147,6 +147,9 @@
     <form id="admin-form" method="post" action="/admin">
       <input value="{{user._id}}" name="person" style="visibility: hidden; position: absolute; width: 0; height: 0;"/>
     </form>
+    <form id="pleb-form" method="post" action="/pleb">
+      <input value="{{user._id}}" name="person" style="visibility: hidden; position: absolute; width: 0; height: 0;"/>
+    </form>
     
 
     <div id="snapchat" class="modal fade" role="dialog">
@@ -459,9 +462,11 @@
                 <input id="copyTeamTen" style="visibility: hidden; position: absolute; width: 0; height: 0;" value="{{urlArray}}"/>
                 <button class="btn btn-default btn-sm" style="color:grey" onclick="copyToClipboard('#copyTeamTen')">Copy Team10 Links</button>
                 <button class="btn btn-default btn-sm" style="color:grey" data-toggle="modal" data-target="#triggers">Set Triggers for {{user.username}}</button>
-                {{#unless user.isAdmin}}
+                {{#if user.isAdmin}}
+                  <button id="make-pleb" class="btn btn-default btn-sm" style="color:grey">Remove {{user.username}} as Admin</button>
+                {{else}}
                   <button id="make-admin" class="btn btn-default btn-sm" style="color:grey">Make {{user.username}} Admin</button>
-                {{/unless}}
+                {{/if}}
               {{/if}}
               
             </ul>
@@ -661,7 +666,7 @@
                   <table id="datatable" class="table table-striped table-bordered">
                     <thead>
                       <tr>
-                        <th>Date</th>
+                        <th class="sorting_desc">Date</th>
                         <th>Title</th>
                         <th>Likes</th>
                         <th>Dislikes</th>
@@ -980,6 +985,9 @@
     $("#make-admin").click(function() {
       $("#admin-form").submit();
     })
+    $("#make-pleb").click(function() {
+      $("#pleb-form").submit();
+    })
   </script>
 
   <!-- Datatables -->
@@ -1026,7 +1034,9 @@
       }();
 
       // table 1
-      $('#datatable').dataTable();
+      $('#datatable').dataTable({
+        "order": [[0,"desc"]]
+      });
       $('#datatable-keytable').DataTable({
         keys: true
       });
@@ -1046,7 +1056,9 @@
       });
 
       // table 2
-      $('#datatable2').dataTable();
+      $('#datatable2').dataTable({
+        "order": [[0,"desc"]]
+      });
       $('#datatable-keytable2').DataTable({
         keys: true
       });
@@ -1066,7 +1078,9 @@
       });
 
       // table 3
-      $('#datatable3').dataTable();
+      $('#datatable3').dataTable({
+        "order": [[0,"desc"]]
+      });
       $('#datatable-keytable3').DataTable({
         keys: true
       });
@@ -1086,7 +1100,9 @@
       });
 
       // table 4
-      $('#datatable4').dataTable();
+      $('#datatable4').dataTable({
+        "order": [[0,"desc"]]
+      });
       $('#datatable-keytable4').DataTable({
         keys: true
       });
@@ -1106,7 +1122,9 @@
       });
 
       //table 5
-      $('#datatable5').dataTable();
+      $('#datatable5').dataTable({
+        "order": [[0,"desc"]]
+      });
       $('#datatable-keytable5').DataTable({
         keys: true
       });

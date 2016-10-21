@@ -8,6 +8,7 @@ var Post = models.Post;
 var PostSnapshot = models.PostSnapshot;
 
 function vineInformation(username, password){
+	// console.log('did i make it here x2')
 	return new Promise(function(resolve, reject){
 		var vineArr = [];
 		var vine = new Vineapple();
@@ -16,15 +17,18 @@ function vineInformation(username, password){
 		var decrypted = encryptor.decrypt(password);
 	
 		vine.login(username, decrypted, function (error, client) {
+			if (error) {
+				resolve(false)
+			}
 			// console.log("login error", error);
 		    // Make an API request
 		    client.me(function (error, user) {
 		        // Handle failure
-		        var userId = user.userId;
+		        
 		        if (error) {
-		            throw new Error(error);
+		            resolve('hello its me');
 		         }
-
+		         var userId = user.userId;
 		         function getVideos(page) {
 		         	client.user(userId, {page:page, size:20}, function(error, data){
 			         	if (error) return reject(error);

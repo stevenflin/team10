@@ -101,9 +101,11 @@ function getPosts(id) {
 		var platforms = ['youtube', 'instagram', 'vine', 'twitter', 'facebook'];
 		Profile.findOne({userId: id}, function(err, profile) {
 			if (err) return masterReject(err);
+			var d = new Date();
+	        d.setDate(d.getDate() - 60);
 			platforms = platforms.map(function(p) {
 				return new Promise(function(resolve, reject) {
-					Post.find({profileId: profile._id, type: p})
+					Post.find({profileId: profile._id, type: p, date: {$gt: d}})
 					.sort({'date': -1})
 					.populate('snapshots')
 					.lean() //changes mongoose object into normal data

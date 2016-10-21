@@ -403,6 +403,14 @@ router.post('/admin', function(req, res, next) {
 		res.redirect('/dashboard/' + req.body.person);
 	});
 });
+router.post('/pleb', function(req, res, next) {
+	User.findById(req.body.person, function(err, user) {
+		if (err) return next(err);
+		user.isAdmin = false;
+		user.save();
+		res.redirect('/dashboard/' + req.body.person);
+	});
+});
 
 module.exports = router;
 

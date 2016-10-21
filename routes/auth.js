@@ -2,6 +2,8 @@ var router = require('express').Router();
 var models = require('../models/models');
 var Vineapple = require('vineapple');
 var vine = new Vineapple();
+var vineFunctions = require('../update/vine');
+var vineInformation = vineFunctions.vineInformation;
 var facebook = require('fb');
 
 var bcrypt = require('bcrypt');
@@ -234,24 +236,34 @@ module.exports = function(passport) {
   })
 
   router.post('/integrate', function(req, res, next){
+    // console.log('did i make it here')
     req.session.unlockDate = new Date();
 
     var encrypted = encryptor.encrypt(req.body.password);
-
-    req.user.vine = {
-      username: req.body.username,
-      password: encrypted,
-    }
-    req.user.save(function(err, user) {
-      if (err) return next(err);
-      Profile.findOne({userId: user._id}, function(err, p){
-        p.vine.displayName = user.vine.username;
-        p.save(function(err){
-          if(err) return next(err);
-        })
-      })  
+    vineInformation(req.body.username, encrypted)
+    .then((data) => {
+      console.log('HELLO', data);
+      if(!data) {
+        console.log('incorrect login')
         res.redirect('/integrate');
-    });
+      } else {
+        console.log('correct login')
+        req.user.vine = {
+          username: req.body.username,
+          password: encrypted,
+        }
+        req.user.save(function(err, user) {
+          if (err) return next(err);
+          Profile.findOne({userId: user._id}, function(err, p){
+            p.vine.displayName = user.vine.username;
+            p.save(function(err){
+              if(err) return next(err);
+            })
+          })  
+            res.redirect('/integrate');
+        });
+      }
+    })
 });
 
 
